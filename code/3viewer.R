@@ -1,7 +1,9 @@
 
 ## Viewing Displays ##
 
-### Shiny Viewer ###
+### Trelliscope Viewer ###
+
+<div class="alert alert-warning">This section is based on an older version of the Trelliscope Viewer.</div>
 
 The Trelliscope viewer we have encountered throughout this document is a server-side web viewer that uses [Shiny](http://www.rstudio.com/shiny/).  Shiny basically provides a live R session running behind the web viewer, facilitating all of the interaction.
 

@@ -6,11 +6,11 @@
 
 ### Background ###
 
-<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is, but will be much better soon.</div>
+<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is for the most part, but will be much better soon.</div>
 
 Trelliscope provides a way to visualize large, complex data in great detail from within the R statistical programming environment.  This package operates on data that has been split into subsets using the [datadr](http://github.com/tesseradata/datadr) package.  Data can be local R data objects or can be very large data sets supported by the [RHIPE](http://github.com/tesseradata/RHIPE) backend of `datadr`.
 
-Trelliscope is based on the concept of Divide and Recombine (D&R).  Some philosophy and background on D&R can be found at [datadr.org](http://www.datadr.org).
+Trelliscope is based on the concept of Divide and Recombine (D&R).
 
 #### Reference
 
@@ -19,7 +19,7 @@ Related projects:
    - [RHIPE][rhipe]: the engine that enables D&R to work with large, complex data
 
 References:
-   - [http://datadr.org][datadr.org]
+   - [tesseradata.org][tesseradata.org]
    - [Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data][trspaper]
    - [Large complex data: divide and recombine (D&R) with RHIPE][drpaper]
    - [Visualization Databases for the Analysis of Large Complex Datasets][vdbpaper]

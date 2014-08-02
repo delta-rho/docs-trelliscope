@@ -130,7 +130,7 @@
 <li class='nav-header unselectable' data-edit-href='3viewer.Rmd'>Viewing Displays</li>
       
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#shiny-viewer'>Shiny Viewer</a>
+         <a target='_self' class='nav-not-header' href='#trelliscope-viewer'>Trelliscope Viewer</a>
       </li>
 
 
@@ -163,11 +163,11 @@
 <div class='tab-pane active' id='background'>
 <h3>Background</h3>
 
-<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is, but will be much better soon.</div>
+<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is for the most part, but will be much better soon.</div>
 
 <p>Trelliscope provides a way to visualize large, complex data in great detail from within the R statistical programming environment.  This package operates on data that has been split into subsets using the <a href="http://github.com/tesseradata/datadr">datadr</a> package.  Data can be local R data objects or can be very large data sets supported by the <a href="http://github.com/tesseradata/RHIPE">RHIPE</a> backend of <code>datadr</code>.</p>
 
-<p>Trelliscope is based on the concept of Divide and Recombine (D&amp;R).  Some philosophy and background on D&amp;R can be found at <a href="http://www.datadr.org">datadr.org</a>.</p>
+<p>Trelliscope is based on the concept of Divide and Recombine (D&amp;R).</p>
 
 <h4>Reference</h4>
 
@@ -181,7 +181,7 @@
 <p>References:</p>
 
 <ul>
-<li>[<a href="http://datadr.org%5D%5Bdatadr.org">http://datadr.org][datadr.org</a>]</li>
+<li><a href="http://tesseradata.org">tesseradata.org</a></li>
 <li><a href="http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf">Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data</a></li>
 <li><a href="http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full">Large complex data: divide and recombine (D&amp;R) with RHIPE</a></li>
 <li><a href="http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf">Visualization Databases for the Analysis of Large Complex Datasets</a></li>
@@ -208,12 +208,6 @@ install_github(&quot;trelliscope&quot;, &quot;tesseradata&quot;)
 <p>Then we load the package:</p>
 
 <pre><code class="r">library(trelliscope)
-</code></pre>
-
-<pre><code>Loading required package: datadr
-Loading required package: parallel
-Loading required package: lattice
-Loading required package: ggplot2
 </code></pre>
 
 <p>and we are ready to go.</p>
@@ -1205,8 +1199,10 @@ websync()
 </div>
 
 
-<div class='tab-pane' id='shiny-viewer'>
-<h3>Shiny Viewer</h3>
+<div class='tab-pane' id='trelliscope-viewer'>
+<h3>Trelliscope Viewer</h3>
+
+<div class="alert alert-warning">This section is based on an older version of the Trelliscope Viewer.</div>
 
 <p>The Trelliscope viewer we have encountered throughout this document is a server-side web viewer that uses <a href="http://www.rstudio.com/shiny/">Shiny</a>.  Shiny basically provides a live R session running behind the web viewer, facilitating all of the interaction.</p>
 
