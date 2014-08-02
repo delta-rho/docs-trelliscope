@@ -6,7 +6,9 @@
 
 ### Background ###
 
-Trelliscope provides a way to visualize large, complex data in great detail from within the R statistical programming environment.  This package operates on data that has been split into subsets using the [datadr](http://github.com/hafen/datadr) package.  Data can be local R data objects or can be very large data sets supported by the [RHIPE](http://github.com/saptarshiguha/RHIPE) backend of `datadr`.
+<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is, but will be much better soon.</div>
+
+Trelliscope provides a way to visualize large, complex data in great detail from within the R statistical programming environment.  This package operates on data that has been split into subsets using the [datadr](http://github.com/tesseradata/datadr) package.  Data can be local R data objects or can be very large data sets supported by the [RHIPE](http://github.com/tesseradata/RHIPE) backend of `datadr`.
 
 Trelliscope is based on the concept of Divide and Recombine (D&R).  Some philosophy and background on D&R can be found at [datadr.org](http://www.datadr.org).
 
@@ -22,9 +24,9 @@ References:
    - [Large complex data: divide and recombine (D&R) with RHIPE][drpaper]
    - [Visualization Databases for the Analysis of Large Complex Datasets][vdbpaper]
 
-[rhipe]: http://github.com/saptarshiguha/RHIPE
-[datadr]: http://github.com/hafen/datadr
-[datadr.org]: http://datadr.org
+[rhipe]: http://github.com/tesseradata/RHIPE
+[datadr]: http://github.com/tesseradata/datadr
+[tesseradata.org]: http://tesseradata.org
 [trspaper]: http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf
 [drpaper]: http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full
 [vdbpaper]: http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf
@@ -33,17 +35,17 @@ References:
 
 ### Getting Started ###
 
-Trelliscope is a part of and depends on `datadr`.  It is recommended to spend some time in the `datadr` [tutorial](http://hafen.github.io/datadr/index.html) to get acquainted with the package.  Mainly focusing on the [division](http://hafen.github.io/datadr/index.html#division) aspects and the [backend options](http://hafen.github.io/datadr/index.html#backend-choices) of the package will suffice, although it is recommended to get well-acquainted with the entire package, as Trelliscope is simply a visualization component in the D&R analysis paradigm.
+Trelliscope is a part of and depends on `datadr`.  It is recommended to spend some time in the `datadr` [tutorial](http://tesseradata.org/docs-datadr/index.html) to get acquainted with the package.  Mainly focusing on the [division](http://tesseradata.org/docs-datadr/index.html#division) aspects and the [backend options](http://tesseradata.org/docs-datadr/index.html#backend-choices) of the package will suffice, although it is recommended to get well-acquainted with the entire package, as Trelliscope is simply a visualization component in the D&R analysis paradigm.
 
 #### Installation
 
-To install Trelliscope, we must first install `datadr`, which is discussed [here](http://hafen.github.io/datadr/index.html#getting-started).
+To install Trelliscope, we must first install `datadr`, which is discussed [here](http://tesseradata.org/docs-datadr/index.html#getting-started).
 
 Then, to install Trelliscope:
 
 ```r
 library(devtools)
-install_github("trelliscope", "hafen")
+install_github("trelliscope", "tesseradata")
 ```
 
 Then we load the package:
@@ -82,13 +84,13 @@ Collections of Trelliscope and other displays created throughout the course of a
 The first step to using Trelliscope for an analysis project is to connect to a VDB.  A VDB connection is simply a connection to a directory on disk where all of the VDB files reside or will reside.
 
 ```{r echo=FALSE, purl=FALSE, include=FALSE, warning=FALSE, error=FALSE, message=FALSE}
-unlink("/private/tmp/vdbtest", recursive=TRUE)
+unlink(file.path(tempdir(), "vdbtest"), recursive=TRUE)
 ```
 
 ```{r vdb_conn, message=FALSE}
 # initialize a connection to a new VDB to be located at /private/tmp/vdbtest
-vdbDir <- "/private/tmp/vdbtest"
-conn <- vdbConn(vdbDir, autoYes=TRUE, name="myProject")
+vdbDir <- file.path(tempdir(), "vdbtest")
+conn <- vdbConn(vdbDir, autoYes = TRUE, name = "myProject")
 ```
 
 If the VDB connection directory doesn't exist, it will ask whether it should be created.  Here, we specify `autoYes=TRUE` to automatically answer yes to this question.  In any subsequent R session, we can connect to the existing VDB directory with the same `vdbConn()` command.
@@ -121,7 +123,7 @@ Let's take a look at `co` vs. time:
 ```{r airplane_time, fig.height=2.5}
 # look at co vs. time
 Sys.setenv(TZ="UTC")
-xyplot(co ~ dat_ams, data=airplane, aspect=0.2)
+xyplot(co ~ dat_ams, data = airplane, aspect = 0.2)
 ```
 
 This plots `co` vs. `dat_ams`, and gives the plot an aspect ratio of 0.2.  Note that aspect ratios are very important for visual perception and should not be an afterthought or not thought of at all when creating a display.
@@ -142,14 +144,14 @@ Another interesting variable is altitude.  If we look at altitude vs. time:
 
 ```{r ap_alt, fig.height=2.5}
 # look at altitude vs. time
-xyplot(altitude ~ dat_ams, data=airplane, aspect=0.2)
+xyplot(altitude ~ dat_ams, data = airplane, aspect = 0.2)
 ```
 
 We see that altitude typically stays fairly constant a little under 500 and 1000, with some interesting quick ascents to higher altitudes.  It may be interesting to investigate different altitude levels, and we can create a discretized altitude variable:
 
 ```{r ap_altcut}
 # create a discrete version of altitude
-airplane$altCut <- cut(airplane$altitude, seq(0, 3000, by=500))
+airplane$altCut <- cut(airplane$altitude, seq(0, 3000, by = 500))
 ```
 
 #### Flight tracks
@@ -158,11 +160,11 @@ We can get a feel for the flight tracks during each flight with the following:
 
 ```{r ap_tracks, fig.height=4.5}
 # take a look at airplane tracks
-xyplot(latitude ~ longitude, data=airplane,
-   groups=flight,
-   aspect="iso",
-   alpha=0.5,
-   auto.key=list(space="right")
+xyplot(latitude ~ longitude, data = airplane,
+   groups = flight,
+   aspect = "iso",
+   alpha = 0.5,
+   auto.key = list(space = "right")
 )
 ```
 
@@ -176,17 +178,17 @@ Suppose we want to incorporate altitude into the tracks plot.  There are several
 # look at tracks with altitude and flight
 library(RColorBrewer)
 xyplot(latitude ~ longitude | flight, 
-   data=airplane,
-   panel=function(x, y, ...) {
+   data = airplane,
+   panel = function(x, y, ...) {
       panel.fill("#E0E0E0")
-      panel.grid(h=-1, v=-1, col="lightgray")
+      panel.grid(h = -1, v = -1, col = "lightgray")
       panel.xyplot(x, y, ...)
    },
-   groups=altCut,
-   between=list(x=0.5),
-   aspect="iso",
-   par.settings=list(superpose.symbol=list(col=brewer.pal(6, "Accent"))),
-   auto.key=list(space="right")
+   groups = altCut,
+   between = list(x = 0.5),
+   aspect = "iso",
+   par.settings = list(superpose.symbol = list(col = brewer.pal(6, "Accent"))),
+   auto.key = list(space = "right")
 )
 ```
 
@@ -216,18 +218,19 @@ One way we might view the data conditioned on this new time variable is to plot 
 # plot of airplane tracks by 15 minute intervals
 arrowPanel <- function(x, y, ...) {
    n <- length(x)
-   panel.grid(h=-1, v=-1)
-   panel.arrows(x[1:(n-1)], y[1:(n-1)], x[2:n], y[2:n], length=0.05, alpha=0.3, col="blue")
+   panel.grid(h = -1, v = -1)
+   panel.arrows(x[1:(n-1)], y[1:(n-1)], x[2:n], y[2:n], 
+      length = 0.05, alpha = 0.3, col = "blue")
 }
 
 xyplot(latitude ~ longitude | datCut,
-   data=airplane,
-   panel=arrowPanel,
-   as.table=TRUE,
-   between=list(x=0.25, y=0.25),
-   layout=c(5, 2),
-   aspect="iso",
-   subset=flight=="pm"
+   data = airplane,
+   panel = arrowPanel,
+   as.table = TRUE,
+   between = list(x = 0.25, y = 0.25),
+   layout = c(5, 2),
+   aspect = "iso",
+   subset = flight == "pm"
 )
 ```
 
@@ -252,13 +255,14 @@ Here is the same plot as before but with both axes "free":
 ```{r tracks_free, fig.height=4}
 # example of both x and y axes "free"
 xyplot(latitude ~ longitude | datCut,
-   data=airplane,
-   panel=arrowPanel,
-   as.table=TRUE,
-   between=list(x=0.25, y=0.25),
-   layout=c(5, 2),
-   scales=list(x=list(relation="free"), y=list(relation="free")),
-   subset=flight=="pm"
+   data = airplane,
+   panel = arrowPanel,
+   as.table = TRUE,
+   between = list(x = 0.25, y = 0.25),
+   layout = c(5, 2),
+   scales = list(x = list(relation = "free"), 
+      y = list(relation="free")),
+   subset = flight == "pm"
 )
 ```
 
@@ -271,13 +275,14 @@ Here is the plot with both axes "sliced":
 ```{r tracks_sliced, fig.height=4}
 # example of both x and y axes "sliced"
 xyplot(latitude ~ longitude | datCut,
-   data=airplane,
-   panel=arrowPanel,
-   as.table=TRUE,
-   between=list(x=0.25, y=0.25),
-   layout=c(5, 2),
-   scales=list(x=list(relation="sliced"), y=list(relation="sliced")),
-   subset=flight=="pm"
+   data = airplane,
+   panel = arrowPanel,
+   as.table = TRUE,
+   between = list(x = 0.25, y = 0.25),
+   layout = c(5, 2),
+   scales = list(x = list(relation = "sliced"), 
+      y = list(relation="sliced")),
+   subset = flight == "pm"
 )
 ```
 
@@ -294,31 +299,32 @@ Here is an example of using a prepanel function to specify that the axis limits 
 ```{r tracks_prepanel, fig.height=4}
 # prepanel example
 xyplot(latitude ~ longitude | datCut,
-   data=airplane,
-   panel=arrowPanel,
-   prepanel=function(x, y) {
-      list(xlim=range(x) + c(-1, 1), ylim=range(y) + c(-1, 1))
+   data = airplane,
+   panel = arrowPanel,
+   prepanel = function(x, y) {
+      list(xlim = range(x) + c(-1, 1), ylim = range(y) + c(-1, 1))
    },
-   as.table=TRUE,
-   between=list(x=0.25, y=0.25),
-   layout=c(5, 2),
-   scales=list(x=list(relation="free"), y=list(relation="free")),
-   subset=flight=="pm"
+   as.table = TRUE,
+   between = list(x = 0.25, y = 0.25),
+   layout = c(5, 2),
+   scales = list(x = list(relation = "free"), 
+      y = list(relation="free")),
+   subset = flight == "pm"
 )
 ```
 
 
-<!-- latCuts <- seq(38.2, 39.4, by=0.1)
-lonCuts <- seq(-121.8, -120.8, by=0.1)
+<!-- latCuts <- seq(38.2, 39.4, by = 0.1)
+lonCuts <- seq(-121.8, -120.8, by = 0.1)
 
-xyplot(latitude ~ longitude, data=airplane,
-   groups=airplane$dat_ams < as.POSIXct("2010-06-28 21:00:00 UTC"),
-   panel=function(x, y, ...) {
-      panel.abline(v=lonCuts, col="gray")
-      panel.abline(h=latCuts, col="gray")
+xyplot(latitude ~ longitude, data = airplane,
+   groups = airplane$dat_ams < as.POSIXct("2010-06-28 21:00:00 UTC"),
+   panel = function(x, y, ...) {
+      panel.abline(v = lonCuts, col = "gray")
+      panel.abline(h = latCuts, col = "gray")
       panel.xyplot(x, y, ...)
    },
-   aspect="iso"
+   aspect = "iso"
 ) -->
 
 ### Visualization Databases ###
@@ -337,10 +343,10 @@ We have already initialized a VDB.  If we are in a new R session, we can re-conn
 
 ```{r vdb_reinit}
 # re-connect to our VDB
-conn <- vdbConn("/private/tmp/vdbtest")
+conn <- vdbConn(file.path(tempdir(), "vdbtest"))
 ```
 
-The other information about the VDB connection (such as its name) have been stored and are read in.  If you would like to reset a VDB connection's settings (such as for changing the VDB name), you can add `reset=TRUE` to the call.
+The other information about the VDB connection (such as its name) have been stored and are read in.  If you would like to reset a VDB connection's settings (such as for changing the VDB name), you can add `reset = TRUE` to the call.
 
 Recall that `vdbConn()` sets a global option with the connection information such that all methods have access to this information without explicitly supplying the connection object all the time.
 
@@ -353,23 +359,24 @@ Say that we would like to add one of our plots we have created so far to our VDB
 ```{r add_display}
 # add a lattice plot to our VDB
 p <- xyplot(latitude ~ longitude | flight, 
-   data=airplane,
-   panel=function(x, y, ...) {
+   data = airplane,
+   panel = function(x, y, ...) {
       panel.fill("#E0E0E0")
-      panel.grid(h=-1, v=-1, col="lightgray")
+      panel.grid(h = -1, v = -1, col = "lightgray")
       panel.xyplot(x, y, ...)
    },
-   groups=altCut,
-   between=list(x=0.5),
-   aspect="iso",
-   par.settings=list(superpose.symbol=list(col=brewer.pal(6, "Accent"))),
-   auto.key=list(space="right"))
+   groups = altCut,
+   between = list(x = 0.5),
+   aspect = "iso",
+   par.settings = list(superpose.symbol = 
+      list(col = brewer.pal(6, "Accent"))),
+   auto.key = list(space = "right"))
 
 addDisplay(p, 
    name  = "tracks_byflight", 
    group = "exploratory",
    desc  = "The tracks of the airplane with a panel for each of the morning and evening flights.  Color by altitude of plane.",
-   dim   = list(width=800, height=450, res=150))
+   width = 800, height = 450)
 ```
 
 There are three attributes we can specify to describe a display record being added to the VDB:

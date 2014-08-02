@@ -6,13 +6,16 @@
 latCuts <- seq(38.2, 39.4, by=0.1)
 lonCuts <- seq(-121.8, -120.8, by=0.1)
 
+# make airplane a ddf
+airplaneDdf <- ddf(airplane)
+# add variables latCut and lonCut to airplane
+airplaneLL <- addTransform(airplaneDdf, function(x) {
+   x$latCut <- cut(x$latitude, latCuts)
+   x$lonCut <- cut(x$longitude, lonCuts)
+   x
+})
 # divide the data by lat / lon
-byLatLon <- divide(airplane, by=c("latCut", "lonCut"),
-   preTransFn = function(x) {
-      x$latCut <- cut(x$latitude, latCuts)
-      x$lonCut <- cut(x$longitude, lonCuts)
-      x
-   },
+byLatLon <- divide(airplaneLL, by=c("latCut", "lonCut"),
    update=TRUE)
 
 
@@ -23,7 +26,7 @@ byLatLon
 
 
 # see what a subset key-value pair looks like
-str(byLatLon[[1]])
+byLatLon[[1]]
 
 
 
@@ -40,7 +43,7 @@ coPanelFn <- function(d) {
 
 
 # apply the panel function to a subset
-kvApply(coPanelFn, byLatLon[[2]])
+coPanelFn(byLatLon[[2]]$value)
 
 
 
@@ -138,7 +141,7 @@ coCogFn <- function(x) {
 
 
 # test the cognostics function on a subset
-kvApply(coCogFn, byLatLon[[1]])
+coCogFn(byLatLon[[1]]$value)
 
 
 
@@ -150,37 +153,6 @@ makeDisplay(byLatLon,
    panelFn = coPanelFn,
    cogFn   = coCogFn,
    lims    = coTimeLims
-)
-
-
-
-# make display with panels pre-rendered
-makeDisplay(byLatLon,
-   name      = "co_vs_time_rend",
-   group     = "co",
-   desc      = "Plot of co vs. time for each geographic 'square' with with fitted line, illustrating the use of 'same' axis limits and a cognostics function, and pre-rendered panels",
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   lims      = coTimeLims,
-   preRender = TRUE
-)
-
-
-
-# initiate a MongoDB cognostics connection
-mongoConn <- mongoCogConn()   
-
-
-
-# create the display using MongoDB to store the cognostics
-makeDisplay(byLatLon,
-   name      = "co_vs_time_mon",
-   group     = "co",
-   desc      = "Plot of co vs. time for each geographic 'square' with with fitted line, illustrating the use of 'same' axis limits and a cognostics function, and storing cognostics in MongoDB",
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   cogConn   = mongoConn,
-   lims      = coTimeLims
 )
 
 
@@ -202,7 +174,7 @@ latLonPanelFn <- function(a) {
 }
 
 # test the panel function on a subset
-kvApply(latLonPanelFn, byLatLon[[2]])
+latLonPanelFn(byLatLon[[2]]$value)
 # create the display
 makeDisplay(
    data = byLatLon,
@@ -221,10 +193,15 @@ airplaneSplodDat <- makeSplodData(airplane,
 
 
 # look at a subset of airplaneSplotDat
-str(kvExample(airplaneSplodDat))
+airplaneSplodDat[[1]]
 
 
 
 splod(airplaneSplodDat)
+
+
+
+# set up a web connection
+wc <- webConn(user="rhafen", ip="glimmer.rstudio.com", appDir="~/ShinyApps", name="vdbexample")
 
 

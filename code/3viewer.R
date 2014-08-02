@@ -3,11 +3,11 @@
 
 ### Shiny Viewer ###
 
-The VDB viewer we have encountered throughout this document is a server-side web viewer that uses [Shiny](http://www.rstudio.com/shiny/).  Shiny basically provides a live R session running behind the web viewer, facilitating all of the interaction.
+The Trelliscope viewer we have encountered throughout this document is a server-side web viewer that uses [Shiny](http://www.rstudio.com/shiny/).  Shiny basically provides a live R session running behind the web viewer, facilitating all of the interaction.
 
-This viewer is a work in progress.  There are many possible features.  Focus is given first to functionality - I will work to optimize things once things settle.
+The viewer is a work in progress.  There are many possible features.
 
-Below I describe some of the components of the viewer.
+Below we describe some of the components of the viewer.
 
 #### Panel View
 
@@ -55,7 +55,7 @@ There are some keyboard shortcuts for convenience:
 
 ### Cognostics Interactions ###
 
-The current viewer is a proof-of-concept, and I'd like to see much more functionality here in the future.  In particular, the following are interactive filtering / sorting behaviors I would like to see for each cognostics type:
+The current viewer is a proof-of-concept, and I'd like to see much more functionality here in the future.  In particular, the following are interactive filtering / sorting behaviors we would like to see for each cognostics type:
 
 - **Numeric**: filter / expore by univariate quantile plot / histogram - for groups of numeric variables, filter by scatterplot
 - **Factor (Categorical)**: filter / explore by dropdown of categories, frequency bar chart, regular expression input
@@ -65,9 +65,4 @@ The current viewer is a proof-of-concept, and I'd like to see much more function
 - **Hierarchy**: a label that is found in a hierarchy specified externally to the record (in a separate metadata file) - filter / explore by treemap, etc.
 
 Filters and interactivity based on combinations of cognostics would also be desirable, such as a numeric cognostic plotted versus a time cognostic as a time series, etc.
-
-
-<!-- ### Client-Side Viewer ###
-
-There is a client-side viewer that is convenient because it does not require a web server, but is not nearly as flexible because it requires collections of plot files as the storage mechanism (instead of applying the plot function on the fly or storing the plots on HDFS or in MongoDB).  This viewer can be invoked by calling `view(type="cs")`.  It has not been maintained in a while. -->
 

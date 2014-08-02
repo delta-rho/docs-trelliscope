@@ -2,7 +2,7 @@
 
 # convert byLatLon to a localDiskConn object
 byLatLonLD <- convert(byLatLon, 
-   localDiskConn("/private/tmp/byLatLon", autoYes=TRUE))
+   localDiskConn(file.path(tempdir(), "byLatLon"), autoYes=TRUE))
 
 
 

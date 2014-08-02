@@ -2,21 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>trelliscope  R function reference</title>
+    <title>trelliscope R function reference</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="assets/css/custom.css" rel="stylesheet">
-    <link href="assets/css/pygment.css" rel="stylesheet">
+    
+    <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/custom/custom.css" rel="stylesheet">
     <!-- font-awesome -->
     <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href='assets/css/highlight.css' rel='stylesheet'>
-
     
-
+    <!-- prism -->
+    <link href="assets/prism/prism.css" rel="stylesheet">
+    <link href="assets/prism/prism.r.css" rel="stylesheet">
+    <script type='text/javascript' src='assets/prism/prism.js'></script>
+    <script type='text/javascript' src='assets/prism/prism.r.js'></script>
+    
+    
+    
+    
+    
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="js/html5shiv.js"></script>
@@ -41,9 +46,9 @@
 
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-           <li class=''><a href='index.html'>Docs</a></li><li class='active'><a href='functionref.html'>Function Ref</a></li><li><a href='https://github.com/hafen/trelliscope'>Github <i class='fa fa-github'></i></a></li>
+           <li class=''><a href='index.html'>Docs</a></li><li class='active'><a href='functionref.html'>Function Ref</a></li><li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
         </ul>
-        <p class="myHeader">trelliscope  R function reference</p>
+        <p class="myHeader">trelliscope R function reference</p>
       </div>
 
       <hr>
@@ -60,7 +65,13 @@
    <a target="_self" class="nav-not-header" href="#adddisplay">addDisplay</a>
 </li>
 <li class="">
+   <a target="_self" class="nav-not-header" href="#airplane">airplane</a>
+</li>
+<li class="">
    <a target="_self" class="nav-not-header" href="#applycogfn">applyCogFn</a>
+</li>
+<li class="">
+   <a target="_self" class="nav-not-header" href="#batting">batting</a>
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#bssetup">bsSetup</a>
@@ -70,6 +81,9 @@
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#cogncol">cogNcol</a>
+</li>
+<li class="">
+   <a target="_self" class="nav-not-header" href="#coghref">cogHref</a>
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#cogloessrmse">cogLoessRMSE</a>
@@ -103,9 +117,6 @@
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#makesploddata">makeSplodData</a>
-</li>
-<li class="">
-   <a target="_self" class="nav-not-header" href="#mongocogconn">mongoCogConn</a>
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#cogpre">cogPre</a>
@@ -147,6 +158,12 @@
    <a target="_self" class="nav-not-header" href="#splodpanelfn">splodPanelFn</a>
 </li>
 <li class="">
+   <a target="_self" class="nav-not-header" href="#synclocaldata">syncLocalData</a>
+</li>
+<li class="">
+   <a target="_self" class="nav-not-header" href="#trelliscope">trelliscope</a>
+</li>
+<li class="">
    <a target="_self" class="nav-not-header" href="#typeset">typeset</a>
 </li>
 <li class="">
@@ -162,7 +179,7 @@
    <a target="_self" class="nav-not-header" href="#webconn">webConn</a>
 </li>
 <li class="">
-   <a target="_self" class="nav-not-header" href="#websync">websync</a>
+   <a target="_self" class="nav-not-header" href="#websync">webSync</a>
 </li>
    </ul>
    </div>
@@ -175,9 +192,9 @@
 <h3>Trelliscope</h3>
 
 <p><strong>Author:</strong> Ryan Hafen</p>
-<p><strong>Version:</strong> 0.7.3</p>
-<p><strong>Date:</strong> 2014-03-15</p>
-<p><strong>License:</strong> BSD</p>
+<p><strong>Version:</strong> 0.7.9</p>
+<p><strong>Date:</strong> 2014-07-21</p>
+<p><strong>License:</strong> BSD_3_clause + file LICENSE</p>
 
 <h4>Description</h4>
 <p>Trelliscope provides a way to create, organize, and view
@@ -196,22 +213,16 @@ and present these displays in a &quot;lab notebook&quot;.</p>
 <h4>Depends</h4>
 <p>
 R (&gt;= 2.15.1),
-datadr,
+base,
+datadr (&gt;= 0.7.3),
 lattice (&gt;= 0.20-23),
-base64enc,
-knitr,
-markdown,
-shiny (&gt;= 0.7.0),
-digest,
-codetools,
-hexbin,
 ggplot2</p>
 
 <h4>Suggests</h4>
 <p>
-Rhipe,
-rmongodb,
-scagnostics</p>
+Cairo,
+testthat (&gt;= 0.8.1),
+roxygen2 (&gt;= 4.0.0)</p>
 
 </div>
 <!-- addDisplay -->   
@@ -219,47 +230,157 @@ scagnostics</p>
 
 <h3 class="fref_title">Add a Display to a VDB</h3>
 
+<h4>Description</h4>
+Add an R display (lattice, ggplot, base R) to a visualization database (VDB)
+
 <h4>Usage</h4>
-<pre>addDisplay(p, name, group = "common", desc = "", dim = list(height = NULL, width = NULL, 
-  aspect = NULL, res = NULL), conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>addDisplay(p, name, group&nbsp;=&nbsp;"common", desc&nbsp;=&nbsp;"", height&nbsp;=&nbsp;800, width&nbsp;=&nbsp;800, conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>p</dt>
-  <dd>an R plot object (lattice or ggplot) or an
-  expression containing code to create a plot</dd>
+  <dd>an R plot object (lattice or ggplot) or an expression containing code to create a plot</dd>
   <dt>name</dt>
-  <dd>the name of the display (no spaces or special
-  characters)</dd>
+  <dd>the name of the display (no spaces or special characters)</dd>
   <dt>group</dt>
-  <dd>the group the display belongs to (displays
-  are organized into groups).  Defaults to "common"</dd>
+  <dd>the group the display belongs to (displays are organized into groups).  Defaults to "common"</dd>
   <dt>desc</dt>
-  <dd>a description of the display (used in the
-  viewer and in notebooks)</dd>
-  <dt>dim</dt>
-  <dd>a list defining aspects of the plot dimension,
-  including height, width, aspect, and res (resolution of
-  raster image).  defaults are 1000 (px), 1000 (px),
-  "fill", and 150, respectively</dd>
+  <dd>a description of the display (used in the viewer and in notebooks)</dd>
+  <dt>height</dt>
+  <dd>TODO</dd>
+  <dt>width</dt>
+  <dd>TODO</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Add an R display (lattice, ggplot, base R) to a
-  visualization database (VDB)</p>
-
 
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
+
+</div>
+
+
+<!-- airplane -->   
+<div class="tab-pane" id="airplane">
+
+<h3 class="fref_title">Airplane TODO</h3>
+
+<h4>Description</h4>
+Airplane details TODO
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>data(airplane)</div></code></pre>
+
+  <h4>Format</h4>
+
+  <p>A data frame with 1479 rows and 47 variables</p>
+
+
+  <h4>Details</h4>
+
+  <p><ul>
+<li> dat_ams.      : POSIXct, format: "2010-06-28 16:25:21" "2010-06-28 16:25:34" ...
+  </li>
+<li> org.          : num  9.26 13.29 12.13 12.36 10.11 ...
+  </li>
+<li> NO3.          : num  0.449 0.589 0.536 0.57 0.457 ...
+  </li>
+<li> SO4.          : num  0.115 0.193 0.232 0.307 0.197 ...
+  </li>
+<li> NH4.          : num  0.126 0.229 0.224 0.179 0.172 ...
+  </li>
+<li> CHL.          : num  0.01119 0.01748 0.00607 0.03346 0.00683 ...
+  </li>
+<li> org_err.      : num  0.111 0.117 0.116 0.116 0.115 ...
+  </li>
+<li> NO3_err.      : num  0.0172 0.0181 0.0177 0.0182 0.0175 ...
+  </li>
+<li> SO4_err.      : num  0.0222 0.0244 0.0252 0.0253 0.025 ...
+  </li>
+<li> NH4_err.      : num  0.0331 0.0331 0.0331 0.0332 0.0331 ...
+  </li>
+<li> CHl_err.      : num  0.0124 0.0122 0.0123 0.0123 0.0123 ...
+  </li>
+<li> latitude.     : num  38.7 38.7 38.7 38.7 38.7 ...
+  </li>
+<li> longitude.    : num  -121 -121 -121 -121 -121 ...
+  </li>
+<li> altitude.     : num  354 369 385 393 388 ...
+  </li>
+<li> static_p.     : num  968 966 964 963 964 ...
+  </li>
+<li> altitude_p.   : num  327 341 356 365 360 ...
+  </li>
+<li> static_t.     : num  28.4 28.7 28.6 28.5 28.8 ...
+  </li>
+<li> potential_t.  : num  31.3 31.7 31.7 31.7 32 ...
+  </li>
+<li> dewpt.        : num  14.1 13.5 13.4 12.9 11.1 ...
+  </li>
+<li> RH.           : num  41.6 39.3 39.3 38.5 33.5 ...
+  </li>
+<li> h2o_MF.       : num  10.54 10.11 10.05 9.8 8.68 ...
+  </li>
+<li> windspd.      : num  3.45 3.9 4.14 4.12 4.7 4.54 3.42 3.1 2.98 2.64 ...
+  </li>
+<li> winddir.      : num  330 325 320 318 317 ...
+  </li>
+<li> cpc_3025.     : num  5508 3915 4037 3969 3567 ...
+  </li>
+<li> cpc_3010.     : num  483 352 364 348 314 ...
+  </li>
+<li> ozone.        : num  46.8 44.3 45.2 45.5 40.4 ...
+  </li>
+<li> co.           : num  109.7 97.6 101.2 103.1 91.8 ...
+  </li>
+<li> so2.          : num  NA NA NA NA NA NA NA 0.6 0.465 0.644 ...
+  </li>
+<li> no.           : num  0.3074 0.0514 0.1456 0.1593 0.115 ...
+  </li>
+<li> no2.          : num  1.745 0.358 0.573 0.688 0.8 ...
+  </li>
+<li> noy.          : num  5.25 3.48 4.09 4.02 3.53 ...
+  </li>
+<li> mz_33.        : num  16.7 14.6 14.4 14.1 11.1 ...
+  </li>
+<li> mz_42.        : num  0.1024 0.1176 0.1333 0.0916 0.0407 ...
+  </li>
+<li> mz_45.        : num  5.98 5.22 5.19 4.84 5.07 ...
+  </li>
+<li> mz_59.        : num  8.49 7.71 6.85 7.08 6.46 ...
+  </li>
+<li> mz_69.        : num  1.589 0.811 0.791 0.904 0.911 ...
+  </li>
+<li> mz_71.        : num  3.88 3.65 3.35 2.94 2.74 ...
+  </li>
+<li> mz_79.        : num  0.417 0.243 0.192 0.261 0.178 ...
+  </li>
+<li> mz_93.        : num  0.446 0.571 0.454 0.218 0.185 ...
+  </li>
+<li> mz_107.       : num  0.686 0.869 0.661 0.78 0.265 ...
+  </li>
+<li> mz_137.       : num  0.519 0.452 0.093 0.353 0.348 ...
+  </li>
+<li> mz_43.        : num  8.52 8.3 8.17 8.38 6.87 ...
+  </li>
+<li> mz_61.        : num  5.39 5.13 5.1 5.17 4.96 ...
+  </li>
+<li> mz_87.        : num  0.302 0.235 0.418 0.298 0.364 ...
+  </li>
+<li> mz69_71.      : num  5.47 4.46 4.14 3.84 3.65 ...
+  </li>
+<li> leg_flag.     : int  13 13 13 13 3 3 3 3 3 3 ...
+  </li>
+<li> nox.          : num  2.053 0.41 0.718 0.847 0.915 ...
+</li>
+</ul></p>
+
+  <p></p>
+
+
 
 </div>
 
@@ -269,8 +390,11 @@ scagnostics</p>
 
 <h3 class="fref_title">Apply Cognostics Function to a Key-Value Pair</h3>
 
+<h4>Description</h4>
+Apply cognostics function to a key-value pair
+
 <h4>Usage</h4>
-<pre>applyCogFn(cogFn, kvSubset)</pre>
+<pre><code class="language-r"><div>applyCogFn(cogFn, kvSubset, conn)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -278,23 +402,94 @@ scagnostics</p>
   <dd>cognostics function</dd>
   <dt>kvSubset</dt>
   <dd>key-value pair</dd>
+  <dt>conn</dt>
+  <dd>TODO</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Apply cognostics function to a key-value pair</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#cog'>cog</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='#cog'>cog</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
+
+</div>
+
+
+<!-- batting -->   
+<div class="tab-pane" id="batting">
+
+<h3 class="fref_title">Batting Title TODO</h3>
+
+<h4>Description</h4>
+Batting details TODO
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>data(batting)</div></code></pre>
+
+  <h4>Format</h4>
+
+  <p>A data frame with 1406 rows and 22 variables</p>
+
+
+  <h4>Details</h4>
+
+  <p><ul>
+<li> playerID. : Factor w/ 17908 levels "aardsda01","aaronha01",..: 1 6 34 34 37 40 40 41 46 51 ...
+  </li>
+<li> yearID.   : int  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012 ...
+  </li>
+<li> stint.    : int  1 1 1 2 1 1 2 1 1 1 ...
+  </li>
+<li> teamID.   : Factor w/ 149 levels "ALT","ANA","ARI",..: 93 58 71 72 66 45 96 16 116 94 ...
+  </li>
+<li> lgID.     : Factor w/ 6 levels "AA","AL","FL",..: 2 4 2 4 2 2 2 2 2 4 ...
+  </li>
+<li> G.        : int  1 37 8 92 22 26 1 69 153 45 ...
+  </li>
+<li> AB.       : int  NA 7 24 195 70 0 NA 0 607 0 ...
+  </li>
+<li> R.        : int  NA 0 1 28 5 0 NA 0 84 0 ...
+  </li>
+<li> H.        : int  NA 1 5 48 18 0 NA 0 137 0 ...
+  </li>
+<li> X2B.      : int  NA 0 3 8 2 0 NA 0 22 0 ...
+  </li>
+<li> X3B.      : int  NA 0 0 1 1 0 NA 0 2 0 ...
+  </li>
+<li> HR.       : int  NA 0 0 3 1 0 NA 0 12 0 ...
+  </li>
+<li> RBI.      : int  NA 0 5 19 15 0 NA 0 50 0 ...
+  </li>
+<li> SB.       : int  NA 0 0 6 0 0 NA 0 13 0 ...
+  </li>
+<li> CS.       : int  NA 0 0 2 0 0 NA 0 3 0 ...
+  </li>
+<li> BB.       : int  NA 0 2 35 2 0 NA 0 59 0 ...
+  </li>
+<li> SO.       : int  NA 3 5 51 13 0 NA 0 124 0 ...
+  </li>
+<li> IBB.      : int  NA 0 0 3 0 0 NA 0 7 0 ...
+  </li>
+<li> HBP.      : int  NA 0 0 0 1 0 NA 0 0 0 ...
+  </li>
+<li> SH.       : int  NA 0 0 0 0 0 NA 0 1 0 ...
+  </li>
+<li> SF.       : int  NA 0 1 0 1 0 NA 0 1 0 ...
+  </li>
+<li> GIDP.     : int  NA 1 1 6 1 0 NA 0 3 0 ...
+  </li>
+<li> price. price in US dollars (\$326--\$18,823)
+</li>
+</ul></p>
+
+  <p></p>
+
+
 
 </div>
 
@@ -304,17 +499,18 @@ scagnostics</p>
 
 <h3 class="fref_title">Set Up Web Notebook Using Bootstrap</h3>
 
+<h4>Description</h4>
+Set up a Twitter Boostrap template for a notebook to be typeset with knitr.  This function should be called at the beginning of a .Rmd file.  If you use <code><a href='newNotebook.html'>newNotebook</a></code> to initialize a notebook .Rmd file, this will already be there.
+
 <h4>Usage</h4>
-<pre>bsSetup(pageTitle = "test", title = "test", author = "author name", toc = TRUE, css = NULL)</pre>
+<pre><code class="language-r"><div>bsSetup(pageTitle&nbsp;=&nbsp;"test", title&nbsp;=&nbsp;"test", author&nbsp;=&nbsp;"author name", toc&nbsp;=&nbsp;TRUE, css&nbsp;=&nbsp;NULL)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>pageTitle</dt>
-  <dd>the text to display on the title bar of
-  the web browser</dd>
+  <dd>the text to display on the title bar of the web browser</dd>
   <dt>title</dt>
-  <dd>the text to display on the header of the web
-  page</dd>
+  <dd>the text to display on the header of the web page</dd>
   <dt>author</dt>
   <dd>author</dd>
   <dt>toc</dt>
@@ -322,15 +518,6 @@ scagnostics</p>
   <dt>css</dt>
   <dd>path to additional style sheets, if desired</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Set up a Twitter Boostrap template for a notebook to be
-  typeset with knitr.  This function should be called at
-  the beginning of a .Rmd file.  If you use
-  <code><a href='#newnotebook'>newNotebook</a></code> to initialize a notebook .Rmd
-  file, this will already be there.</p>
-
 
   <h4>References</h4>
 
@@ -341,12 +528,12 @@ scagnostics</p>
 
 <h4>See also</h4>
 
-  <code><a href='#newnotebook'>newNotebook</a></code>, <code><a href='#typeset'>typeset</a></code>
+<code><a href='#newnotebook'>newNotebook</a></code>, <code><a href='#typeset'>typeset</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -356,19 +543,28 @@ scagnostics</p>
 
 <h3 class="fref_title">Create a Cognostics Object</h3>
 
+<h4>Description</h4>
+Create a cognostics object.  To be used inside of the function passed to the <code>cogFn</code> argument of <code><a href='makeDisplay.html'>makeDisplay</a></code> for each cognostics value to be computed for each subset.
+
 <h4>Usage</h4>
-<pre>cog(val = NULL, desc = "", type = NULL)</pre>
+<pre><code class="language-r"><div>cog(val&nbsp;=&nbsp;NULL, desc&nbsp;=&nbsp;"", group&nbsp;=&nbsp;"common", type&nbsp;=&nbsp;NULL, defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;TRUE, filterable&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>val</dt>
-  <dd>a scalar value (numeric, characer, date,
-  etc.)</dd>
+  <dd>a scalar value (numeric, characer, date, etc.)</dd>
   <dt>desc</dt>
   <dd>a description for this cognostic value</dd>
-  <dt>the</dt>
-  <dd>desired type of cognostic you would like to
-  compute (see details)</dd>
+  <dt>group</dt>
+  <dd>optional categorization of the cognostic for organizational purposes</dd>
+  <dt>type</dt>
+  <dd>the desired type of cognostic you would like to compute (see details)</dd>
+  <dt>defLabel</dt>
+  <dd>should this cognostic be used as a panel label in the viewer by default?</dd>
+  <dt>defActive</dt>
+  <dd>should this cognostic be active (available for sort / filter / sample) by default?</dd>
+  <dt>filterable</dt>
+  <dd>should this cognostic be filterable?  Default is <code>TRUE</code>.  It can be useful to set this to <code>FALSE</code> if the cognostic is categorical with many unique values and is only desired to be used as a panel label.</dd>
 </dl>
 
   <h4>Value</h4>
@@ -376,40 +572,21 @@ scagnostics</p>
   <p>object of class "cog"</p>
 
 
-  <h4>Description</h4>
-
-  <p>Create a cognostics object.  To be used inside of the
-  function passed to the <code>cogFn</code> argument of
-  <code><a href='#makedisplay'>makeDisplay</a></code> for each cognostics value to be
-  computed for each subset.</p>
-
-
   <h4>Details</h4>
 
-  <p>Different types of cognostics can be specified through
-  the <code>type</code> argument that will effect how the user is
-  able to interact with those cognostics in the viewer.
-  This can usually be ignored because it will be inferred
-  from the implicit data type of <code>val</code>.  But there are
-  special types of cognostics, such as geographic
-  coordinates and relations (not implemented) that can be
-  specified as well.  Current possibilities for <code>type</code>
-  are "key", "int", "num", "fac", "date", "time", "geo",
-  "rel", "hier".</p>
+  <p>Different types of cognostics can be specified through the <code>type</code> argument that will effect how the user is able to interact with those cognostics in the viewer.  This can usually be ignored because it will be inferred from the implicit data type of <code>val</code>.  But there are special types of cognostics, such as geographic coordinates and relations (not implemented) that can be specified as well.  Current possibilities for <code>type</code> are "key", "integer", "numeric", "factor", "date", "time", "geo", "rel", "hier", "href".</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#cogrange'>cogRange</a></code>,
-  <code><a href='#cogmean'>cogMean</a></code>, <code><a href='#cogscagnostics'>cogScagnostics</a></code>,
-  <code><a href='#cogloessrmse'>cogLoessRMSE</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#cogrange'>cogRange</a></code>, <code><a href='#cogmean'>cogMean</a></code>, <code><a href='#cogscagnostics'>cogScagnostics</a></code>, <code><a href='#cogloessrmse'>cogLoessRMSE</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -419,35 +596,80 @@ scagnostics</p>
 
 <h3 class="fref_title">Methods for Cognostics Connections</h3>
 
+<h4>Description</h4>
+Methods for Cognostics Connections
+
 <h4>Usage</h4>
-<pre>cogNcol(x, ...)
-
-cogNrow(x, ...)
-
-cogNames(x, ...)
-
-getCogData(x, ...)
-
-getCurCogDat(x, ...)</pre>
+<pre><code class="language-r"><div>cogNcol(x, ...)</div>
+<div>cogNrow(x, ...)</div>
+<div>cogNames(x, ...)</div>
+<div>getCogData(x, rowIdx, colIdx, ...)</div>
+<div>oldGetCurCogDat(cogDF, flt, ordering, colIndex, verbose, ...)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>x</dt>
   <dd>object</dd>
+  <dt>...</dt>
+  <dd>other objects passed onto generic methods</dd>
+  <dt>rowIdx</dt>
+  <dd>TODO</dd>
+  <dt>colIdx</dt>
+  <dd>TODO</dd>
+  <dt>cogDF</dt>
+  <dd>TODO</dd>
+  <dt>flt</dt>
+  <dd>TODO</dd>
+  <dt>ordering</dt>
+  <dd>TODO</dd>
+  <dt>colIndex</dt>
+  <dd>TODO</dd>
+  <dt>verbose</dt>
+  <dd>TODO</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Methods for Cognostics Connections</p>
-
 
   <h4>Note</h4>
 
-  <p>These methods are used mainly by the trelliscope viewer
-  and therefore must be exported.  They should never need
-  to be used by an analyst.</p>
+  <p>These methods are used mainly by the trelliscope viewer and therefore must be exported.  They should never need to be used by an analyst.</p>
 
 
+
+</div>
+
+
+<!-- cogHref -->   
+<div class="tab-pane" id="coghref">
+
+<h3 class="fref_title">Href Cognostic</h3>
+
+<h4>Description</h4>
+Create href to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>cogHref(x, label&nbsp;=&nbsp;"link", desc&nbsp;=&nbsp;"link", group&nbsp;=&nbsp;"common", target&nbsp;=&nbsp;"_blank", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;FALSE, filterable&nbsp;=&nbsp;FALSE)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>x</dt>
+  <dd>URL to link to</dd>
+  <dt>label</dt>
+  <dd>label of the href</dd>
+  <dt>target</dt>
+  <dd>value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
+</dl>
+
+
+
+<h4>See also</h4>
+
+<code><a href='#cog'>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
 
 </div>
 
@@ -457,35 +679,30 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Compute RMSE of Loess Fit Cognostic</h3>
 
+<h4>Description</h4>
+Compute RMSE of loess fit as a cognostic to be used as cognostics in a trelliscope display.
+
 <h4>Usage</h4>
-<pre>cogLoessRMSE(..., desc = "RMSE of residuals from loess fit")</pre>
+<pre><code class="language-r"><div>cogLoessRMSE(..., desc&nbsp;=&nbsp;"RMSE of residuals from loess fit", group&nbsp;=&nbsp;"common", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;TRUE, filterable&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>...</dt>
-  <dd>arguments to be passed to
-  <code>link{loess}</code>, such as the formula, data, smoothing
-  parameters, etc.</dd>
-  <dt>desc</dt>
-  <dd>description of cognostic</dd>
+  <dd>arguments to be passed to <code>link{loess}</code>, such as the formula, data, smoothing parameters, etc.</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Compute RMSE of loess fit as a cognostic to be used as
-  cognostics in a trelliscope display.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#cog'>cog</a></code>
+<code><a href='#cog'>cog</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -495,33 +712,30 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Compute Mean Cognostic</h3>
 
+<h4>Description</h4>
+Compute mean to be used as cognostics in a trelliscope display.
+
 <h4>Usage</h4>
-<pre>cogMean(x, desc = "mean")</pre>
+<pre><code class="language-r"><div>cogMean(x, desc&nbsp;=&nbsp;"mean", group&nbsp;=&nbsp;"common", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;TRUE, filterable&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>x</dt>
   <dd>numeric vector from which to compute the mean</dd>
-  <dt>desc</dt>
-  <dd>description of cognostic</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Compute mean to be used as cognostics in a trelliscope
-  display.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#cog'>cog</a></code>
+<code><a href='#cog'>cog</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -531,33 +745,30 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Compute Range Cognostic</h3>
 
+<h4>Description</h4>
+Compute range to be used as cognostics in a trelliscope display.
+
 <h4>Usage</h4>
-<pre>cogRange(x, desc = "range (max - min)")</pre>
+<pre><code class="language-r"><div>cogRange(x, desc&nbsp;=&nbsp;"range (max - min)", group&nbsp;=&nbsp;"common", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;TRUE, filterable&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>x</dt>
   <dd>numeric vector from which to compute the range</dd>
-  <dt>desc</dt>
-  <dd>description of cognostic</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Compute range to be used as cognostics in a trelliscope
-  display.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#cog'>cog</a></code>
+<code><a href='#cog'>cog</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -567,34 +778,32 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Compute Scagnostics</h3>
 
+<h4>Description</h4>
+Compute list of scagnostics (see <code><a href='http://www.inside-r.org/packages/cran/scagnostics/docs/scagnostics'>scagnostics</a></code>) to be used as cognostics in a trelliscope display.
+
 <h4>Usage</h4>
-<pre>cogScagnostics(x, y)</pre>
+<pre><code class="language-r"><div>cogScagnostics(x, y, group&nbsp;=&nbsp;"scagnostics", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;TRUE, filterable&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>x,y</dt>
-  <dd></dd>
-  <dt>desc</dt>
-  <dd>description of cognostic</dd>
+  <dt>x</dt>
+  <dd>vector of the x-axis data for a scatterplot</dd>
+  <dt>y</dt>
+  <dd>vector of the y-axis data for a scatterplot</dd>
+  <dt>group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Compute list of scagnostics (see
-  <code><cite>scagnostics</cite></code>) to be used as cognostics in a
-  trelliscope display.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#cog'>cog</a></code>
+<code><a href='#cog'>cog</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -604,36 +813,32 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Initiate Data Frame Cognostics Connection</h3>
 
+<h4>Description</h4>
+Initiate data frame cognostics connection
+
 <h4>Usage</h4>
-<pre>dfCogConn()</pre>
+<pre><code class="language-r"><div>dfCogConn()</div></code></pre>
 
   <h4>Value</h4>
 
   <p>"cogConn" object of class "dfCogConn"</p>
 
 
-  <h4>Description</h4>
-
-  <p>Initiate data frame cognostics connection</p>
-
-
   <h4>Note</h4>
 
-  <p>This should never need to be called explicitly.  It is
-  the default mechanism for storing cognostics in
-  <code><a href='#makedisplay'>makeDisplay</a></code>.</p>
+  <p>This should never need to be called explicitly.  It is the default mechanism for storing cognostics in <code><a href='#makedisplay'>makeDisplay</a></code>.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -643,13 +848,17 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">base64 Encoding of a .png File</h3>
 
+<h4>Description</h4>
+base64 Encoding of a .png File
+
 <h4>Usage</h4>
-<pre>encodePNG(plotLoc)</pre>
+<pre><code class="language-r"><div>encodePNG(plotLoc)</div></code></pre>
 
-  <h4>Description</h4>
-
-  <p>base64 Encoding of a .png File</p>
-
+<h4>Arguments</h4>
+<dl>
+  <dt>plotLoc</dt>
+  <dd>TODO</dd>
+</dl>
 
 
 </div>
@@ -660,8 +869,11 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Retrieve Display Object from VDB</h3>
 
+<h4>Description</h4>
+Retrieve a display object from a VDB.
+
 <h4>Usage</h4>
-<pre>getDisplay(name, group = NULL, conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>getDisplay(name, group&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -670,33 +882,24 @@ getCurCogDat(x, ...)</pre>
   <dt>group</dt>
   <dd>the group of the display</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Retrieve a display object from a VDB.</p>
-
 
   <h4>Details</h4>
 
-  <p>If a display is uniquely determined by its name, then
-  group is not required.</p>
+  <p>If a display is uniquely determined by its name, then group is not required.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#removedisplay'>removeDisplay</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#removedisplay'>removeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -706,34 +909,28 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">List Displays in a VDB</h3>
 
+<h4>Description</h4>
+List displays in a VDB.
+
 <h4>Usage</h4>
-<pre>listDisplays(conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>listDisplays(conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>List displays in a VDB.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#adddisplay'>addDisplay</a></code>,
-  <code><a href='#removedisplay'>removeDisplay</a></code>, <code><a href='#view'>view</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#adddisplay'>addDisplay</a></code>, <code><a href='#removedisplay'>removeDisplay</a></code>, <code><a href='#view'>view</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -743,115 +940,67 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Create a Trelliscope Display</h3>
 
+<h4>Description</h4>
+Create a trelliscope display and add it to a visualization database (VDB)
+
 <h4>Usage</h4>
-<pre>makeDisplay(data, name, group = "common", desc = "", panelDim = list(height = NULL, 
-  width = NULL, aspect = NULL, res = NULL), panelFn = NULL, lims = list(x = "free", 
-  y = "free", prepanelFn = NULL), cogFn = NULL, preRender = FALSE, cogConn = dfCogConn(), 
-  output = NULL, conn = getOption("vdbConn"), verbose = TRUE, control = NULL)</pre>
+<pre><code class="language-r"><div>makeDisplay(data, name, group&nbsp;=&nbsp;"common", desc&nbsp;=&nbsp;"", height&nbsp;=&nbsp;500, width&nbsp;=&nbsp;500, panelFn&nbsp;=&nbsp;NULL, lims&nbsp;=&nbsp;list(x&nbsp;=&nbsp;"free", y&nbsp;=&nbsp;"free", prepanelFn&nbsp;=&nbsp;NULL), cogFn&nbsp;=&nbsp;NULL, preRender&nbsp;=&nbsp;FALSE, cogConn&nbsp;=&nbsp;dfCogConn(), output&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"), verbose&nbsp;=&nbsp;TRUE, params&nbsp;=&nbsp;NULL, packages&nbsp;=&nbsp;NULL, control&nbsp;=&nbsp;NULL)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>data</dt>
-  <dd>data of class "ddo" or "ddf" (see
-  <code>ddo</code>, <code>ddf</code>)</dd>
+  <dd>data of class "ddo" or "ddf" (see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/ddo'>ddo</a></code>, <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/ddf'>ddf</a></code>)</dd>
   <dt>name</dt>
-  <dd>the name of the display (no spaces or special
-  characters)</dd>
+  <dd>the name of the display (no spaces or special characters)</dd>
   <dt>group</dt>
-  <dd>the group the display belongs to (displays
-  are organized into groups).  Defaults to "common"</dd>
+  <dd>the group the display belongs to (displays are organized into groups).  Defaults to "common"</dd>
   <dt>desc</dt>
-  <dd>a description of the display (used in the
-  viewer and in notebooks)</dd>
-  <dt>panelDim</dt>
-  <dd>a list defining aspects of dimensions for
-  each panel, including height, width, aspect, and res
-  (resolution of raster image).  defaults are 1000 (px),
-  1000 (px), "fill", and 150, respectively</dd>
+  <dd>a description of the display (used in the viewer and in notebooks)</dd>
+  <dt>height</dt>
+  <dd>reference dimensions (in pixels) for each panel (panels will be resized based on available space in the viewer)</dd>
+  <dt>width</dt>
+  <dd>reference dimensions (in pixels) for each panel (panels will be resized based on available space in the viewer)</dd>
   <dt>panelFn</dt>
-  <dd>a function that produces a plot and takes
-  one argument, which will be the current split of the data
-  being passed to it.  Useful to test with
-  panelFn(divExample(dat)).  Must return either an object
-  of class "ggplot", "trellis", or "expression" (of base
-  plot commands)</dd>
+  <dd>a function that produces a plot and takes one argument, which will be the current split of the data being passed to it.  Useful to test with panelFn(divExample(dat)).  Must return either an object of class "ggplot", "trellis", or "expression" (of base plot commands)</dd>
   <dt>lims</dt>
-  <dd>either an object of class "trsLims" as
-  obtained from <code><a href='#setlims'>setLims</a></code> or a list with
-  elements x, y, and prepanelFn, that specify how to apply
-  <code><a href='#prepanel'>prepanel</a></code> and <code><a href='#setlims'>setLims</a></code></dd>
+  <dd>either an object of class "trsLims" as obtained from <code><a href='#setlims'>setLims</a></code> or a list with elements x, y, and prepanelFn, that specify how to apply <code><a href='#prepanel'>prepanel</a></code> and <code><a href='#setlims'>setLims</a></code></dd>
   <dt>cogFn</dt>
-  <dd>a function that produces a single row of a
-  data frame where each column is a cognostic feature .
-  The function should takes one argument, which will be the
-  current split of the data being passed to it.  Useful to
-  test with cogFn(divExample(dat))</dd>
+  <dd>a function that produces a single row of a data frame where each column is a cognostic feature .  The function should takes one argument, which will be the current split of the data being passed to it.  Useful to test with cogFn(divExample(dat))</dd>
   <dt>preRender</dt>
-  <dd>should the panels be pre-rendered and
-  stored (<code>TRUE</code>), or rendered on-the-fly in the
-  viewer (<code>FALSE</code>, default)?  Default is recommended
-  unless rendering is very expensive.</dd>
+  <dd>should the panels be pre-rendered and stored (<code>TRUE</code>), or rendered on-the-fly in the viewer (<code>FALSE</code>, default)?  Default is recommended unless rendering is very expensive.</dd>
   <dt>cogConn</dt>
-  <dd>a connection to store the cognostics data.
-  By default, this is <code>dfCogConn()</code>, but if
-  there are many subsets (millions or more),
-  <code>mongoCogConn()</code> is recommended (if MongoDB
-  is an option).</dd>
+  <dd>a connection to store the cognostics data.  By default, this is <code><a href='#dfcogconn'>dfCogConn</a>()</code>.</dd>
   <dt>output</dt>
-  <dd>how to store the panels and metadata for
-  the display (unnecessary to specify in most cases -- see
-  details)</dd>
+  <dd>how to store the panels and metadata for the display (unnecessary to specify in most cases -- see details)</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
   <dt>verbose</dt>
   <dd>print status messages?</dd>
+  <dt>params</dt>
+  <dd>a named list of parameters external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dt>packages</dt>
+  <dd>a vector of R package names that contain functions used in <code>panelFn</code> or <code>cogFn</code> (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
   <dt>control</dt>
-  <dd>parameters specifying how the backend
-  should handle things (most-likely parameters to
-  <code>rhwatch</code> in RHIPE) - see
-  <code>rhipeControl</code> and
-  <code>localDiskControl</code></dd>
+  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl'>localDiskControl</a></code></dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Create a trelliscope display and add it to a
-  visualization database (VDB)</p>
-
 
   <h4>Details</h4>
 
-  <p>Many of the parameters are optional or have defaults.
-  For several examples, see the documentation on github:
-  <a href = 'http://hafen.github.io/trelliscope'>http://hafen.github.io/trelliscope</a></p>
+  <p>Many of the parameters are optional or have defaults.  For several examples, see the documentation on github: <a href = 'http://hafen.github.io/trelliscope'>http://hafen.github.io/trelliscope</a></p>
 
-  <p>Panels by default are not pre-rendered.  Instead, this
-  function creates a display object and computes and stores
-  the cognostics.  Then panels are rendered on the fly.  If
-  a user would like to pre-render the images, then by
-  default these will be stored to a local disk connection
-  (see <code>localDiskConn</code>) inside the VDB
-  directory, organized in subdirectories by group and name
-  of the display.  Optionally, the user can specify the
-  <code>output</code> parameter to be any valid "kvConnection"
-  object, as long as it is one that persists on disk (e.g.
-  <code>hdfsConn</code>).</p>
+  <p>Panels by default are not pre-rendered.  Instead, this function creates a display object and computes and stores the cognostics.  Then panels are rendered on the fly.  If a user would like to pre-render the images, then by default these will be stored to a local disk connection (see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskConn'>localDiskConn</a></code>) inside the VDB directory, organized in subdirectories by group and name of the display.  Optionally, the user can specify the <code>output</code> parameter to be any valid "kvConnection" object, as long as it is one that persists on disk (e.g. <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/hdfsConn'>hdfsConn</a></code>).</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#prepanel'>prepanel</a></code>, <code><a href='#setlims'>setLims</a></code>,
-  <code>inputVars</code>, <code>divide</code>
+<code><a href='#prepanel'>prepanel</a></code>, <code><a href='#setlims'>setLims</a></code>, <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/divide'>divide</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -861,8 +1010,11 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Make a png for a Subset</h3>
 
+<h4>Description</h4>
+Make a png for a subset of an object of class "ddo" or "ddf".  The user should never need to call this directly, but the viewer needs it, so it is exported with this documentation.
+
 <h4>Usage</h4>
-<pre>makePNG(dat, panelFn = NULL, file, width, height, res, lims = NULL)</pre>
+<pre><code class="language-r"><div>makePNG(dat, panelFn&nbsp;=&nbsp;NULL, file, width, height, origWidth&nbsp;=&nbsp;width, res&nbsp;=&nbsp;72, basePointSize&nbsp;=&nbsp;12, lims&nbsp;=&nbsp;NULL, pixelratio&nbsp;=&nbsp;2)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -874,28 +1026,26 @@ getCurCogDat(x, ...)</pre>
   <dd>file name for png</dd>
   <dt>width,height,res</dt>
   <dd>width, height, and resolution</dd>
+  <dt>origWidth</dt>
+  <dd>TODO</dd>
+  <dt>basePointSize</dt>
+  <dd>TODO</dd>
   <dt>lims</dt>
   <dd>axis limits</dd>
+  <dt>pixelratio</dt>
+  <dd>TODO</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Make a png for a subset of an object of class "ddo" or
-  "ddf".  The user should never need to call this directly,
-  but the viewer needs it, so it is exported with this
-  documentation.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -905,27 +1055,25 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Create Data Plottable by splod</h3>
 
+<h4>Description</h4>
+Create pairwise scatterplot data plottable by splod
+
 <h4>Usage</h4>
-<pre>makeSplodData(data, id.vars = NULL, ...)</pre>
+<pre><code class="language-r"><div>makeSplodData(data, id.vars&nbsp;=&nbsp;NULL, ...)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>data</dt>
   <dd>a data.frame</dd>
   <dt>id.vars</dt>
-  <dd>variables to ignore when computing all
-  pairs of variables</dd>
+  <dd>variables to ignore when computing all pairs of variables</dd>
+  <dt>...</dt>
+  <dd>TODO</dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>an object of class 'localDiv' and 'splodDat' that can be
-  passed to <code><a href='#splod'>splod</a></code></p>
-
-
-  <h4>Description</h4>
-
-  <p>Create pairwise scatterplot data plottable by splod</p>
+  <p>an object of class 'localDiv' and 'splodDat' that can be passed to <code><a href='#splod'>splod</a></code></p>
 
 
   <h4>References</h4>
@@ -937,53 +1085,12 @@ getCurCogDat(x, ...)</pre>
 
 <h4>See also</h4>
 
-  <code><a href='#splod'>splod</a></code>, <code>trsCogFn</code>,
-  <code><a href='#splodpanelfn'>splodPanelFn</a></code>
+<code><a href='#splod'>splod</a></code>, <code><a href='#splodpanelfn'>splodPanelFn</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
-
-</div>
-
-
-<!-- mongoCogConn -->   
-<div class="tab-pane" id="mongocogconn">
-
-<h3 class="fref_title">Initiate a MongoDB Cognostics Connection</h3>
-
-<h4>Usage</h4>
-<pre>mongoCogConn(host = "127.0.0.1", user = "", pass = "", name = "", db = "")</pre>
-
-<h4>Arguments</h4>
-<dl>
-  <dt>host,user,pass,name,db</dt>
-  <dd>parameters used to initiate
-  MongoDB connection (see <code>mongo.create</code>)</dd>
-</dl>
-
-  <h4>Value</h4>
-
-  <p>a "cogConn" object of class "cogMongoConn"</p>
-
-
-  <h4>Description</h4>
-
-  <p>Initiate a MongoDB cognostics connection, to be passed as
-  the <code>cogConn</code> argument to <code><a href='#makedisplay'>makeDisplay</a></code>.</p>
-
-
-
-
-<h4>See also</h4>
-
-  <code><a href='#makedisplay'>makeDisplay</a></code>
-
-
-<h4>Author</h4>
-
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -993,37 +1100,20 @@ getCurCogDat(x, ...)</pre>
 
 <h3 class="fref_title">Methods Used in MapReduce for makeDisplay</h3>
 
+<h4>Description</h4>
+Methods Used in MapReduce for makeDisplay,Methods Used in MapReduce for makeDisplay,Methods Used in MapReduce for makeDisplay,Methods Used in MapReduce for makeDisplay
+
 <h4>Usage</h4>
-<pre>cogPre(obj, ...)
-
-cogEmit(obj, ...)
-
-cogCollect(obj, ...)
-
-cogFinal(obj, ...)</pre>
+<pre><code class="language-r"><div>cogPre(cogConn, conn, group, name, ...)</div>
+<div>cogEmit(cogConn, ...)</div>
+<div>cogCollect(cogConn, ...)</div>
+<div>cogFinal(cogConn, ...)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>obj</dt>
-  <dd>object</dd>
-  <dt>obj</dt>
-  <dd>object</dd>
-  <dt>obj</dt>
-  <dd>object</dd>
-  <dt>obj</dt>
-  <dd>object</dd>
+  <dt>cogConn,conn,group,name,...</dt>
+  <dd>TODO</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Methods Used in MapReduce for makeDisplay</p>
-
-  <p>Methods Used in MapReduce for makeDisplay</p>
-
-  <p>Methods Used in MapReduce for makeDisplay</p>
-
-  <p>Methods Used in MapReduce for makeDisplay</p>
-
 
 
 </div>
@@ -1034,8 +1124,11 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Make Single Display in a Notebook</h3>
 
+<h4>Description</h4>
+Make html code to show a large plot of a single display in a web notebook.  To be used inside of a notebook .Rmd file.  Meant for single-panel displays.
+
 <h4>Usage</h4>
-<pre>nbDisplay(name, group = NULL, conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>nbDisplay(name, group&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -1044,29 +1137,19 @@ cogFinal(obj, ...)</pre>
   <dt>group</dt>
   <dd>(needs to be fixed...)</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Make html code to show a large plot of a single display
-  in a web notebook.  To be used inside of a notebook .Rmd
-  file.  Meant for single-panel displays.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#typeset'>typeset</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
+<code><a href='#typeset'>typeset</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1076,8 +1159,11 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Make a List of Displays in a Notebook</h3>
 
+<h4>Description</h4>
+Make html code to display a list of displays in a web notebook.  To be used inside of a notebook .Rmd file.
+
 <h4>Usage</h4>
-<pre>nbDisplayList(name, group = NULL, conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>nbDisplayList(name, group&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -1086,28 +1172,19 @@ cogFinal(obj, ...)</pre>
   <dt>group</dt>
   <dd>(needs to be fixed...)</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Make html code to display a list of displays in a web
-  notebook.  To be used inside of a notebook .Rmd file.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#typeset'>typeset</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
+<code><a href='#typeset'>typeset</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1117,56 +1194,41 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Create a New Notebook File</h3>
 
+<h4>Description</h4>
+Create a new notebook file skeleton.
+
 <h4>Usage</h4>
-<pre>newNotebook(name = "index", blank = FALSE, title = "My Test Page", pageTitle = title, 
-  author = "Author Name", toc = TRUE, css = NULL, conn = getOption("vdbConn"), 
-  overwrite = FALSE)</pre>
+<pre><code class="language-r"><div>newNotebook(name&nbsp;=&nbsp;"index", blank&nbsp;=&nbsp;FALSE, title&nbsp;=&nbsp;"My Test Page", pageTitle&nbsp;=&nbsp;title, author&nbsp;=&nbsp;"Author Name", toc&nbsp;=&nbsp;TRUE, css&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"), overwrite&nbsp;=&nbsp;FALSE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>name</dt>
   <dd>name of the .Rmd file to be created</dd>
   <dt>blank</dt>
-  <dd>do you just want a blank page, or do you
-  want a template with several markdown examples filled out
-  for reference?</dd>
-  <dt>pageTitle,</dt>
-  <dd>title, author, toc, css these are
-  parameters to be placed in the <code><a href='#bssetup'>bsSetup</a></code> call
-  at the top of the .Rmd file, and can be ignored if you
-  plan to change them later in the file itself</dd>
+  <dd>do you just want a blank page, or do you want a template with several markdown examples filled out for reference?</dd>
+  <dt>pageTitle,title,author,toc,css</dt>
+  <dd>these are parameters to be placed in the <code><a href='#bssetup'>bsSetup</a></code> call at the top of the .Rmd file, and can be ignored if you plan to change them later in the file itself</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
   <dt>overwrite</dt>
-  <dd>if the file exists, should it be
-  overwritten?</dd>
+  <dd>if the file exists, should it be overwritten?</dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>creates a new .Rmd file that will go in the "notebook"
-  directory of the vdb directory</p>
-
-
-  <h4>Description</h4>
-
-  <p>Create a new notebook file skeleton.</p>
+  <p>creates a new .Rmd file that will go in the "notebook" directory of the vdb directory</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#typeset'>typeset</a></code>, <code><a href='#viewnotebook'>viewNotebook</a></code>,
-  <code><a href='#bssetup'>bsSetup</a></code>
+<code><a href='#typeset'>typeset</a></code>, <code><a href='#viewnotebook'>viewNotebook</a></code>, <code><a href='#bssetup'>bsSetup</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1176,38 +1238,32 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Remove Margins from Trellis/Lattice Plot</h3>
 
+<h4>Description</h4>
+Removes whitespace surrounding a trellis plot.  Ideal for <code><a href='makeDisplay.html'>makeDisplay</a></code> because when tiling multiple panels, a lot of space is wasted with the margins.
+
 <h4>Usage</h4>
-<pre>noMargins(..., topkey = FALSE, rightkey = FALSE)</pre>
+<pre><code class="language-r"><div>noMargins(..., topkey&nbsp;=&nbsp;FALSE, rightkey&nbsp;=&nbsp;FALSE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>...</dt>
-  <dd>a list of other parameters to be passed to
-  par.settings</dd>
+  <dd>a list of other parameters to be passed to par.settings</dd>
   <dt>topkey</dt>
   <dd>should extra space be added for a top key?</dd>
   <dt>rightkey</dt>
-  <dd>should extra space be added for a right
-  key?</dd>
+  <dd>should extra space be added for a right key?</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Removes whitespace surrounding a trellis plot.  Ideal for
-  <code><a href='#makedisplay'>makeDisplay</a></code> because when tiling multiple
-  panels, a lot of space is wasted with the margins.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='http://www.inside-r.org/r-doc/lattice/xyplot'>xyplot</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='http://www.inside-r.org/packages/cran/lattice/docs/xyplot'>xyplot</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1217,20 +1273,18 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Plot results form prepanel</h3>
 
+<h4>Description</h4>
+Plot results form prepanel
+
 <h4>Usage</h4>
-<pre>plot(lims, layout = c(2, 2), as.table = TRUE, strip = FALSE, strip.left = TRUE, between = list(y = 0.25), 
-  xlab = "Rank", ylab = "Panel Limits", ...)</pre>
+<pre><code class="language-r"><div>"plot"(x, layout&nbsp;=&nbsp;c(2, 2), as.table&nbsp;=&nbsp;TRUE, strip&nbsp;=&nbsp;FALSE, strip.left&nbsp;=&nbsp;TRUE, between&nbsp;=&nbsp;list(y&nbsp;=&nbsp;0.25), xlab&nbsp;=&nbsp;"Rank", ylab&nbsp;=&nbsp;"Panel Limits", ...)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>lims</dt>
-  <dd>object of class "trsPre" created by
-  <code><a href='#prepanel'>prepanel</a></code></dd>
-  <dt>layout,</dt>
-  <dd>as.table, strip, strip.left, between,
-  xlab, ylab, ... parameters for the lattice plot that
-  is output (these are defaults - can ignore unless you
-  want fine control)</dd>
+  <dt>x</dt>
+  <dd>object of class "trsPre" created by <code><a href='#prepanel'>prepanel</a></code></dd>
+  <dt>layout,as.table,strip,strip.left,between,xlab,ylab,...</dt>
+  <dd>parameters for the lattice plot that is output (these are defaults - can ignore unless you want fine control)</dd>
 </dl>
 
   <h4>Value</h4>
@@ -1238,30 +1292,21 @@ cogFinal(obj, ...)</pre>
   <p>object of class "trellis" (plotted by default)</p>
 
 
-  <h4>Description</h4>
-
-  <p>Plot results form prepanel</p>
-
-
   <h4>Details</h4>
 
-  <p>This function plots the sorted axis ranges for the x and
-  y axis for the case of "same" (all axis limits share the
-  same range) and "sliced" (all axis limits share the) and
-  can be useful in helping determine how to ultimately set
-  the limits.</p>
+  <p>This function plots the sorted axis ranges for the x and y axis for the case of "same" (all axis limits share the same range) and "sliced" (all axis limits share the) and can be useful in helping determine how to ultimately set the limits.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#prepanel'>prepanel</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='#prepanel'>prepanel</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1271,89 +1316,51 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Prepanel Function for Trelliscope Displays</h3>
 
+<h4>Description</h4>
+Apply a prepanel function to objects of class "ddo" or "ddf" to determine ranges of x and y axis limits prior to creating a trelliscope display (<code><a href='makeDisplay.html'>makeDisplay</a></code>).  Useful in conjunction with <code><a href='setLims.html'>setLims</a></code>.
+
 <h4>Usage</h4>
-<pre>prepanel(data, prepanelFn = NULL, control = NULL, verbose = TRUE)</pre>
+<pre><code class="language-r"><div>prepanel(data, prepanelFn&nbsp;=&nbsp;NULL, control&nbsp;=&nbsp;NULL, verbose&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>dat</dt>
+  <dt>data</dt>
   <dd>an object of class "localDiv" or "rhData"</dd>
   <dt>prepanelFn</dt>
-  <dd>a prepanel function that returns a list
-  specifying <code>xlim</code> and <code>ylim</code> for determining
-  axis limits, and optionally <code>dx</code> and <code>dy</code> for
-  determining aspect ratio (used to define slopes of line
-  segments used for banking computations).  prepanelFn can
-  also be a panelFn (see <code><a href='#makedisplay'>makeDisplay</a></code>) that
-  returns either an object of class "trellis" or "ggplot",
-  since xlim and ylim can be determined from these.</dd>
+  <dd>a prepanel function that returns a list specifying <code>xlim</code> and <code>ylim</code> for determining axis limits, and optionally <code>dx</code> and <code>dy</code> for determining aspect ratio (used to define slopes of line segments used for banking computations).  prepanelFn can also be a panelFn (see <code><a href='#makedisplay'>makeDisplay</a></code>) that returns either an object of class "trellis" or "ggplot", since xlim and ylim can be determined from these.</dd>
   <dt>verbose</dt>
   <dd>print status messages?</dd>
   <dt>control</dt>
-  <dd>parameters specifying how the backend
-  should handle things (most-likely parameters to
-  <code>rhwatch</code> in RHIPE) - see
-  <code>rhipeControl</code> and
-  <code>localDiskControl</code></dd>
+  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl'>localDiskControl</a></code></dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>object of class "trsPre".  This is a list of the x and y
-  axis ranges for each split, along with the aspect ratio
-  banking value if <code>dx</code> and <code>dy</code> are supplied in
-  <code>prepanelFn</code>.  Can be used with
-  <code><a href='#plottrspre'>plot.trsPre</a></code> and <code><a href='#setlims'>setLims</a></code>.</p>
-
-
-  <h4>Description</h4>
-
-  <p>Apply a prepanel function to objects of class "ddo" or
-  "ddf" to determine ranges of x and y axis limits prior to
-  creating a trelliscope display
-  (<code><a href='#makedisplay'>makeDisplay</a></code>).  Useful in conjunction with
-  <code><a href='#setlims'>setLims</a></code>.</p>
+  <p>object of class "trsPre".  This is a list of the x and y axis ranges for each split, along with the aspect ratio banking value if <code>dx</code> and <code>dy</code> are supplied in <code>prepanelFn</code>.  Can be used with <code><a href='#plottrspre'>plot.trsPre</a></code> and <code><a href='#setlims'>setLims</a></code>.</p>
 
 
   <h4>Details</h4>
 
-  <p>The plot method plots the sorted axis ranges for the x
-  and y axis for the case of "same" (all axis limits share
-  the same range) and "sliced" (all axis limits share the)
-  and can be useful in helping determine how to ultimately
-  set the limits.</p>
+  <p>The plot method plots the sorted axis ranges for the x and y axis for the case of "same" (all axis limits share the same range) and "sliced" (all axis limits share the) and can be useful in helping determine how to ultimately set the limits.</p>
 
-  <p>You do not need to use <code>prepanel()</code> to ultimately
-  create a display with <code>makeDisplay()</code>, but if
-  you bypass, you will either need to specify your own
-  limits in your plot command, or do nothing, in which case
-  each individual plot will have limits based on the data
-  in the split being plotted (the axes will be "free").</p>
+  <p>You do not need to use <code>prepanel()</code> to ultimately create a display with <code><a href='#makedisplay'>makeDisplay</a>()</code>, but if you bypass, you will either need to specify your own limits in your plot command, or do nothing, in which case each individual plot will have limits based on the data in the split being plotted (the axes will be "free").</p>
 
-  <p>Axis limits are very important.  What makes viewing
-  groups of plots of subsets of data ("small multiples") so
-  powerful is being able to make meaningful visual
-  comparisons across plots.  This is much easier to do if
-  scales for each plot are commensurate.</p>
+  <p>Axis limits are very important.  What makes viewing groups of plots of subsets of data ("small multiples") so powerful is being able to make meaningful visual comparisons across plots.  This is much easier to do if scales for each plot are commensurate.</p>
 
-  <p>This function is also useful for identifying subsets with
-  very large outlying values, and in conjunction with
-  <code><a href='#setlims'>setLims</a></code>, allows you to account for that
-  prior to the expensive process of creating all of the
-  plots.</p>
+  <p>This function is also useful for identifying subsets with very large outlying values, and in conjunction with <code><a href='#setlims'>setLims</a></code>, allows you to account for that prior to the expensive process of creating all of the plots.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='http://www.inside-r.org/r-doc/ggplot2/aes_position'>x</a></code> <code><a href='#plottrspre'>plot.trsPre</a></code>,
-  <code><a href='#setlims'>setLims</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='http://www.inside-r.org/packages/cran/ggplot2/docs/aes_position'>x</a></code>
+<code><a href='#plottrspre'>plot.trsPre</a></code>, <code><a href='#setlims'>setLims</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1363,13 +1370,19 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">S3method print displayObj</h3>
 
+<h4>Description</h4>
+S3method print displayObj
+
 <h4>Usage</h4>
-<pre>print.displayObj(x, ...)</pre>
+<pre><code class="language-r"><div>"print"(x, ...)</div></code></pre>
 
-  <h4>Description</h4>
-
-  <p>S3method print displayObj</p>
-
+<h4>Arguments</h4>
+<dl>
+  <dt>x</dt>
+  <dd>TODO</dd>
+  <dt>...</dt>
+  <dd>TODO</dd>
+</dl>
 
 
 </div>
@@ -1380,8 +1393,11 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Remove a Display from a VDB</h3>
 
+<h4>Description</h4>
+Remove a display from a VDB.
+
 <h4>Usage</h4>
-<pre>removeDisplay(name = NULL, group = NULL, conn = getOption("vdbConn"), verbose = TRUE)</pre>
+<pre><code class="language-r"><div>removeDisplay(name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"), verbose&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -1390,36 +1406,26 @@ cogFinal(obj, ...)</pre>
   <dt>group</dt>
   <dd>the group of the display</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
   <dt>verbose</dt>
-  <dd>logical - print messages about what is
-  being done</dd>
+  <dd>logical - print messages about what is being done</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Remove a display from a VDB.</p>
-
 
   <h4>Details</h4>
 
-  <p>If a display is uniquely determined by its name, then
-  group is not required.</p>
+  <p>If a display is uniquely determined by its name, then group is not required.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#removedisplay'>removeDisplay</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1429,78 +1435,55 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Specify Rules for x and y Limits for a Display</h3>
 
+<h4>Description</h4>
+Based on results from <code><a href='prepanel.html'>prepanel</a></code>, specify rules that will determine x and y axis limits to be passed as the <code>lims</code> argument when calling <code><a href='makeDisplay.html'>makeDisplay</a></code>.
+
 <h4>Usage</h4>
-<pre>setLims(lims, x = "same", y = "same", xQuant = c(0, 1), yQuant = c(0, 1), xRangeQuant = 1, 
-  yRangeQuant = 1, prop = 0.07)</pre>
+<pre><code class="language-r"><div>setLims(lims, x&nbsp;=&nbsp;"same", y&nbsp;=&nbsp;"same", xQuant&nbsp;=&nbsp;c(0, 1), yQuant&nbsp;=&nbsp;c(0, 1), xRangeQuant&nbsp;=&nbsp;1, yRangeQuant&nbsp;=&nbsp;1, prop&nbsp;=&nbsp;0.07)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>lims</dt>
   <dd>object of class "trsPre"</dd>
   <dt>x</dt>
-  <dd>x-axis limits rule (either "same", "sliced", or
-  "free" - see details)</dd>
+  <dd>x-axis limits rule (either "same", "sliced", or "free" - see details)</dd>
   <dt>y</dt>
-  <dd>y-axis limits rule (either "same", "sliced", or
-  "free" - see details)</dd>
+  <dd>y-axis limits rule (either "same", "sliced", or "free" - see details)</dd>
   <dt>xQuant</dt>
-  <dd>lower and upper quantiles at which to cut
-  off x-axis limits, in the case of outliers.  Used when
-  x="same".</dd>
+  <dd>lower and upper quantiles at which to cut off x-axis limits, in the case of outliers.  Used when x="same".</dd>
   <dt>yQuant</dt>
   <dd>same as xQuant but for y-axis</dd>
-  <dt>xQuantRange</dt>
-  <dd>a single upper quantile at which to
-  cut off the x-axis range, used when x="sliced", used in
-  the case of a few splits having abnormally high range,
-  which are wished to be excluded</dd>
-  <dt>yQuantRange</dt>
-  <dd>same as xQuantRange but for y-axis</dd>
+  <dt>xRangeQuant</dt>
+  <dd>a single upper quantile at which to cut off the x-axis range, used when x="sliced", used in the case of a few splits having abnormally high range, which are wished to be excluded</dd>
+  <dt>yRangeQuant</dt>
+  <dd>same as xRangeQuant but for y-axis</dd>
+  <dt>prop</dt>
+  <dd>TODO</dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>object of class "trsLims", which can be used in a call to
-  <code><a href='#makedisplay'>makeDisplay</a></code></p>
-
-
-  <h4>Description</h4>
-
-  <p>Based on results from <code><a href='#prepanel'>prepanel</a></code>, specify
-  rules that will determine x and y axis limits to be
-  passed as the <code>lims</code> argument when calling
-  <code><a href='#makedisplay'>makeDisplay</a></code>.</p>
+  <p>object of class "trsLims", which can be used in a call to <code><a href='#makedisplay'>makeDisplay</a></code></p>
 
 
   <h4>Details</h4>
 
-  <p>This function reduces the list of axis limits computed
-  for each split of a data set to an overall axis limit
-  rule for the plot.</p>
+  <p>This function reduces the list of axis limits computed for each split of a data set to an overall axis limit rule for the plot.</p>
 
-  <p>About "x" and "y" parameters: This is the same as in
-  lattice.  From lattice documentation: A character string
-  that determines how axis limits are calculated for each
-  panel. Possible values are "same" (default), "free" and
-  "sliced". For relation="same", the same limits, usually
-  large enough to encompass all the data, are used for all
-  the panels. For relation="free", limits for each panel is
-  determined by just the points in that panel. Behavior for
-  relation="sliced" is similar, except that the length (max
-  - min) of the scales are constrained to remain the same
-  across panels.</p>
+  <p>About "x" and "y" parameters: This is the same as in lattice.  From lattice documentation:
+A character string that determines how axis limits are calculated for each panel. Possible values are "same" (default), "free" and "sliced". For relation="same", the same limits, usually large enough to encompass all the data, are used for all the panels. For relation="free", limits for each panel is determined by just the points in that panel. Behavior for relation="sliced" is similar, except that the length (max - min) of the scales are constrained to remain the same across panels.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#prepanel'>prepanel</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
+<code><a href='#prepanel'>prepanel</a></code>, <code><a href='#makedisplay'>makeDisplay</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1510,32 +1493,25 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Create a Scatterplot Display</h3>
 
+<h4>Description</h4>
+Create a scatterplot display (splod)
+
 <h4>Usage</h4>
-<pre>splod(data, id.vars = NULL, name = NULL, desc = NULL, cogFn = splodCogFn, panelFn = splodPanelFn, 
-  verbose = TRUE, ...)</pre>
+<pre><code class="language-r"><div>splod(data, id.vars&nbsp;=&nbsp;NULL, name&nbsp;=&nbsp;NULL, desc&nbsp;=&nbsp;NULL, cogFn&nbsp;=&nbsp;splodCogFn, panelFn&nbsp;=&nbsp;splodPanelFn, verbose&nbsp;=&nbsp;TRUE, ...)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>data</dt>
-  <dd>a data.frame or an object of class
-  "splodDat"</dd>
+  <dd>a data.frame or an object of class "splodDat"</dd>
   <dt>id.vars</dt>
-  <dd>variables to ignore when computing all
-  pairs of variables</dd>
-  <dt>name,</dt>
-  <dd>desc, cogFn, panelFn, verbose, ...
-  parameters passed to <code><a href='#makedisplay'>makeDisplay</a></code></dd>
+  <dd>variables to ignore when computing all pairs of variables</dd>
+  <dt>name,desc,cogFn,panelFn,verbose,...</dt>
+  <dd>parameters passed to <code><a href='#makedisplay'>makeDisplay</a></code></dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>an object of class 'localDiv' that can be passed to
-  <code><a href='#splod'>splod</a></code></p>
-
-
-  <h4>Description</h4>
-
-  <p>Create a scatterplot display (splod)</p>
+  <p>an object of class 'localDiv' that can be passed to <code><a href='#splod'>splod</a></code></p>
 
 
   <h4>References</h4>
@@ -1547,13 +1523,12 @@ cogFinal(obj, ...)</pre>
 
 <h4>See also</h4>
 
-  <code><a href='#makedisplay'>makeDisplay</a></code>, <code>makeSplodDat</code>,
-  <code>trsCogFn</code>, <code><a href='#splodpanelfn'>splodPanelFn</a></code>
+<code><a href='#makedisplay'>makeDisplay</a></code>, <code><a href='#makesploddata'>makeSplodData</a></code>, <code><a href='#splodpanelfn'>splodPanelFn</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1563,24 +1538,21 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Default Cognostics Function for splod</h3>
 
+<h4>Description</h4>
+Default cognostics function for splod
+
 <h4>Usage</h4>
-<pre>splodCogFn(df)</pre>
+<pre><code class="language-r"><div>splodCogFn(df)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>df</dt>
-  <dd>a subset of data created by
-  <code><a href='#makesploddata'>makeSplodData</a></code></dd>
+  <dd>a subset of data created by <code><a href='#makesploddata'>makeSplodData</a></code></dd>
 </dl>
 
   <h4>Value</h4>
 
   <p>a data.frame of scagnostics for the given subset</p>
-
-
-  <h4>Description</h4>
-
-  <p>Default cognostics function for splod</p>
 
 
   <h4>References</h4>
@@ -1592,13 +1564,12 @@ cogFinal(obj, ...)</pre>
 
 <h4>See also</h4>
 
-  <code><a href='#splodpanelfn'>splodPanelFn</a></code>, <code><a href='#splod'>splod</a></code>,
-  <code><a href='#makesploddata'>makeSplodData</a></code>
+<code><a href='#splodpanelfn'>splodPanelFn</a></code>, <code><a href='#splod'>splod</a></code>, <code><a href='#makesploddata'>makeSplodData</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1608,25 +1579,21 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Default Plot Function for splod</h3>
 
+<h4>Description</h4>
+Default plot function for splod
+
 <h4>Usage</h4>
-<pre>splodPanelFn(df)</pre>
+<pre><code class="language-r"><div>splodPanelFn(df)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>df</dt>
-  <dd>a subset of data created by
-  <code><a href='#makesploddata'>makeSplodData</a></code></dd>
+  <dd>a subset of data created by <code><a href='#makesploddata'>makeSplodData</a></code></dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>a trellis plot object of a scatterplot for the given
-  subset</p>
-
-
-  <h4>Description</h4>
-
-  <p>Default plot function for splod</p>
+  <p>a trellis plot object of a scatterplot for the given subset</p>
 
 
   <h4>References</h4>
@@ -1638,13 +1605,58 @@ cogFinal(obj, ...)</pre>
 
 <h4>See also</h4>
 
-  <code><a href='#splodcogfn'>splodCogFn</a></code>, <code><a href='#splod'>splod</a></code>,
-  <code><a href='#makesploddata'>makeSplodData</a></code>
+<code><a href='#splodcogfn'>splodCogFn</a></code>, <code><a href='#splod'>splod</a></code>, <code><a href='#makesploddata'>makeSplodData</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
+
+</div>
+
+
+<!-- syncLocalData -->   
+<div class="tab-pane" id="synclocaldata">
+
+<h3 class="fref_title">Sync localDisk Objects to VDB</h3>
+
+<h4>Description</h4>
+Sync localDisk data that is used for VDB displays located throughout the system to a 'data' directory inside the VDB - useful for collecting data before syncing with a web server, and used inside of <code><a href='websync.html'>webSync</a></code>.
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>syncLocalData(vdbConn&nbsp;=&nbsp;getOption("vdbConn"), rsync&nbsp;=&nbsp;NULL)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>vdbConn</dt>
+  <dd>VDB connection settings</dd>
+  <dt>rsync</dt>
+  <dd>location of rsync binary</dd>
+</dl>
+
+
+
+<h4>See also</h4>
+
+<code><a href='#websync'>webSync</a></code>, <code><a href='#webconn'>webConn</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+</div>
+
+
+<!-- trelliscope -->   
+<div class="tab-pane" id="trelliscope">
+
+<h3 class="fref_title">trelliscope.</h3>
+
+<h4>Description</h4>
+trelliscope.
+
+
 
 </div>
 
@@ -1654,46 +1666,35 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Typeset a notebook (.Rmd) File</h3>
 
+<h4>Description</h4>
+Processes a .Rmd file created with <code><a href='newNotebook.html'>newNotebook</a></code>.  Basically a wrapper around knitr that additionally takes care of several layout issues to get a Bootstrap notebook web page.
+
 <h4>Usage</h4>
-<pre>typeset(name = "index", conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>typeset(name&nbsp;=&nbsp;"index", conn&nbsp;=&nbsp;getOption("vdbConn"))</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>file</dt>
-  <dd>file name (extension of .Rmd is not
-  required)</dd>
+  <dt>name</dt>
+  <dd>file name (extension of .Rmd is not required)</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
 </dl>
 
   <h4>Value</h4>
 
-  <p>output .html file goes in the "notebook" directory of the
-  vdb directory, to be viewed with
-  <code><a href='#viewnotebook'>viewNotebook</a></code></p>
-
-
-  <h4>Description</h4>
-
-  <p>Processes a .Rmd file created with
-  <code><a href='#newnotebook'>newNotebook</a></code>.  Basically a wrapper around
-  knitr that additionally takes care of several layout
-  issues to get a Bootstrap notebook web page.</p>
+  <p>output .html file goes in the "notebook" directory of the vdb directory, to be viewed with <code><a href='#viewnotebook'>viewNotebook</a></code></p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#viewnotebook'>viewNotebook</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
+<code><a href='#viewnotebook'>viewNotebook</a></code>, <code><a href='#newnotebook'>newNotebook</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1703,44 +1704,29 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Connect to a VDB</h3>
 
+<h4>Description</h4>
+Connect to a visualization catabase
+
 <h4>Usage</h4>
-<pre>vdbConn(path, name = NULL, autoYes = FALSE, reset = FALSE, verbose = TRUE)</pre>
+<pre><code class="language-r"><div>vdbConn(path, name&nbsp;=&nbsp;NULL, autoYes&nbsp;=&nbsp;FALSE, verbose&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>path</dt>
-  <dd>The path on the local file system where the
-  directory for the VDB is located</dd>
+  <dd>The path on the local file system where the directory for the VDB is located</dd>
   <dt>name</dt>
-  <dd>the name for the VDB (if null, uses the name
-  of the parent directory)</dd>
+  <dd>the name for the VDB (if null, uses the name of the parent directory)</dd>
   <dt>autoYes</dt>
-  <dd>should questions to proceed with directory
-  creation operations be automatically answered with
-  "yes"?</dd>
-  <dt>reset</dt>
-  <dd>should existing metadata for this VDB
-  connection be overwritten?</dd>
+  <dd>should questions to proceed with directory creation operations be automatically answered with "yes"?</dd>
   <dt>verbose</dt>
-  <dd>logical - print messages about what is
-  being done</dd>
+  <dd>logical - print messages about what is being done</dd>
 </dl>
 
-  <h4>Description</h4>
-
-  <p>Connect to a visualization catabase</p>
-
-
-
-
-<h4>See also</h4>
-
-  <code>updateViewer</code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1750,36 +1736,29 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">View a Display or Run Shiny Display Viewer</h3>
 
+<h4>Description</h4>
+View a display or run Shiny display viewer
+
 <h4>Usage</h4>
-<pre>view(name = NULL, group = NULL, openBrowser = TRUE, conn = getOption("vdbConn"))</pre>
+<pre><code class="language-r"><div>view(name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL, openBrowser&nbsp;=&nbsp;TRUE, conn&nbsp;=&nbsp;getOption("vdbConn"), port&nbsp;=&nbsp;8100L)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
-  <dt>name,</dt>
-  <dd>group optional parameters to load the viewer
-  with a pre-specified display</dd>
+  <dt>name,group</dt>
+  <dd>optional parameters to load the viewer with a pre-specified display</dd>
+  <dt>openBrowser</dt>
+  <dd>should the browser be automatically launched?</dd>
+  <dt>conn</dt>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
   <dt>port</dt>
   <dd>what port to use for the viewer</dd>
-  <dt>openBrowser</dt>
-  <dd>should the browser be automatically
-  launched?</dd>
-  <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>View a display or run Shiny display viewer</p>
-
 
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1789,40 +1768,32 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">View a Notebook File</h3>
 
+<h4>Description</h4>
+Use <code><a href='http://www.inside-r.org/packages/cran/utils/docs/browseURL'>browseURL</a></code> to open a notebook .html file that is in the "notebook" directory of the vdb directory and that has typically been created with <code><a href='newNotebook.html'>newNotebook</a></code> and typeset with <code><a href='typeset.html'>typeset</a></code>.
+
 <h4>Usage</h4>
-<pre>viewNotebook(name = "index", conn = getOption("vdbConn"), local = TRUE)</pre>
+<pre><code class="language-r"><div>viewNotebook(name&nbsp;=&nbsp;"index", conn&nbsp;=&nbsp;getOption("vdbConn"), local&nbsp;=&nbsp;TRUE)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>name</dt>
-  <dd>name of the notebook file (.html extension
-  not required)</dd>
+  <dd>name of the notebook file (.html extension not required)</dd>
   <dt>conn</dt>
-  <dd>VDB connection info, typically stored in
-  options("vdbConn") at the beginning of a session, and not
-  necessary to specify here if a valid "vdbConn" object
-  exists</dd>
+  <dd>VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+  <dt>local</dt>
+  <dd>TODO</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Use <code><a href='http://www.inside-r.org/r-doc/utils/browseURL'>browseURL</a></code> to open a notebook .html file
-  that is in the "notebook" directory of the vdb directory
-  and that has typically been created with
-  <code><a href='#newnotebook'>newNotebook</a></code> and typeset with
-  <code><a href='#typeset'>typeset</a></code>.</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#newnotebook'>newNotebook</a></code>, <code><a href='#typeset'>typeset</a></code>
+<code><a href='#newnotebook'>newNotebook</a></code>, <code><a href='#typeset'>typeset</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1832,50 +1803,48 @@ cogFinal(obj, ...)</pre>
 
 <h3 class="fref_title">Initialize a Web Connection</h3>
 
+<h4>Description</h4>
+Initialize a connection to a web server
+
 <h4>Usage</h4>
-<pre>webConn(user = NULL, ip, appDir, name)</pre>
+<pre><code class="language-r"><div>webConn(user&nbsp;=&nbsp;NULL, ip&nbsp;=&nbsp;NULL, appDir&nbsp;=&nbsp;"/srv/shiny-server", name&nbsp;=&nbsp;NULL)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>user</dt>
   <dd>the username to log on to the web server</dd>
   <dt>ip</dt>
-  <dd>the IP address of the web server</dd>
+  <dd>the IP address of the web server - if <code>NULL</code>, it is assumed that your web server is on the same machine that you are working on</dd>
   <dt>appDir</dt>
-  <dd>the directory where Shiny apps go on the
-  web server</dd>
+  <dd>the directory where Shiny apps go on the web server - defaults to the default location of /srv/shiny-server</dd>
   <dt>name</dt>
-  <dd>the name under which to store the
-  application</dd>
+  <dd>the name of the directory in <code>appDir</code> under which to store the application - if not supplied, it defaults to the name provided in the vdb connection</dd>
 </dl>
-
-  <h4>Description</h4>
-
-  <p>Initialize a connection to a web server</p>
-
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#websync'>websync</a></code>
+<code><a href='#websync'>webSync</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
 
-<!-- websync -->   
+<!-- webSync -->   
 <div class="tab-pane" id="websync">
 
 <h3 class="fref_title">Sync VDB and notebook Files to a Web Server</h3>
 
+<h4>Description</h4>
+Sync VDB and notebook files to a web server
+
 <h4>Usage</h4>
-<pre>websync(vdbConn = getOption("vdbConn"), webConn = getOption("vdbWebConn"), verbose = FALSE, 
-  rsync = NULL)</pre>
+<pre><code class="language-r"><div>webSync(vdbConn&nbsp;=&nbsp;getOption("vdbConn"), webConn&nbsp;=&nbsp;getOption("vdbWebConn"), fixPermissions&nbsp;=&nbsp;TRUE, verbose&nbsp;=&nbsp;FALSE, rsync&nbsp;=&nbsp;NULL)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
@@ -1883,34 +1852,29 @@ cogFinal(obj, ...)</pre>
   <dd>VDB connection settings</dd>
   <dt>webConn</dt>
   <dd>web connection settings</dd>
+  <dt>fixPermissions</dt>
+  <dd>should an attempt be made to fix permissions in the web directory?</dd>
   <dt>verbose</dt>
   <dd>show rsync output</dd>
   <dt>rsync</dt>
   <dd>location of rsync binary</dd>
 </dl>
 
-  <h4>Description</h4>
-
-  <p>Sync VDB and notebook files to a web server</p>
-
-
   <h4>Details</h4>
 
-  <p>If you are syncing via ssh, this only works if public key
-  authentication is enabled between your local machine and
-  the remote server.</p>
+  <p>This requires rsync to be installed on your machine.  If you are syncing via ssh, this only works if public key authentication is enabled between your local machine and the remote server.</p>
 
 
 
 
 <h4>See also</h4>
 
-  <code><a href='#typeset'>typeset</a></code>, <code><a href='#webconn'>webConn</a></code>
+<code><a href='#typeset'>typeset</a></code>, <code><a href='#webconn'>webConn</a></code>, <code><a href='#synclocaldata'>syncLocalData</a></code>
 
 
 <h4>Author</h4>
 
-  Ryan Hafen
+Ryan Hafen
 
 </div>
 
@@ -1929,14 +1893,15 @@ cogFinal(obj, ...)</pre>
 <hr>
 
 <div class="footer">
-   <p>&copy; Ryan Hafen, 2014</p>
+   <p>&copy; Tessera, 2014</p>
 </div>
 </div> <!-- /container -->
 
-<script src="assets/js/jquery.js"></script>
-<script src="assets/bootstrap/js/bootstrap.js"></script>
-<script src="assets/js/jquery.ba-hashchange.min.js"></script>
-<script src="assets/js/nav.js"></script>
+<script src="assets/jquery/jquery.js"></script>
+<script type='text/javascript' src='assets/custom/custom.js'></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/custom/jquery.ba-hashchange.min.js"></script>
+<script src="assets/custom/nav.js"></script>
 
 </body>
 </html>

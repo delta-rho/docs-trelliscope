@@ -6,7 +6,7 @@
 
 Trelliscope is an extension of Trellis Display that allows you to create displays with potentially thousands to millions of panels.  It provides a mechanism to create and interact with these displays.
 
-Conditioning in Trelliscope is achieved by dividing the data into subsets, one subset for each panel.  Trelliscope uses the division mechanism of the Divide & Recombine (D&R) package, `datadr`.  It is assumed that you have already gone through the `datadr` [tutorial](http://hafen.github.io/datadr).  Essentially, Trelliscope provides *visual recombination* methods for D&R.
+Conditioning in Trelliscope is achieved by dividing the data into subsets, one subset for each panel.  Trelliscope uses the division mechanism of the Divide & Recombine (D&R) package, `datadr`.  It is assumed that you have already gone through the `datadr` [tutorial](http://tesseradata.org/docs-datadr).  Essentially, Trelliscope provides *visual recombination* methods for D&R.
 
 #### Geographical division of airplane data
 
@@ -30,13 +30,16 @@ Thus, it might be interesting to split the data into subsets by cutting the lati
 latCuts <- seq(38.2, 39.4, by=0.1)
 lonCuts <- seq(-121.8, -120.8, by=0.1)
 
+# make airplane a ddf
+airplaneDdf <- ddf(airplane)
+# add variables latCut and lonCut to airplane
+airplaneLL <- addTransform(airplaneDdf, function(x) {
+   x$latCut <- cut(x$latitude, latCuts)
+   x$lonCut <- cut(x$longitude, lonCuts)
+   x
+})
 # divide the data by lat / lon
-byLatLon <- divide(airplane, by=c("latCut", "lonCut"),
-   preTransFn = function(x) {
-      x$latCut <- cut(x$latitude, latCuts)
-      x$lonCut <- cut(x$longitude, lonCuts)
-      x
-   },
+byLatLon <- divide(airplaneLL, by=c("latCut", "lonCut"),
    update=TRUE)
 ```
 
@@ -53,24 +56,22 @@ Also, let's look at a key-value pair to make sure it looks how we think it shoul
 
 ```{r }
 # see what a subset key-value pair looks like
-str(byLatLon[[1]])
+byLatLon[[1]]
 ```
 
 We have our division.  Now we are ready to make some displays.
 
 ### A Bare Bones Display ###
 
-To quickly get our feet wet with creating a display, we start with a minimal example.  Creating a plot first requires the specification of what you would like to be plotted for each subset.  Just like with `lattice`, you create a panel function that will be applied to each subset.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in `datadr`, which can operate either on both a key and a value of just the value (see [here](http://hafen.github.io/datadr/#key-value-pairs) for more details).
+To quickly get our feet wet with creating a display, we start with a minimal example.  Creating a plot first requires the specification of what you would like to be plotted for each subset.  Just like with `lattice`, you create a panel function that will be applied to each subset.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in `datadr`, which can operate either on both a key and a value of just the value (see [here](http://tesseradata.org/docs-datadr/#key-value-pairs) for more details).
 
 Some things to know about the panel function:
 
 - The panel function is applied to each subset of your divided data object
-- The panel function returns something that can be printed to a graphics device
+- The panel function returns something that can be printed to a graphics device or can be rendered in a web page (for example, we have experimantal support for `ggvis` and plan to support `rCharts` soon)
 - Those familiar with lattice can think of the panel function as the lattice panel function and the data argument(s) as the lattice packet being plotted (except that you conveniently get the whole data structure instead of just `x` and `y`)
-- As long as the plotting method you use can produce graphics in a graphics device, you can use it: base R graphics, lattice, or ggplot2 are all available 
+- Although we have been referring to lattice and have been showing examples with lattice, you do not need to use lattice in your panel function -- you can use base R graphics, lattice, or ggplot2, etc.
 - However, using something like lattice or ggplot2 adds benefit because these create objects which can be inspected to pull out axis limits, etc. (see our discussion of `prepanel` functions later on)
-- If you use something that doesn't create an object (such as base R graphics), you need to wrap the list of plot commands in an expression as the return value
-- In the future, I will provide support for custom rendering hooks/methods to accommodate more plotting options
 
 #### Panel function for `co` vs. time
 
@@ -92,7 +93,7 @@ The argument `d` (you can call it whatever you like) is the value of one of the 
 
 ```{r simple_co_apply}
 # apply the panel function to a subset
-kvApply(coPanelFn, byLatLon[[2]])
+coPanelFn(byLatLon[[2]]$value)
 ```
 
 #### Making the display
@@ -126,17 +127,7 @@ This will bring up the Trelliscope viewer.  You will get a list of displays to c
 <!--If you aren't following along with the example in your own R console, you can look at the display on RStudio's glimmer site [here](http://glimmer.rstudio.com/rhafen/vdbexample2/#group=co&name=co_vs_time_plain).-->
 Later we will cover how to sync a local VDB with a web server.
 
-You can also launch the viewer to go directly to this display with either of the following:
-
-```r
-# open this display in the Trelliscope viewer
-view(group="co", name="co_vs_time_bb")
-view(name="co_vs_time_bb")
-```
-
-Notice that the second one works, even though a display is uniquely identified by the group and name combination.  Usually, name is unique too and if that is the case, group is inferred.
-
-We'll talk more about how to use the viewer later, but feel free to play around.
+We'll also talk more about how to use the viewer later, but feel free to play around.
 
 Now, let's do something that shows all of the other functionality of `makeDisplay()`, including prepanel functions, cognostics, etc.
 
@@ -254,21 +245,13 @@ makeDisplay(byLatLon,
 )
 ```
 
-<!-- #### Setting the limits manually
-
-You can also explicitly specify limits with `lims` in `makeDisplay()`, which will automatically perform the axis limit computations prior to creating the display. -->
-
 #### Setting the limits in your panel function
 
 Another option, of course, is to set axis limits explicitly in your panel function.
 
-<!-- This really isn't very much work for the benefit we receive from what we are able to do with the display after it's created. -->
-
-<!-- Currently, this is how aspect ratios of the bounding boxes are specified.  There is functionality for you to specify an aspect ratio and either a height or a width, where the bounding box with which the panel aspect ratio is computed is based on the data, not the entire plot (including axis labels, etc.), but it isn't quite working.  You can specify aspect ratios in your lattice plots, but it is then difficult to get the panel dimensions correct such that there is not a lot of white space wasted for each panel (remember, we want to tile many of these across one screen so we don't want to waste white space).  On a related note, for lattice plots, see `?noMargins`. -->
-
 ### Cognostics ###
 
-Much of the power of the viewer for multi-panel displays (particularly when the panels number in the thousands or higher) lies in the ability to specify metrics that provide interesting information about each panel, with which you can filter and sort your collection of panels to look for those which are interesting.  John Tukey called a notion similar to this "cognostics".
+Much of the power of the viewer for multi-panel displays (particularly when the panels number in the thousands or higher) lies in the ability to specify metrics that provide interesting information about each panel, with which you can filter, sort, and sample your collection of panels to look for those which are interesting.  John Tukey called a notion similar to this "cognostics".
 
 We can obtain cognostics for our panels by specifying a `cogFn` function to `makeDisplay()`.
 
@@ -312,7 +295,7 @@ Let's test the cognostics function on a subset:
 
 ```{r co_cog_apply}
 # test the cognostics function on a subset
-kvApply(coCogFn, byLatLon[[1]])
+coCogFn(byLatLon[[1]]$value)
 ```
 
 Now, let's add these cognostics to our display:
@@ -334,77 +317,9 @@ With this display, we can start to see the utility of cognostics.  Pressing the 
 
 ### Panel Storage ###
 
-The default behavior for how panels are stored is to store the data subsets and then render the panels on-the-fly in the viewer.  
+The default behavior for how panels are stored is to store a reference to the ddo/ddf and then render the panels on-the-fly in the viewer, pulling the appropriate subsets from the data as necessary.  Thus, if we have a very large ddo/ddf on HDFS, we do not make a copy for visualization, and only have to render the images being requested at the time of viewing.  When calling `makeDisplay()`, only the prepanel and cognostics computations need to be done.
 
-When we are not pre-rendering, if the input data is already a persistent divided data object, then that data object is simply used as the input when rendering is done by the viewer on-the-fly.  For example, if we have a very large data set on HDFS with a very large number of subsets, we can simply specify the HDFS connection as the input, and the only computation that needs to be done is the prepanel of cognostics computations, if specified.
-
-When we are pre-rendering, the panels are rendered at the time `makeDisplay()` is called and the output is stored somewhere, which can be on any valid `datadr` storage backend such as local disk or HDFS.  The default is local disk in the display's VDB directory.
-
-For the examples we have seen so far, our input has been an in-memory divided data object, which is not persistent.  By default, Trelliscope takes such input and stores it as to "localDiskConn" connection in the `"panels"` subdirectory of the display's directory in the VDB.  If we were to pre-render, the data would still go to this location, but instead of being the input data, it will be the rendered panel images.
-
-#### When to pre-render
-
-There are trade-offs for pre-rendering or not:
-
-**In favor of pre-rendering**
-  - Paging through panels can be faster as we don't have to render them prior to displaying them
-  - Less work for the web server
-
-**In favor of rendering on-the-fly**
-  - `makeDisplay()` is considerably faster - we only need to compute cognostics and metadata about the display.  This is particularly true for very large datasets.
-  - If we are only ever going to view a small subset of possibly hundreds of thousands of panels, why render them all up-front instead of rendering the ones you currently want to look at?
-  - Image resolution: we do now know if the image will be viewed as a single large panel in the window, or tiled with tens or hundreds of panels in a single window.  When we render the image on-the-fly, we can render it at the resolution at which it will be viewed instead of having to store a raster image that has a resolution sufficient to be viewed at the largest scale.  A way around this would be to go away from .png to a vector format like .svg.  The only problem with that is that those files can get very large, and can be difficult to render consistently across all browsers.  In the future, this may all move toward using something like d3 as the rendering engine.
-
-#### Pre-rendering example
-
-Here is an example of how to specify pre-rendering when creating a display:
-
-```{r pre_render, message=FALSE}
-# make display with panels pre-rendered
-makeDisplay(byLatLon,
-   name      = "co_vs_time_rend",
-   group     = "co",
-   desc      = "Plot of co vs. time for each geographic 'square' with with fitted line, illustrating the use of 'same' axis limits and a cognostics function, and pre-rendered panels",
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   lims      = coTimeLims,
-   preRender = TRUE
-)
-```
-
-The only thing that changes is that we specify `preRender=TRUE`.  Now, the data stored as the output for this display are a binary png blob for each panel.
-
-### Cognostics Storage ###
-
-The default behavior for storing cognostics is as an R data frame.  This provides convenience in computations regarding cognostics in the viewer, but is limiting from a scalability point of view, as it will become difficult to manage with the number of panels beyond the hundreds of thousands.  There is now experimental support for storing cognostics in a MongoDB collection.  In this case, it should be possible to handle a much larger number of panels.
-
-To store cognostics in MongoDB, we must first initiate a cognostics MongoDB connection.  This of course requires a MongoDB instance to be running somewhere that you have access to - the following code will only work if this is the case.
-
-```{r mongo_cog_conn, eval=FALSE}
-# initiate a MongoDB cognostics connection
-mongoConn <- mongoCogConn()   
-```
-
-In `mongoCogConn()`, you can specify information such as the host address, etc. of MongoDB.  The parameters and their defaults can be seen with`?mongoCogConn`.
-
-Now, we can simply specify this as the `cogConn` argument in our call to `makeDisplay()` and cognostics will be stored in this connection.
-
-```{r mongo_cog, eval=FALSE}
-# create the display using MongoDB to store the cognostics
-makeDisplay(byLatLon,
-   name      = "co_vs_time_mon",
-   group     = "co",
-   desc      = "Plot of co vs. time for each geographic 'square' with with fitted line, illustrating the use of 'same' axis limits and a cognostics function, and storing cognostics in MongoDB",
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   cogConn   = mongoConn,
-   lims      = coTimeLims
-)
-```
-
-When this display is being viewed, the MongoDB database will be queried as we interact with the panels of the display.
-
-We chose MongoDB as a potential cognostics storage backend simply because it provides a scalable database, allows for indexing, and has a flexible aggregation framework.  The Trelliscope cognostics connection interface is extendable, such that other cognostic storage backends could be explored as well.
+There is an option to pre-render, which can be useful when rendering the image is compute-intensive.  However, this feature is still being developed and is currently not recommended.
 
 ### Linking Displays ###
 
@@ -430,7 +345,7 @@ latLonPanelFn <- function(a) {
 }
 
 # test the panel function on a subset
-kvApply(latLonPanelFn, byLatLon[[2]])
+latLonPanelFn(byLatLon[[2]]$value)
 # create the display
 makeDisplay(
    data = byLatLon,
@@ -445,7 +360,7 @@ Note that the panel function uses data objects `lonCuts` and `latCuts`, data obj
 
 ### Scatterplot Displays ###
 
-Scatterplot matrices become increasingly infeasible as the number of variables grows beyond \(\approx\)10.  Using `trelliscope`, we can create "scatterplot displays", where for \(p\) variables we create a panel for each of the \(\tbinom{p}{2}\) pairwise combinations.  We can leverage research on "scagnostics" (scatterplot diagnostics, or cognostics for scatterplots) [reference][scagnostics], which includes the R package [scagnostics][rscagnostics] to identify interesting relationships.  I have created a convenience function for doing this, `splod()` (**s**catter**plo**t **d**isplay).  This function takes a data frame and creates a subset for the data for each pairwise combination of variables.  The panel function is a simple scatterplot, and the cognostics function is a collection of scagnostics.
+Scatterplot matrices become increasingly infeasible as the number of variables grows beyond \(\approx\)10.  Using `trelliscope`, we can create "scatterplot displays", where for \(p\) variables we create a panel for each of the \(\tbinom{p}{2}\) pairwise combinations.  We can leverage research on "scagnostics" (scatterplot diagnostics, or cognostics for scatterplots) [reference][scagnostics], which includes the R package [scagnostics][rscagnostics] to identify interesting relationships.  We have created a convenience function for doing this, `splod()` (**s**catter**plo**t **d**isplay).  This function takes a data frame and creates a subset for the data for each pairwise combination of variables.  The panel function is a simple scatterplot, and the cognostics function is a collection of scagnostics.
 
 To illustrate this, we can create a scatterplot display for all of the variables in the `airplane` data.  First, we call `makeSplodDat()` to get the data into the correct format:
 
@@ -461,7 +376,7 @@ Here's an example of what a subset looks like:
 
 ```{r sploddat_example}
 # look at a subset of airplaneSplotDat
-str(kvExample(airplaneSplodDat))
+airplaneSplodDat[[1]]
 ```
 
 We can now create a display for this with `splod()`:
@@ -480,3 +395,24 @@ splod(airplane, id.vars=c("dat_ams", "flight", "datCut"))
 
 [scagnostics]: http://www.google.com/url?sa=t&rct=j&q=leland%20wilkinson%20scagnostics&source=web&cd=1&ved=0CDIQFjAA&url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.62.6148%26rep%3Drep1%26type%3Dpdf&ei=6spVUcCQDYWl4AOJ_oHoDw&usg=AFQjCNH0rmXCgq5vR-mEkuYz8AC476e6Bw&sig2=VipicfJ0CN0AOJ4pt_yuXg&bvm=bv.44442042,d.dmg&cad=rja)
 [rscagnostics]: http://cran.r-project.org/web/packages/scagnostics/
+
+
+### Syncing Files With the Web ###
+
+Often our D&R environment is on a local workstation which is connected to a distributed computing backend.  We might build up our VDB and web notebook locally and then desire to push the results to a web server which is running [Shiny server](http://www.rstudio.com/shiny/server/).  This is very useful for sharing analysis results with others.
+
+There is some simple support for this in Trelliscope.  You can initialize a web connection using `webConn()`, which assumes that your web server is a Linux machine to which you have passwordless ssh capability.  You specify the address of the server, the directory of the VDB, and the name of the VDB under which you would like things stored.
+
+```{r web_conn}
+# set up a web connection
+wc <- webConn(user="rhafen", ip="glimmer.rstudio.com", appDir="~/ShinyApps", name="vdbexample")
+```
+
+Now we can sync our VDB with the web:
+
+```r
+# sync files with the web server
+websync()
+```
+
+

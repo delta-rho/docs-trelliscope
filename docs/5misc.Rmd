@@ -8,15 +8,7 @@ You can go through most of the examples we've seen so far in this tutorial with 
 
 To deal with much larger datasets, scaling comes automatically with Trelliscope's dependency on `datadr` -- any backend supported by `datadr` is supported by Trelliscope.  These currently include Hadoop and local disk.
 
-Some of the components beyond R that you will need to make use of these capabilities include:
 
-- [Hadoop](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/4.2.0/CDH4-Installation-Guide/CDH4-Installation-Guide.html)
-- [RHIPE](http://www.datadr.org/install.html)
-- [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-red-hat-centos-or-fedora-linux/)
-- [Shiny Server](http://www.rstudio.com/shiny/server/)
-- [RStudio Server](http://www.rstudio.com/ide/download/server)
-
-RStudio Server is not a necessary component, but is very convenient to put on the front-end node to the cluster.
 
 #### Using data on localDisk as input
 
@@ -27,7 +19,7 @@ First, let's convert our in-memory `byLatLon` object to a "localDiskConn" object
 ```{r localdisk, eval=FALSE}
 # convert byLatLon to a localDiskConn object
 byLatLonLD <- convert(byLatLon, 
-   localDiskConn("/private/tmp/byLatLon", autoYes=TRUE))
+   localDiskConn(file.path(tempdir(), "byLatLon"), autoYes=TRUE))
 ```
 
 Now, we simply specify this object as the input to `makeDisplay()`:
@@ -82,11 +74,9 @@ makeDisplay(byLatLonHDFS,
 
 #### What should I do if I have an issue or feature request?
 
-Please post an issue on [github](https://github.com/hafen/trelliscope/issues).
+Please post an issue on [github](https://github.com/tesseradata/trelliscope/issues).
 
-#### Who are the intended users of Trelliscope?
 
-The context for our visualization environment is *deep statistical analysis and machine learning*, building and validating mathematical models that capture systematic behavior in data while accounting for random behavior.  The consumer of visualization tools in this context is not a field analyst but a statistician with in-depth knowledge about a wealth of statistical methods, the assumptions these methods make about the data, and with experience in fitting and validating models.  In this context, the analyst needs tools that are very flexible that allow for rapid prototyping.  Most importantly, visualization tools in this context need to tie directly into the data analysis environment, as visual and numerical methods cannot be decoupled in the analysis process.
 
 ### R Code ###
 
