@@ -30,6 +30,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <!-- <link href='http://fonts.googleapis.com/css?family=Lustria' rel='stylesheet' type='text/css'> -->
     <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
     
 
     <!-- Fav and touch icons -->
@@ -48,6 +49,10 @@
         <ul class="nav nav-pills pull-right">
            <li class=''><a href='index.html'>Docs</a></li><li class='active'><a href='functionref.html'>Function Ref</a></li><li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
         </ul>
+        <a class='navbar-brand' href='http://tessera.io'>
+  <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -6px;'>
+  Tessera
+</a>
         <p class="myHeader">trelliscope R function reference</p>
       </div>
 
@@ -83,6 +88,9 @@
    <a target="_self" class="nav-not-header" href="#cogncol">cogNcol</a>
 </li>
 <li class="">
+   <a target="_self" class="nav-not-header" href="#cogdisplayhref">cogDisplayHref</a>
+</li>
+<li class="">
    <a target="_self" class="nav-not-header" href="#coghref">cogHref</a>
 </li>
 <li class="">
@@ -98,6 +106,9 @@
    <a target="_self" class="nav-not-header" href="#cogscagnostics">cogScagnostics</a>
 </li>
 <li class="">
+   <a target="_self" class="nav-not-header" href="#deploytoshinyapps">deployToShinyApps</a>
+</li>
+<li class="">
    <a target="_self" class="nav-not-header" href="#dfcogconn">dfCogConn</a>
 </li>
 <li class="">
@@ -105,6 +116,9 @@
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#getdisplay">getDisplay</a>
+</li>
+<li class="">
+   <a target="_self" class="nav-not-header" href="#tohash">toHash</a>
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#listdisplays">listDisplays</a>
@@ -117,6 +131,9 @@
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#makesploddata">makeSplodData</a>
+</li>
+<li class="">
+   <a target="_self" class="nav-not-header" href="#makestatehash">makeStateHash</a>
 </li>
 <li class="">
    <a target="_self" class="nav-not-header" href="#cogpre">cogPre</a>
@@ -167,6 +184,9 @@
    <a target="_self" class="nav-not-header" href="#typeset">typeset</a>
 </li>
 <li class="">
+   <a target="_self" class="nav-not-header" href="#validatestate">validateState</a>
+</li>
+<li class="">
    <a target="_self" class="nav-not-header" href="#vdbconn">vdbConn</a>
 </li>
 <li class="">
@@ -192,8 +212,8 @@
 <h3>Trelliscope</h3>
 
 <p><strong>Author:</strong> Ryan Hafen</p>
-<p><strong>Version:</strong> 0.7.9</p>
-<p><strong>Date:</strong> 2014-07-21</p>
+<p><strong>Version:</strong> 0.8.0.2</p>
+<p><strong>Date:</strong> 2014-11-03</p>
 <p><strong>License:</strong> BSD_3_clause + file LICENSE</p>
 
 <h4>Description</h4>
@@ -222,7 +242,9 @@ ggplot2</p>
 <p>
 Cairo,
 testthat (&gt;= 0.8.1),
-roxygen2 (&gt;= 4.0.0)</p>
+roxygen2 (&gt;= 4.0.0),
+scagnostics,
+shinyapps</p>
 
 </div>
 <!-- addDisplay -->   
@@ -637,6 +659,52 @@ Methods for Cognostics Connections
 </div>
 
 
+<!-- cogDisplayHref -->   
+<div class="tab-pane" id="cogdisplayhref">
+
+<h3 class="fref_title">DisplayHref Cognostic</h3>
+
+<h4>Description</h4>
+Create href that points to another trelliscope display with optional state
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>cogDisplayHref(displayName, displayGroup&nbsp;=&nbsp;NULL, state&nbsp;=&nbsp;NULL, label&nbsp;=&nbsp;"link", desc&nbsp;=&nbsp;"display link", group&nbsp;=&nbsp;"common", target&nbsp;=&nbsp;"_blank", defLabel&nbsp;=&nbsp;FALSE, defActive&nbsp;=&nbsp;FALSE, filterable&nbsp;=&nbsp;FALSE)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>displayName</dt>
+  <dd>the name of the display</dd>
+  <dt>displayGroup</dt>
+  <dd>the group the display belongs to</dd>
+  <dt>state</dt>
+  <dd>if specified, this tells the viewer the default parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see <code><a href='#validatestate'>validateState</a></code> for details)</dd>
+  <dt>label</dt>
+  <dd>label of the href</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
+  <dt>target</dt>
+  <dd>value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p>a hash string</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href='#validatestate'>validateState</a></code>, <code><a href='#coghref'>cogHref</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+</div>
+
+
 <!-- cogHref -->   
 <div class="tab-pane" id="coghref">
 
@@ -654,10 +722,10 @@ Create href to be used as cognostics in a trelliscope display.
   <dd>URL to link to</dd>
   <dt>label</dt>
   <dd>label of the href</dd>
-  <dt>target</dt>
-  <dd>value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
   <dt>desc,group,defLabel,defActive,filterable</dt>
   <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
+  <dt>target</dt>
+  <dd>value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
 </dl>
 
 
@@ -687,10 +755,10 @@ Compute RMSE of loess fit as a cognostic to be used as cognostics in a trellisco
 
 <h4>Arguments</h4>
 <dl>
-  <dt>...</dt>
-  <dd>arguments to be passed to <code>link{loess}</code>, such as the formula, data, smoothing parameters, etc.</dd>
   <dt>desc,group,defLabel,defActive,filterable</dt>
   <dd>arguments passed to <code><a href='#cog'>cog</a></code></dd>
+  <dt>...</dt>
+  <dd>arguments to be passed to <code>link{loess}</code>, such as the formula, data, smoothing parameters, etc.</dd>
 </dl>
 
 
@@ -808,6 +876,51 @@ Ryan Hafen
 </div>
 
 
+<!-- deployToShinyApps -->   
+<div class="tab-pane" id="deploytoshinyapps">
+
+<h3 class="fref_title">Deploy VDB to shinyapps.io</h3>
+
+<h4>Description</h4>
+Deploy VDB to shinyapps.io
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>deployToShinyApps(vdbConn&nbsp;=&nbsp;getOption("vdbConn"), appName&nbsp;=&nbsp;NULL, account&nbsp;=&nbsp;NULL, redeploy&nbsp;=&nbsp;TRUE, size&nbsp;=&nbsp;NULL, instances&nbsp;=&nbsp;NULL, quiet&nbsp;=&nbsp;FALSE)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>vdbConn</dt>
+  <dd>VDB connection settings</dd>
+  <dt>appName</dt>
+  <dd>name of application (app will be available at https://[account].shinyapps.io/[appName]/) - if not supplied, will use the name of VDB connection</dd>
+  <dt>account</dt>
+  <dd>passed to <code>shinyapps::configureApp</code></dd>
+  <dt>redeploy</dt>
+  <dd>passed to <code>shinyapps::configureApp</code></dd>
+  <dt>size</dt>
+  <dd>passed to <code>shinyapps::configureApp</code></dd>
+  <dt>instances</dt>
+  <dd>passed to <code>shinyapps::configureApp</code></dd>
+  <dt>quiet</dt>
+  <dd>passed to <code>shinyapps::configureApp</code></dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p>If you do not have a shinyapps.io account and have not set your account info, first visit here prior to calling this function: <a href = 'http://shiny.rstudio.com/articles/#shinyapps'>http://shiny.rstudio.com/articles/#shinyapps</a>.</p>
+
+
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+<code><a href='syncLocalData.html'>syncLocalData</a></code>
+
+</div>
+
+
 <!-- dfCogConn -->   
 <div class="tab-pane" id="dfcogconn">
 
@@ -904,6 +1017,28 @@ Ryan Hafen
 </div>
 
 
+<!-- toHash -->   
+<div class="tab-pane" id="tohash">
+
+<h3 class="fref_title">Methods for dealing with state and hashes</h3>
+
+<h4>Description</h4>
+Methods for dealing with state and hashes
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>toHash(x)</div>
+<div>fromHash(x)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>x</dt>
+  <dd>state or hash object</dd>
+</dl>
+
+
+</div>
+
+
 <!-- listDisplays -->   
 <div class="tab-pane" id="listdisplays">
 
@@ -944,12 +1079,12 @@ Ryan Hafen
 Create a trelliscope display and add it to a visualization database (VDB)
 
 <h4>Usage</h4>
-<pre><code class="language-r"><div>makeDisplay(data, name, group&nbsp;=&nbsp;"common", desc&nbsp;=&nbsp;"", height&nbsp;=&nbsp;500, width&nbsp;=&nbsp;500, panelFn&nbsp;=&nbsp;NULL, lims&nbsp;=&nbsp;list(x&nbsp;=&nbsp;"free", y&nbsp;=&nbsp;"free", prepanelFn&nbsp;=&nbsp;NULL), cogFn&nbsp;=&nbsp;NULL, preRender&nbsp;=&nbsp;FALSE, cogConn&nbsp;=&nbsp;dfCogConn(), output&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"), verbose&nbsp;=&nbsp;TRUE, params&nbsp;=&nbsp;NULL, packages&nbsp;=&nbsp;NULL, control&nbsp;=&nbsp;NULL)</div></code></pre>
+<pre><code class="language-r"><div>makeDisplay(data, name, group&nbsp;=&nbsp;"common", desc&nbsp;=&nbsp;"", height&nbsp;=&nbsp;500, width&nbsp;=&nbsp;500, panelFn&nbsp;=&nbsp;NULL, lims&nbsp;=&nbsp;list(x&nbsp;=&nbsp;"free", y&nbsp;=&nbsp;"free", prepanelFn&nbsp;=&nbsp;NULL), cogFn&nbsp;=&nbsp;NULL, state&nbsp;=&nbsp;NULL, preRender&nbsp;=&nbsp;FALSE, cogConn&nbsp;=&nbsp;dfCogConn(), output&nbsp;=&nbsp;NULL, conn&nbsp;=&nbsp;getOption("vdbConn"), verbose&nbsp;=&nbsp;TRUE, params&nbsp;=&nbsp;NULL, packages&nbsp;=&nbsp;NULL, control&nbsp;=&nbsp;NULL)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>data</dt>
-  <dd>data of class "ddo" or "ddf" (see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/ddo'>ddo</a></code>, <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/ddf'>ddf</a></code>)</dd>
+  <dd>data of class "ddo" or "ddf" (see <code><a href='http://www.inside-r.org/packages/cran//docs/0'>ddo</a></code>, <code><a href='http://www.inside-r.org/packages/cran//docs/0'>ddf</a></code>)</dd>
   <dt>name</dt>
   <dd>the name of the display (no spaces or special characters)</dd>
   <dt>group</dt>
@@ -966,6 +1101,8 @@ Create a trelliscope display and add it to a visualization database (VDB)
   <dd>either an object of class "trsLims" as obtained from <code><a href='#setlims'>setLims</a></code> or a list with elements x, y, and prepanelFn, that specify how to apply <code><a href='#prepanel'>prepanel</a></code> and <code><a href='#setlims'>setLims</a></code></dd>
   <dt>cogFn</dt>
   <dd>a function that produces a single row of a data frame where each column is a cognostic feature .  The function should takes one argument, which will be the current split of the data being passed to it.  Useful to test with cogFn(divExample(dat))</dd>
+  <dt>state</dt>
+  <dd>if specified, this tells the viewer the default parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see <code><a href='#validatestate'>validateState</a></code> for details)</dd>
   <dt>preRender</dt>
   <dd>should the panels be pre-rendered and stored (<code>TRUE</code>), or rendered on-the-fly in the viewer (<code>FALSE</code>, default)?  Default is recommended unless rendering is very expensive.</dd>
   <dt>cogConn</dt>
@@ -981,21 +1118,21 @@ Create a trelliscope display and add it to a visualization database (VDB)
   <dt>packages</dt>
   <dd>a vector of R package names that contain functions used in <code>panelFn</code> or <code>cogFn</code> (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
   <dt>control</dt>
-  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl'>localDiskControl</a></code></dd>
+  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran//docs/0'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran//docs/0'>localDiskControl</a></code></dd>
 </dl>
 
   <h4>Details</h4>
 
   <p>Many of the parameters are optional or have defaults.  For several examples, see the documentation on github: <a href = 'http://hafen.github.io/trelliscope'>http://hafen.github.io/trelliscope</a></p>
 
-  <p>Panels by default are not pre-rendered.  Instead, this function creates a display object and computes and stores the cognostics.  Then panels are rendered on the fly.  If a user would like to pre-render the images, then by default these will be stored to a local disk connection (see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskConn'>localDiskConn</a></code>) inside the VDB directory, organized in subdirectories by group and name of the display.  Optionally, the user can specify the <code>output</code> parameter to be any valid "kvConnection" object, as long as it is one that persists on disk (e.g. <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/hdfsConn'>hdfsConn</a></code>).</p>
+  <p>Panels by default are not pre-rendered.  Instead, this function creates a display object and computes and stores the cognostics.  Then panels are rendered on the fly.  If a user would like to pre-render the images, then by default these will be stored to a local disk connection (see <code><a href='http://www.inside-r.org/packages/cran//docs/0'>localDiskConn</a></code>) inside the VDB directory, organized in subdirectories by group and name of the display.  Optionally, the user can specify the <code>output</code> parameter to be any valid "kvConnection" object, as long as it is one that persists on disk (e.g. <code><a href='http://www.inside-r.org/packages/cran//docs/0'>hdfsConn</a></code>).</p>
 
 
 
 
 <h4>See also</h4>
 
-<code><a href='#prepanel'>prepanel</a></code>, <code><a href='#setlims'>setLims</a></code>, <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/divide'>divide</a></code>
+<code><a href='#prepanel'>prepanel</a></code>, <code><a href='#setlims'>setLims</a></code>, <code><a href='http://www.inside-r.org/packages/cran//docs/0'>divide</a></code>
 
 
 <h4>Author</h4>
@@ -1086,6 +1223,46 @@ Create pairwise scatterplot data plottable by splod
 <h4>See also</h4>
 
 <code><a href='#splod'>splod</a></code>, <code><a href='#splodpanelfn'>splodPanelFn</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+</div>
+
+
+<!-- makeStateHash -->   
+<div class="tab-pane" id="makestatehash">
+
+<h3 class="fref_title">Make a URL hash out of state information</h3>
+
+<h4>Description</h4>
+Make a URL hash out of cognostics state information
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>makeStateHash(x, name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>x</dt>
+  <dd>a list of cognostics state parameters</dd>
+  <dt>name</dt>
+  <dd>the name of the display</dd>
+  <dt>group</dt>
+  <dd>the group the display belongs to</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p>a URL hash</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href='#validatestate'>validateState</a></code>
 
 
 <h4>Author</h4>
@@ -1246,12 +1423,12 @@ Removes whitespace surrounding a trellis plot.  Ideal for <code><a href='makeDis
 
 <h4>Arguments</h4>
 <dl>
-  <dt>...</dt>
-  <dd>a list of other parameters to be passed to par.settings</dd>
   <dt>topkey</dt>
   <dd>should extra space be added for a top key?</dd>
   <dt>rightkey</dt>
   <dd>should extra space be added for a right key?</dd>
+  <dt>...</dt>
+  <dd>a list of other parameters to be passed to par.settings</dd>
 </dl>
 
 
@@ -1328,10 +1505,10 @@ Apply a prepanel function to objects of class "ddo" or "ddf" to determine ranges
   <dd>an object of class "localDiv" or "rhData"</dd>
   <dt>prepanelFn</dt>
   <dd>a prepanel function that returns a list specifying <code>xlim</code> and <code>ylim</code> for determining axis limits, and optionally <code>dx</code> and <code>dy</code> for determining aspect ratio (used to define slopes of line segments used for banking computations).  prepanelFn can also be a panelFn (see <code><a href='#makedisplay'>makeDisplay</a></code>) that returns either an object of class "trellis" or "ggplot", since xlim and ylim can be determined from these.</dd>
+  <dt>control</dt>
+  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran//docs/0'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran//docs/0'>localDiskControl</a></code></dd>
   <dt>verbose</dt>
   <dd>print status messages?</dd>
-  <dt>control</dt>
-  <dd>parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl'>rhipeControl</a></code> and <code><a href='http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl'>localDiskControl</a></code></dd>
 </dl>
 
   <h4>Value</h4>
@@ -1621,7 +1798,7 @@ Ryan Hafen
 <h3 class="fref_title">Sync localDisk Objects to VDB</h3>
 
 <h4>Description</h4>
-Sync localDisk data that is used for VDB displays located throughout the system to a 'data' directory inside the VDB - useful for collecting data before syncing with a web server, and used inside of <code><a href='websync.html'>webSync</a></code>.
+Sync localDisk data that is used for VDB displays located throughout the system to a 'data' directory inside the VDB - useful for collecting data before syncing with a web server, and used inside of <code><a href='webSync.html'>webSync</a></code>.
 
 <h4>Usage</h4>
 <pre><code class="language-r"><div>syncLocalData(vdbConn&nbsp;=&nbsp;getOption("vdbConn"), rsync&nbsp;=&nbsp;NULL)</div></code></pre>
@@ -1699,6 +1876,65 @@ Ryan Hafen
 </div>
 
 
+<!-- validateState -->   
+<div class="tab-pane" id="validatestate">
+
+<h3 class="fref_title">Validate State Parameters</h3>
+
+<h4>Description</h4>
+Validate state parameters for a Trelliscope display
+
+<h4>Usage</h4>
+<pre><code class="language-r"><div>validateState(x, name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL, displayObj&nbsp;=&nbsp;NULL)</div></code></pre>
+
+<h4>Arguments</h4>
+<dl>
+  <dt>x</dt>
+  <dd>a list of state parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see details)</dd>
+  <dt>name</dt>
+  <dd>the name of the display (optional but recommended - if checking state against variable names, etc. of the display is desired)</dd>
+  <dt>group</dt>
+  <dd>the group the display belongs to</dd>
+  <dt>displayObj</dt>
+  <dd>the display object (can be specified in place of <code>name</code> and <code>group</code>)</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p>a modified state parameter list that is valid, an object of class "cogState"</p>
+
+
+  <h4>Details</h4>
+
+  <p>Trelliscope allows you to specify either a default state in <code><a href='#makedisplay'>makeDisplay</a></code> or specify the state of the display when you call <code><a href='#view'>view</a></code>.  Aspects of the display that can be controlled with the state include:
+<ul>
+<li> labels a vector of names of cognostics to be shown as labels underneath each panel.  If not specified, the default is to show labels for any of the splitting variables that created the partition of the data being plotted.
+  </li>
+<li> layout a list with optional elements <code>nrow</code>, <code>ncol</code>, and <code>arrange</code>.  <code>nrow</code> and <code>ncol</code> specify the arrangement of the panels into rows and columns (<code>nrow = 1</code> and <code>ncol = 1</code> are defaults), and <code>arrange</code> can be either "row" or "col" and specified whether to sort the panels by row or by column ("row" is default)
+  </li>
+<li> sort a named list where each name corresponds to a cognostic name and the value is either "asc" or "desc" for sorting in ascending or descending order.  The order in which sorting is applied to each variable is according to the order of the variables specified.
+  </li>
+<li> filter a named list where each name corresponds to a cognostic name and the value is a specification of either "regex" or "select" for categorical variables, or a range, "from" and "to", for quantitative variables.  For a "regex", a simple regular expression string is specified, and the filter finds all matches for the regular expression against the variable.  For "select" a vector of strings is specified, and all exact matches are returned.  For the range filter, all values of the specified variable within the range "from" and "to" are returned.  If either "from" or "to" are omitted, they are treated as <code>-Inf</code> and <code>Inf</code> respectively.
+</li>
+</ul></p>
+
+  <p></p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href='#view'>view</a></code>, <code><a href='#cogdisplayhref'>cogDisplayHref</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+</div>
+
+
 <!-- vdbConn -->   
 <div class="tab-pane" id="vdbconn">
 
@@ -1740,12 +1976,14 @@ Ryan Hafen
 View a display or run Shiny display viewer
 
 <h4>Usage</h4>
-<pre><code class="language-r"><div>view(name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL, openBrowser&nbsp;=&nbsp;TRUE, conn&nbsp;=&nbsp;getOption("vdbConn"), port&nbsp;=&nbsp;8100L)</div></code></pre>
+<pre><code class="language-r"><div>view(name&nbsp;=&nbsp;NULL, group&nbsp;=&nbsp;NULL, state&nbsp;=&nbsp;NULL, openBrowser&nbsp;=&nbsp;TRUE, conn&nbsp;=&nbsp;getOption("vdbConn"), port&nbsp;=&nbsp;8100L)</div></code></pre>
 
 <h4>Arguments</h4>
 <dl>
   <dt>name,group</dt>
-  <dd>optional parameters to load the viewer with a pre-specified display</dd>
+  <dd>optional parameters to load the viewer with a pre-specified display - if not specified, the viewer will launch with a list to choose from</dd>
+  <dt>state</dt>
+  <dd>an optional list of state variables to set the default viewing state for layout, sorting, filtering, and labels (see details)</dd>
   <dt>openBrowser</dt>
   <dd>should the browser be automatically launched?</dd>
   <dt>conn</dt>
@@ -1753,6 +1991,11 @@ View a display or run Shiny display viewer
   <dt>port</dt>
   <dd>what port to use for the viewer</dd>
 </dl>
+
+  <h4>Details</h4>
+
+  <p>The 'state'</p>
+
 
 
 

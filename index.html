@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Trelliscope: Detailed Vis of Large Complex Data in R</title>
+    <title>Trelliscope Tutorial</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -35,6 +35,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <!-- <link href='http://fonts.googleapis.com/css?family=Lustria' rel='stylesheet' type='text/css'> -->
     <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
     
 
     <!-- Fav and touch icons -->
@@ -51,9 +52,13 @@
 
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-           <li class='active'><a href='index.html'>Docs</a></li><li class=''><a href='functionref.html'>Function Ref</a></li><li><a href='https://github.com/tesseradata/datadr'>Github <i class='fa fa-github'></i></a></li>
+           <li class='active'><a href='index.html'>Docs</a></li><li class=''><a href='functionref.html'>Function Ref</a></li><li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
         </ul>
-        <p class="myHeader">Trelliscope: Detailed Vis of Large Complex Data in R</p>
+        <a class='navbar-brand' href='http://tessera.io'>
+  <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -6px;'>
+  Tessera
+</a>
+        <p class="myHeader">Trelliscope Tutorial</p>
       </div>
 
       <hr>
@@ -71,12 +76,24 @@
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#getting-started'>Getting Started</a>
+         <a target='_self' class='nav-not-header' href='#quickstart'>Quickstart</a>
+      </li>
+
+
+<li class='nav-header unselectable' data-edit-href='3fundamentals.Rmd'>Trelliscope Fundamentals</li>
+      
+      <li class='active'>
+         <a target='_self' class='nav-not-header' href='#multipanel-display'>Multipanel Display</a>
       </li>
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#trellis-display'>Trellis Display</a>
+         <a target='_self' class='nav-not-header' href='#axis-limits'>Axis Limits</a>
+      </li>
+
+
+      <li class='active'>
+         <a target='_self' class='nav-not-header' href='#aspect-ratio'>Aspect Ratio</a>
       </li>
 
 
@@ -85,8 +102,13 @@
       </li>
 
 
-<li class='nav-header unselectable' data-edit-href='2displays.Rmd'>Trelliscope Displays</li>
+<li class='nav-header unselectable' data-edit-href='4displays.Rmd'>Trelliscope Display</li>
       
+      <li class='active'>
+         <a target='_self' class='nav-not-header' href='#initialize-a-vdb'>Initialize a VDB</a>
+      </li>
+
+
       <li class='active'>
          <a target='_self' class='nav-not-header' href='#division-with-datadr'>Division with datadr</a>
       </li>
@@ -98,12 +120,12 @@
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#axis-limits'>Axis Limits</a>
+         <a target='_self' class='nav-not-header' href='#cognostics'>Cognostics</a>
       </li>
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#cognostics'>Cognostics</a>
+         <a target='_self' class='nav-not-header' href='#trelliscope-axis-limits'>Trelliscope Axis Limits</a>
       </li>
 
 
@@ -113,33 +135,38 @@
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#linking-displays'>Linking Displays</a>
+         <a target='_self' class='nav-not-header' href='#related-displays'>Related Displays</a>
       </li>
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#scatterplot-displays'>Scatterplot Displays</a>
+         <a target='_self' class='nav-not-header' href='#display-state'>Display State</a>
       </li>
 
 
       <li class='active'>
-         <a target='_self' class='nav-not-header' href='#syncing-files-with-the-web'>Syncing Files With the Web</a>
+         <a target='_self' class='nav-not-header' href='#other-panel-functions'>Other Panel Functions</a>
       </li>
 
 
-<li class='nav-header unselectable' data-edit-href='3viewer.Rmd'>Viewing Displays</li>
+      <li class='active'>
+         <a target='_self' class='nav-not-header' href='#handling-displays'>Handling Displays</a>
+      </li>
+
+
+      <li class='active'>
+         <a target='_self' class='nav-not-header' href='#sharing-displays'>Sharing Displays</a>
+      </li>
+
+
+<li class='nav-header unselectable' data-edit-href='5viewer.Rmd'>Viewing Displays</li>
       
       <li class='active'>
          <a target='_self' class='nav-not-header' href='#trelliscope-viewer'>Trelliscope Viewer</a>
       </li>
 
 
-      <li class='active'>
-         <a target='_self' class='nav-not-header' href='#cognostics-interactions'>Cognostics Interactions</a>
-      </li>
-
-
-<li class='nav-header unselectable' data-edit-href='5misc.Rmd'>Misc</li>
+<li class='nav-header unselectable' data-edit-href='6misc.Rmd'>Misc</li>
       
       <li class='active'>
          <a target='_self' class='nav-not-header' href='#scalable-system'>Scalable System</a>
@@ -163,11 +190,13 @@
 <div class='tab-pane active' id='background'>
 <h3>Background</h3>
 
-<div class="alert alert-warning">This tutorial is undergoing revision based on recent updates in the Trelliscope package.  The content is still is relevant as-is for the most part, but will be much better soon.</div>
+<p>Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment.  Trelliscope is a component in the <a href="tessera.io">Tessera</a> environment.</p>
 
-<p>Trelliscope provides a way to visualize large, complex data in great detail from within the R statistical programming environment.  This package operates on data that has been split into subsets using the <a href="http://github.com/tesseradata/datadr">datadr</a> package.  Data can be local R data objects or can be very large data sets supported by the <a href="http://github.com/tesseradata/RHIPE">RHIPE</a> backend of <code>datadr</code>.</p>
+<p>For those familiar with <a href="http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/">Trellis Display</a>, <a href="http://docs.ggplot2.org/0.9.3.1/facet_wrap.html">faceting in ggplot</a>, or the notion of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples</a>, Trelliscope provides a scalable way to break a set of data into pieces, apply a plot method to each piece, and then arrange those plots in a grid and interactively sort, filter, and query panels of the display based on metrics of interest.  With Trelliscope, we are able to create multipanel displays on data with a very large number of subsets and view them in an interactive and meaningful way.</p>
 
-<p>Trelliscope is based on the concept of Divide and Recombine (D&amp;R).</p>
+<p>Another important function of trelliscope is the organization of all of the Trelliscope displays and other visual artifacts we have deemed worthy of presentation into what we call a &quot;visualization database&quot;, which can be easily shared with other researchers in a way that they can interact with.</p>
+
+<p>To start getting a feel for Trelliscope, continue to the next section, &quot;Quickstart&quot;.</p>
 
 <h4>Reference</h4>
 
@@ -181,7 +210,7 @@
 <p>References:</p>
 
 <ul>
-<li><a href="http://tesseradata.org">tesseradata.org</a></li>
+<li><a href="http://tessera.io">tessera.io</a></li>
 <li><a href="http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf">Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data</a></li>
 <li><a href="http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full">Large complex data: divide and recombine (D&amp;R) with RHIPE</a></li>
 <li><a href="http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf">Visualization Databases for the Analysis of Large Complex Datasets</a></li>
@@ -190,515 +219,78 @@
 </div>
 
 
-<div class='tab-pane' id='getting-started'>
-<h3>Getting Started</h3>
+<div class='tab-pane' id='quickstart'>
+<h3>Quickstart</h3>
 
-<p>Trelliscope is a part of and depends on <code>datadr</code>.  It is recommended to spend some time in the <code>datadr</code> <a href="http://tesseradata.org/docs-datadr/index.html">tutorial</a> to get acquainted with the package.  Mainly focusing on the <a href="http://tesseradata.org/docs-datadr/index.html#division">division</a> aspects and the <a href="http://tesseradata.org/docs-datadr/index.html#backend-choices">backend options</a> of the package will suffice, although it is recommended to get well-acquainted with the entire package, as Trelliscope is simply a visualization component in the D&amp;R analysis paradigm.</p>
+<p>Before getting into the details, we&#39;ll first go over a quick example to provide a feel for what can be done with Trelliscope.  This example is adapted from the quick start example in the <a href="tessera.io/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
 
-<h4>Installation</h4>
+<h4>Package installation</h4>
 
-<p>To install Trelliscope, we must first install <code>datadr</code>, which is discussed <a href="http://tesseradata.org/docs-datadr/index.html#getting-started">here</a>.</p>
+<p>First, we need to install the necessary components, <code>datadr</code> and <code>trelliscope</code>.  These are R packages that we install from github.</p>
 
-<p>Then, to install Trelliscope:</p>
-
-<pre><code class="r">library(devtools)
-install_github(&quot;trelliscope&quot;, &quot;tesseradata&quot;)
+<pre><code class="r"># install packages (one time only)
+install.packages(&quot;devtools&quot;) # if not installed
+devtools::install_github(&quot;tesseradata/datadr&quot;)
+devtools::install_github(&quot;tesseradata/trelliscope&quot;)
 </code></pre>
 
-<p>Then we load the package:</p>
+<p>Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed.  For support of more scalable back ends like Hadoop when dealing with larger data sets, see the <a href="http://tessera.io/#quickstart">quickstart section</a> on the Tessera website.</p>
 
-<pre><code class="r">library(trelliscope)
+<p>We will use as an example a data set consisting of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from <a href="http://www.zillow.com">Zillow</a> and obtained from <a href="https://www.quandl.com">quandl</a>.  A pre-processed version of this data is available in a package called <code>housingData</code>, which we will use.  To install this package:</p>
+
+<pre><code class="r">devtools::install_github(&quot;hafen/housingData&quot;)
 </code></pre>
 
-<p>and we are ready to go.</p>
+<h4>Environment setup</h4>
 
-<h4>Connecting to a Visualization Database (VDB)</h4>
+<p>Now we load the packages and look at the housing data:</p>
 
-<p>Collections of Trelliscope and other displays created throughout the course of an analysis are organized into a visualization database (VDB) for the project.  Displays can be organized into groups by analysis thread.</p>
+<pre><code class="r"># load packages
+library(housingData)
+library(datadr)
+library(trelliscope)
 
-<p>The first step to using Trelliscope for an analysis project is to connect to a VDB.  A VDB connection is simply a connection to a directory on disk where all of the VDB files reside or will reside.</p>
-
-<pre><code class="r"># initialize a connection to a new VDB to be located at /private/tmp/vdbtest
-vdbDir &lt;- file.path(tempdir(), &quot;vdbtest&quot;)
-conn &lt;- vdbConn(vdbDir, autoYes = TRUE, name = &quot;myProject&quot;)
+# look at housing data
+str(housing)
 </code></pre>
 
-<p>If the VDB connection directory doesn&#39;t exist, it will ask whether it should be created.  Here, we specify <code>autoYes=TRUE</code> to automatically answer yes to this question.  In any subsequent R session, we can connect to the existing VDB directory with the same <code>vdbConn()</code> command.</p>
-
-<p>Most Trelliscope functions need the VDB connection information to know where to put things.  It can be tedious to always supply this, so <code>vdbConn()</code> sets a global R option called <code>&quot;vdbConn&quot;</code> that store the connection information.  If in a Trelliscope function we do not explicitly specify the connection, the default is to search for the global <code>vdbConn</code> option.  The assumption is that in any one R session, the user will be using just one VDB, and thus there will not be multiple conflicting connections.</p>
-
-<p>We can now look at some examples and start populating the VDB with displays.</p>
-
-</div>
-
-
-<div class='tab-pane' id='trellis-display'>
-<h3>Trellis Display</h3>
-
-<p>In this section, we will explore an example dataset using the <code>lattice</code> package, which is based on Trellis Display, upon which many of the principles of Trelliscope are built.  Note that lattice is not required for plotting in Trelliscope - you can use <code>ggplot2</code>, base R graphics, or potentially any other plotting mechanism that can be rendered in a web page.</p>
-
-<h4><code>airplane</code> data</h4>
-
-<p>The Trelliscope package includes a dataset called <code>airplane</code> which we will use as an example dataset in this tutorial.  This data is very small and can be analyzed quite easily without the help of trelliscope, but we use it to demonstrate the functionality.  Bear in mind that the same tools apply to much larger data.</p>
-
-<p>Let&#39;s first get a feel for the data:</p>
-
-<pre><code class="r">data(airplane)
-head(airplane)
+<pre><code>&#39;data.frame&#39;:   224369 obs. of  7 variables:
+ $ fips            : Factor w/ 3235 levels &quot;01001&quot;,&quot;01003&quot;,..: 187 187 187 187 187 187 187 187 187 187 ...
+ $ county          : Factor w/ 1969 levels &quot;Abbeville County&quot;,..: 17 17 17 17 17 17 17 17 17 17 ...
+ $ state           : Factor w/ 57 levels &quot;AK&quot;,&quot;AL&quot;,&quot;AR&quot;,..: 6 6 6 6 6 6 6 6 6 6 ...
+ $ time            : Date, format: &quot;2008-10-01&quot; &quot;2008-11-01&quot; ...
+ $ nSold           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ medListPriceSqft: num  308 299 NA 290 288 ...
+ $ medSoldPriceSqft: num  326 NA 318 306 292 ...
 </code></pre>
 
-<pre><code>              dat_ams    org    NO3    SO4    NH4      CHL org_err NO3_err
-1 2010-06-28 16:25:21  9.263 0.4490 0.1149 0.1256 0.011193  0.1108 0.01721
-2 2010-06-28 16:25:34 13.288 0.5890 0.1925 0.2286 0.017478  0.1165 0.01809
-3 2010-06-28 16:25:46 12.134 0.5356 0.2323 0.2240 0.006066  0.1161 0.01768
-4 2010-06-28 16:25:59 12.357 0.5700 0.3070 0.1785 0.033465  0.1164 0.01820
-5 2010-06-28 16:26:12 10.112 0.4567 0.1975 0.1718 0.006830  0.1146 0.01746
-6 2010-06-28 16:26:24  7.493 0.2889 0.2048 0.1078 0.036566  0.1116 0.01657
-  SO4_err NH4_err CHl_err latitude longitude altitude static_p altitude_p
-1 0.02220 0.03308 0.01238    38.73    -121.4    353.6    967.7      327.2
-2 0.02444 0.03305 0.01217    38.73    -121.3    368.7    966.1      340.8
-3 0.02517 0.03307 0.01231    38.74    -121.3    384.7    964.3      356.4
-4 0.02533 0.03322 0.01227    38.74    -121.3    393.2    963.4      364.9
-5 0.02503 0.03313 0.01225    38.75    -121.3    388.1    963.9      360.0
-6 0.02412 0.03303 0.01193    38.75    -121.3    379.5    964.8      352.0
-  static_t potential_t dewpt    RH h2o_MF windspd winddir cpc_3025
-1    28.43       31.34 14.13 41.64 10.544    3.45   329.8     5508
-2    28.66       31.66 13.50 39.34 10.114    3.90   325.0     3915
-3    28.60       31.72 13.38 39.28 10.054    4.14   320.2     4037
-4    28.51       31.71 12.94 38.48  9.796    4.12   317.8     3969
-5    28.80       31.98 11.10 33.50  8.680    4.70   317.4     3567
-6    28.84       31.94 11.50 34.18  8.872    4.54   316.6     2940
-  cpc_3010 ozone    co so2     no    no2   noy mz_33   mz_42 mz_45 mz_59
-1    482.8 46.79 109.7  NA 0.3074 1.7454 5.245 16.73 0.10241 5.985 8.495
-2    352.4 44.28  97.6  NA 0.0514 0.3584 3.476 14.58 0.11756 5.216 7.713
-3    364.4 45.18 101.2  NA 0.1456 0.5726 4.092 14.42 0.13327 5.188 6.852
-4    348.0 45.50 103.1  NA 0.1593 0.6876 4.024 14.08 0.09164 4.843 7.080
-5    314.0 40.42  91.8  NA 0.1150 0.8004 3.528 11.14 0.04075 5.075 6.459
-6    263.2 40.14  87.8  NA 0.0354 0.3476 3.045 10.69 0.05883 4.171 4.851
-   mz_69 mz_71  mz_79  mz_93 mz_107  mz_137 mz_43 mz_61  mz_87 mz69_71
-1 1.5888 3.880 0.4166 0.4464 0.6861 0.51914 8.521 5.386 0.3025   5.469
-2 0.8105 3.654 0.2426 0.5712 0.8691 0.45182 8.299 5.125 0.2352   4.464
-3 0.7905 3.345 0.1917 0.4538 0.6606 0.09299 8.169 5.097 0.4179   4.136
-4 0.9043 2.939 0.2614 0.2178 0.7805 0.35259 8.377 5.169 0.2983   3.843
-5 0.9109 2.744 0.1778 0.1849 0.2648 0.34773 6.872 4.961 0.3636   3.655
-6 1.1104 1.878 0.1725 0.1533 0.8381 0.16363 7.049 4.566 0.2459   2.988
-  leg_flag    nox
-1       13 2.0528
-2       13 0.4098
-3       13 0.7182
-4       13 0.8469
-5        3 0.9154
-6        3 0.3830
+<p>We see that we have a data frame with the information we discussed, in addition to the number of units sold.</p>
+
+<h4>Setting up a visualization database</h4>
+
+<p>We create many plots throughout the course of analysis, and with Trelliscope, we can store these in a &quot;visualization database&quot; (VDB), which is a directory on our computer where all of the information about our display artifacts is stored.  Typically we will set up a single VDB for each project we are working on.  To initialize and connect to a VDB, we call the <code>vdbConn()</code> function with the path where our VDB is located (or where we would like it to be located), and optionally give it a name.</p>
+
+<pre><code class="r"># connect to a &quot;visualization database&quot;
+conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)
 </code></pre>
 
-<p>We see a date/time variable, latitude, longitude, altitude, and several measurements.  Here we will focus on the measurement of <code>co</code>.</p>
+<p>This connects to a directory called <code>&quot;vdb&quot;</code> relative to our current working directory.  The first time you do this it will ask to make sure you want to create the directory.  R holds this connection in its global options so that subsequent calls will know where to put things without explicitly specifying the connection each time.</p>
 
-<h4><code>co</code> vs. time</h4>
+<h4>Visualization by county and state</h4>
 
-<p>Let&#39;s take a look at <code>co</code> vs. time:</p>
+<p>Trelliscope allows us to visualize large data sets in detail.  We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.</p>
 
-<pre><code class="r"># look at co vs. time
-Sys.setenv(TZ=&quot;UTC&quot;)
-xyplot(co ~ dat_ams, data = airplane, aspect = 0.2)
+<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state.  To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package.  It is recommended to have some familiarity with the <a href="tessera.io/docs-datadr">datadr</a> package.</p>
+
+<pre><code class="r"># divide housing data by county and state
+byCounty &lt;- divide(housing, 
+   by = c(&quot;county&quot;, &quot;state&quot;))
 </code></pre>
 
-<p><img src="figures/knitr/airplane_time.png" alt="plot of chunk airplane_time"> </p>
+<p>Our <code>byCounty</code> object is now a distributed data frame (ddf), which is simply a data frame split into chunks of key-value pairs.  The key defines the split, and the value is the data frame for that split.  We can see some of its attributes by printing the object:</p>
 
-<p>This plots <code>co</code> vs. <code>dat_ams</code>, and gives the plot an aspect ratio of 0.2.  Note that aspect ratios are very important for visual perception and should not be an afterthought or not thought of at all when creating a display.</p>
-
-<p>It looks like there are several <code>co</code> measurements over the course of a day, split into two chunks with a 4-5 hour gap in between.  It turns out that there are two separate flights - one in the morning and one in the afternoon.</p>
-
-<p>To account for this in our analyses, let&#39;s create a new variable <code>flight</code> with values <code>&quot;am&quot;</code> and <code>&quot;pm&quot;</code>:</p>
-
-<pre><code class="r"># distinguish &quot;am&quot; and &quot;pm&quot; flights
-midTime &lt;- as.POSIXct(&quot;2010-06-28 21:00:00 UTC&quot;)
-airplane$flight &lt;- ifelse(airplane$dat_ams &lt; midTime, &quot;am&quot;, &quot;pm&quot;)
-</code></pre>
-
-<h4>Altitude vs. time</h4>
-
-<p>Another interesting variable is altitude.  If we look at altitude vs. time:</p>
-
-<pre><code class="r"># look at altitude vs. time
-xyplot(altitude ~ dat_ams, data = airplane, aspect = 0.2)
-</code></pre>
-
-<p><img src="figures/knitr/ap_alt.png" alt="plot of chunk ap_alt"> </p>
-
-<p>We see that altitude typically stays fairly constant a little under 500 and 1000, with some interesting quick ascents to higher altitudes.  It may be interesting to investigate different altitude levels, and we can create a discretized altitude variable:</p>
-
-<pre><code class="r"># create a discrete version of altitude
-airplane$altCut &lt;- cut(airplane$altitude, seq(0, 3000, by = 500))
-</code></pre>
-
-<h4>Flight tracks</h4>
-
-<p>We can get a feel for the flight tracks during each flight with the following:</p>
-
-<pre><code class="r"># take a look at airplane tracks
-xyplot(latitude ~ longitude, data = airplane,
-   groups = flight,
-   aspect = &quot;iso&quot;,
-   alpha = 0.5,
-   auto.key = list(space = &quot;right&quot;)
-)
-</code></pre>
-
-<p><img src="figures/knitr/ap_tracks.png" alt="plot of chunk ap_tracks"> </p>
-
-<p>The <code>groups</code> argument tells lattice to use a different color to plot data corresponding to each flight.  <code>aspect=&quot;iso&quot;</code> forces the aspect ratio of the plot to be such that the units of the x and y axis are equal according to the physical screen space they cover relative to their units.</p>
-
-<h4>Adding altitude</h4>
-
-<p>Suppose we want to incorporate altitude into the tracks plot.  There are several ways we could do this.  Here, for each flight we plot the tracks colored differently for each level of altitude.</p>
-
-<pre><code class="r"># look at tracks with altitude and flight
-library(RColorBrewer)
-xyplot(latitude ~ longitude | flight, 
-   data = airplane,
-   panel = function(x, y, ...) {
-      panel.fill(&quot;#E0E0E0&quot;)
-      panel.grid(h = -1, v = -1, col = &quot;lightgray&quot;)
-      panel.xyplot(x, y, ...)
-   },
-   groups = altCut,
-   between = list(x = 0.5),
-   aspect = &quot;iso&quot;,
-   par.settings = list(superpose.symbol = list(col = brewer.pal(6, &quot;Accent&quot;))),
-   auto.key = list(space = &quot;right&quot;)
-)
-</code></pre>
-
-<p><img src="figures/knitr/ap_tracks_alt.png" alt="plot of chunk ap_tracks_alt"> </p>
-
-<p>This display introduces several more elements of Trellis Display.  The most important is <em>conditioning</em>, or <em>faceting</em> on the variable <code>flight</code>.  In the R formula interface, this is specified by the <code>|</code> operator.  This causes a panel to be rendered independently for each subset defined by the levels of <code>flight</code>.</p>
-
-<p>Another notion introduced in this example is that of a panel function.  The panel function provides instructions for what to plot for each panel in the display, and the input to the panel function is a subset of data as specified by the conditioning variables.  The default panel function for <code>xyplot()</code> is <code>panel.xyplot()</code>.  Here, we use that, but additionally fill the background of each panel and add grid lines (which can also be done by specifying <code>type=c(&quot;p&quot;, &quot;g&quot;)</code>).</p>
-
-<p>Other aspects introduced here include the key, specified by <code>auto.key</code>, and special settings for the color of the symbols, specified by <code>par.settings</code>.  There are several aspects of Trellis Display as implemented in the <code>lattice</code> package that we encourage you to look into on your own, starting <a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">here</a>.</p>
-
-<h4>More on conditioning</h4>
-
-<p>As conditioning is the basis of Trelliscope display, we&#39;ll cover a few more examples of conditioning, paying particular attention the importance of axis limits for being able to make meaningful judgements of similarities or differences between panels.</p>
-
-<p>Let&#39;s take a look at the airplane tracks broken up by time.  First, we will create a new factor variable that groups time by 15 minute intervals:</p>
-
-<pre><code class="r"># break time into 15 minute intervals
-airplane$datCut &lt;- sprintf(&quot;%s:%02d&quot;,
-   format(airplane$dat_ams, &quot;%m-%d/%H&quot;), 
-   floor(as.integer(format(airplane$dat_ams, &quot;%M&quot;)) / 15) * 15
-)
-</code></pre>
-
-<p>One way we might view the data conditioned on this new time variable is to plot a directional arrow of the flight&#39;s path per time interval:</p>
-
-<pre><code class="r"># plot of airplane tracks by 15 minute intervals
-arrowPanel &lt;- function(x, y, ...) {
-   n &lt;- length(x)
-   panel.grid(h = -1, v = -1)
-   panel.arrows(x[1:(n-1)], y[1:(n-1)], x[2:n], y[2:n], 
-      length = 0.05, alpha = 0.3, col = &quot;blue&quot;)
-}
-
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   aspect = &quot;iso&quot;,
-   subset = flight == &quot;pm&quot;
-)
-</code></pre>
-
-<p><img src="figures/knitr/tracks_datcut.png" alt="plot of chunk tracks_datcut"> </p>
-
-<h4>Scales / axis limits</h4>
-
-<p>Using this example, an important issue to discuss with Trellis Display is that of <em>scales</em>.  When viewing panels of a Trellis display, meaningful visual comparisons between panels greatly depend on how the limits of the x and y axes are determined.  There are three choices for each axis:</p>
-
-<ul>
-<li><strong>&quot;same&quot;</strong>: the same limits are used for all the panels</li>
-<li><strong>&quot;free&quot;</strong>: the limits for each panel are determined by just the points in that panel</li>
-<li><strong>&quot;sliced&quot;</strong>:  the length (max - min) of the scales are constrained to remain the same across panels</li>
-</ul>
-
-<p>Determining suitable axis limits is dependent on what is being visualized, but typically &quot;same&quot; or &quot;sliced&quot; are good choices as they enable panel-to-panel comparisons, which is where much of the power of this type of visualization lies.  You might choose &quot;sliced&quot; if you are interested in relative behaviors in terms of scale, or &quot;same&quot; if you are interested in relative behaviors both in terms of location and scale.</p>
-
-<p>The handling of panel axis limits is specified by the <code>scales</code> argument, which takes a names list of lists with names <code>x</code> and <code>y</code> for the x and y axes respectively.  There are several options to specify for each axis scale, but <code>relation</code> specifies the axis limit behavior.</p>
-
-<p>The default in <code>lattice</code> is &quot;same&quot;, and we have seen an example of this in our previous plot.  Let&#39;s also look at the other options.</p>
-
-<h4>Free axes</h4>
-
-<p>Here is the same plot as before but with both axes &quot;free&quot;:</p>
-
-<pre><code class="r"># example of both x and y axes &quot;free&quot;
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = &quot;free&quot;), 
-      y = list(relation=&quot;free&quot;)),
-   subset = flight == &quot;pm&quot;
-)
-</code></pre>
-
-<p><img src="figures/knitr/tracks_free.png" alt="plot of chunk tracks_free"> </p>
-
-<p>It is quite difficult to understand how things vary between panels in this plot.</p>
-
-<h4>Sliced axes</h4>
-
-<p>Here is the plot with both axes &quot;sliced&quot;:</p>
-
-<pre><code class="r"># example of both x and y axes &quot;sliced&quot;
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = &quot;sliced&quot;), 
-      y = list(relation=&quot;sliced&quot;)),
-   subset = flight == &quot;pm&quot;
-)
-</code></pre>
-
-<p><img src="figures/knitr/tracks_sliced.png" alt="plot of chunk tracks_sliced"> </p>
-
-<p>Now we can make relative judgements between panels, but it is difficult to judge the magnitude of shifts in location from one panel to the other.</p>
-
-<h4>The prepanel function</h4>
-
-<p>One more notion to introduce in Trellis Display that will translate over to Trelliscope is that of a <em>prepanel function</em>.  A prepanel function can be used to determine the individual panel x and y axis data ranges from which the &quot;same&quot;, &quot;free&quot;, or &quot;sliced&quot; axis computations will be based.  </p>
-
-<p>For example, suppose you are introducing other visual artifact to your panels other than the original data being plotted, and you would like to make sure that the axis limits account for the possibility of these extending beyond the range of the data being plotted.</p>
-
-<p>Here is an example of using a prepanel function to specify that the axis limits should extend beyond the range of both the x and y-axis variables by 1 unit in each direction.  The prepanel function, like the panel function, takes the current x and y variables and must return a list that includes <code>xlim</code> and <code>ylim</code> which specify the axis limit range for each panel.</p>
-
-<pre><code class="r"># prepanel example
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   prepanel = function(x, y) {
-      list(xlim = range(x) + c(-1, 1), ylim = range(y) + c(-1, 1))
-   },
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = &quot;free&quot;), 
-      y = list(relation=&quot;free&quot;)),
-   subset = flight == &quot;pm&quot;
-)
-</code></pre>
-
-<p><img src="figures/knitr/tracks_prepanel.png" alt="plot of chunk tracks_prepanel"> </p>
-
-<!-- latCuts <- seq(38.2, 39.4, by = 0.1)
-lonCuts <- seq(-121.8, -120.8, by = 0.1)
-
-xyplot(latitude ~ longitude, data = airplane,
-   groups = airplane$dat_ams < as.POSIXct("2010-06-28 21:00:00 UTC"),
-   panel = function(x, y, ...) {
-      panel.abline(v = lonCuts, col = "gray")
-      panel.abline(h = latCuts, col = "gray")
-      panel.xyplot(x, y, ...)
-   },
-   aspect = "iso"
-) -->
-
-</div>
-
-
-<div class='tab-pane' id='visualization-databases'>
-<h3>Visualization Databases</h3>
-
-<!-- Now that we have looked a little at the data and covered some of the principles of Trellis Display, before moving on to Trelliscope Displays, let's first discuss how we can populate a visualization database with displays. -->
-
-<p>Throughout the course of an analysis, we create several visual displays, such as those seen so far.  To help both keep track of what has been done and communicate our work to others, we can organize our displays in a <em>visualization database</em> (VDB).  </p>
-
-<p>In Trelliscope, a VDB is a collection of display objects that can either be simple plots created from various R plotting packages, like the ones we have seen so far, or Trelliscope displays, which are displays created for a divided dataset with a potentially very large number of subsets.  This type of display is discussed in detail in the <a href="#division-with-datadr">Trelliscope Displays</a> section.  Trelliscope provides a way to view and interact with these displays, as well as easily embed them in a web notebook, which we discuss in the <a href="#viewing-displays">Viewing Displays</a> and <a href="#lab-notebooks">Lab Notebooks</a> sections.</p>
-
-<p>Here, we will get introduced to a few of the commands for interacting with a VDB using Trelliscope. </p>
-
-<h4>Connecting to a VDB</h4>
-
-<p>We have already initialized a VDB.  If we are in a new R session, we can re-connect to the VDB with the following:</p>
-
-<pre><code class="r"># re-connect to our VDB
-conn &lt;- vdbConn(file.path(tempdir(), &quot;vdbtest&quot;))
-</code></pre>
-
-<p>The other information about the VDB connection (such as its name) have been stored and are read in.  If you would like to reset a VDB connection&#39;s settings (such as for changing the VDB name), you can add <code>reset = TRUE</code> to the call.</p>
-
-<p>Recall that <code>vdbConn()</code> sets a global option with the connection information such that all methods have access to this information without explicitly supplying the connection object all the time.</p>
-
-<h4>Adding a display to a VDB</h4>
-
-<p>Plots created with R packages <code>lattice</code> or <code>ggplot2</code>, as well as with any R expression that plots to a graphics device, can be added to a VDB with the function <code>addDisplay()</code>.  We will cover that here, and in the next section we will see how to create and add Trelliscope displays to a VDB.</p>
-
-<p>Say that we would like to add one of our plots we have created so far to our VDB:</p>
-
-<pre><code class="r"># add a lattice plot to our VDB
-p &lt;- xyplot(latitude ~ longitude | flight, 
-   data = airplane,
-   panel = function(x, y, ...) {
-      panel.fill(&quot;#E0E0E0&quot;)
-      panel.grid(h = -1, v = -1, col = &quot;lightgray&quot;)
-      panel.xyplot(x, y, ...)
-   },
-   groups = altCut,
-   between = list(x = 0.5),
-   aspect = &quot;iso&quot;,
-   par.settings = list(superpose.symbol = 
-      list(col = brewer.pal(6, &quot;Accent&quot;))),
-   auto.key = list(space = &quot;right&quot;))
-
-addDisplay(p, 
-   name  = &quot;tracks_byflight&quot;, 
-   group = &quot;exploratory&quot;,
-   desc  = &quot;The tracks of the airplane with a panel for each of the morning and evening flights.  Color by altitude of plane.&quot;,
-   width = 800, height = 450)
-</code></pre>
-
-<p>There are three attributes we can specify to describe a display record being added to the VDB:</p>
-
-<ul>
-<li><code>name</code>: the name of the display</li>
-<li><code>group</code>: the group the display belongs to (default is <code>&quot;common&quot;</code>)</li>
-<li><code>desc</code>: a description of the display</li>
-</ul>
-
-<p>It is sufficient to just specify <code>name</code>, but specifying <code>group</code> is also recommended and is used to help organize plots by different aspects of the analysis.  It is also a good practice to provide a detailed description of the plot.</p>
-
-<p>The <code>dim</code> argument is a list specifying the width and height of the resulting plot (in pixels), and the resolution of the raster image that will be created.</p>
-
-<p>Adding displays to our VDB helps us document our displays in line with our analyses.  This makes the process of dissemination much easier, as we will see.  In the course of analysis, we can create many ineffective displays in our quest to understand the data.  But the displays that are insightful deserve the extra care of being documented and added to the VDB.</p>
-
-<h4>What a display looks like in the VDB</h4>
-
-<p>So what is actually happening when we create a display?  Trelliscope creates a directory for the display in the VDB directory and fills it with various pieces of metadata.  It also can hold the actual rendered panels, as is the case here.</p>
-
-<p>Let&#39;s see what got created for this display:</p>
-
-<pre><code class="r"># list the files in the &quot;displays&quot; directory of the VDB
-list.files(file.path(vdbDir, &quot;displays&quot;))
-</code></pre>
-
-<pre><code>[1] &quot;_displayList.Rdata&quot; &quot;exploratory&quot;       
-</code></pre>
-
-<p>We see a file <code>_displayList.Rdata</code>, which is an object containing the grand list of all displays, as well as various pieces of metadata about the displays.  The other file, <code>&quot;exploratory&quot;</code> is a directory that corresponds to the group that our newly created display belongs to.  Any display with group <code>&quot;exploratory&quot;</code> will be put here.</p>
-
-<pre><code class="r"># list the files in the &quot;exploratory&quot; group
-list.files(file.path(vdbDir, &quot;displays&quot;, &quot;exploratory&quot;))
-</code></pre>
-
-<pre><code>[1] &quot;tracks_byflight&quot;
-</code></pre>
-
-<p>We see a directory for our display, <code>tracks_byflight</code> in here.  Let&#39;s see what is in this directory:</p>
-
-<pre><code class="r"># look at files in the &quot;tracks_byflight&quot; directory
-list.files(file.path(vdbDir, &quot;displays&quot;, &quot;exploratory&quot;, &quot;tracks_byflight&quot;))
-</code></pre>
-
-<pre><code>[1] &quot;displayObj.Rdata&quot; &quot;thumb.png&quot;       
-</code></pre>
-
-<p>There are two files:</p>
-
-<ul>
-<li><code>displayObj.Rdata</code> is an R data object with all of the parameters that went in to creating the display</li>
-<li><code>thumb.png</code> is the rendered display</li>
-</ul>
-
-<p>For Trelliscope displays, <code>thumb.png</code> is the rendering of one subset of the data.  There will also be a subdirectory, <code>panels</code>, which is a directory either containing the data against which the display is applied, or a collection of rendered panels.</p>
-
-<h4>Listing all displays</h4>
-
-<p>To see what displays have been created in a VDB, we can do the following:</p>
-
-<pre><code class="r"># list all displays in the VDB
-listDisplays()
-</code></pre>
-
-<pre><code>           name |       group |                    desc | n |     dataClass
-----------------+-------------+-------------------------+---+--------------
-tracks_byflight | exploratory | The tracks of the ai... | 1 | none (R plot)
-</code></pre>
-
-<p>This provides some simple information about each display in the VDB.  The column <code>n</code> is the number of panels in the display, and the column <code>dataClass</code> indicates the connection type of the data from which the display was created (used for Trelliscope displays).</p>
-
-<!-- For more specific information about a display -->
-
-<h4>Viewing displays</h4>
-
-<p>We can view a display with the following:</p>
-
-<pre><code class="r"># view the tracks_by_flight display
-view(&quot;tracks_byflight&quot;)
-</code></pre>
-
-<p>There is a much more interesting viewer for Trelliscope displays.</p>
-
-<h4>Removing displays</h4>
-
-<p>It is possible to overwrite a display, in which case the directory of the display being replaced is renamed with a <code>&quot;_bak&quot;</code> appended to its name.  </p>
-
-<p>However, we may want to completely remove a display from our VDB.  We can do this with:</p>
-
-<pre><code class="r">removeDisplay(&quot;tracks_byflight&quot;)
-</code></pre>
-
-<p>While a display is uniquely identified by its name and group, we can get away with just specifying a name if it is unique.</p>
-
-</div>
-
-
-<div class='tab-pane' id='division-with-datadr'>
-<h3>Division with datadr</h3>
-
-<p>Trelliscope is an extension of Trellis Display that allows you to create displays with potentially thousands to millions of panels.  It provides a mechanism to create and interact with these displays.</p>
-
-<p>Conditioning in Trelliscope is achieved by dividing the data into subsets, one subset for each panel.  Trelliscope uses the division mechanism of the Divide &amp; Recombine (D&amp;R) package, <code>datadr</code>.  It is assumed that you have already gone through the <code>datadr</code> <a href="http://tesseradata.org/docs-datadr">tutorial</a>.  Essentially, Trelliscope provides <em>visual recombination</em> methods for D&amp;R.</p>
-
-<h4>Geographical division of airplane data</h4>
-
-<p>There are many ways we might want to split the data, depending on the purpose of our analysis.  One aspect of the <code>airplane</code> data that we are interested in is how different variables, such as <code>co</code> change over the course of a day in different geographical locations.  </p>
-
-<p>Looking at our previous plots of the airplane tracks, we notice that within each square defined by the grid lines the airplane recovers many of its tracks from AM to PM:</p>
-
-<p><img src="figures/knitr/ap_tracks2.png" alt="plot of chunk ap_tracks2"> </p>
-
-<p>Thus, it might be interesting to split the data into subsets by cutting the latitude and longitude into small squares (okay, so these aren&#39;t really <em>squares</em>), and then study the variables of interest within those squares.  We can do this with the following:</p>
-
-<pre><code class="r"># latitude and longitude &quot;square&quot; boundaries
-latCuts &lt;- seq(38.2, 39.4, by=0.1)
-lonCuts &lt;- seq(-121.8, -120.8, by=0.1)
-
-# make airplane a ddf
-airplaneDdf &lt;- ddf(airplane)
-# add variables latCut and lonCut to airplane
-airplaneLL &lt;- addTransform(airplaneDdf, function(x) {
-   x$latCut &lt;- cut(x$latitude, latCuts)
-   x$lonCut &lt;- cut(x$longitude, lonCuts)
-   x
-})
-# divide the data by lat / lon
-byLatLon &lt;- divide(airplaneLL, by=c(&quot;latCut&quot;, &quot;lonCut&quot;),
-   update=TRUE)
-</code></pre>
-
-<p>Note that with this small dataset, we could have appended the <code>latCuts</code> and <code>lonCuts</code> variables to the <code>airplane</code> data frame prior to calling <code>divide()</code>.</p>
-
-<p>Let&#39;s look at the resulting distributed data frame (&quot;ddf&quot;) object:</p>
-
-<pre><code class="r"># look at the resulting object
-byLatLon
+<pre><code class="r"># look at byCounty object
+byCounty
 </code></pre>
 
 <pre><code>
@@ -706,57 +298,377 @@ Distributed data frame backed by &#39;kvMemory&#39; connection
 
  attribute      | value
 ----------------+-----------------------------------------------------------
- names          | dat_ams(POS), org(POS), NO3(num), SO4(num), and 46 more
- nrow           | 1479
- size (stored)  | 1003.68 KB
- size (object)  | 1003.68 KB
- # subsets      | 54
+ names          | fips(cha), time(Dat), nSold(num), and 2 more
+ nrow           | 224369
+ size (stored)  | 15.73 MB
+ size (object)  | 15.73 MB
+ # subsets      | 2883
 
 * Other attributes: getKeys(), splitSizeDistn(), splitRowDistn(), summary()
-* Conditioning variables: latCut, lonCut
+* Conditioning variables: county, state
 </code></pre>
 
-<p>Also, let&#39;s look at a key-value pair to make sure it looks how we think it should:</p>
+<p>And we can look at one of the subsets:</p>
 
-<pre><code class="r"># see what a subset key-value pair looks like
-byLatLon[[1]]
+<pre><code class="r"># look at a subset of byCounty
+byCounty[[1]]
 </code></pre>
 
 <pre><code>$key
-[1] &quot;latCut=(38.3,38.4]|lonCut=(-121.3,-121.2]&quot;
+[1] &quot;county=Abbeville County|state=SC&quot;
 
 $value
-              dat_ams   org    NO3    SO4    NH4      CHL org_err NO3_err
-1 2010-06-28 18:19:35 13.29 0.8401 0.7205 0.3719 0.009054  0.1214 0.01999
-2 2010-06-28 18:19:48 13.30 0.8263 0.6418 0.3653 0.037849  0.1217 0.01969
-3 2010-06-28 18:20:00 13.28 0.7154 0.6786 0.3356 0.013103  0.1219 0.01920
-4 2010-06-28 18:20:13 15.15 1.1202 0.9048 0.4539 0.020750  0.1240 0.02146
-  SO4_err NH4_err CHl_err latitude longitude altitude static_p altitude_p
-1 0.03384 0.03629 0.01250    38.37    -121.3    364.5    966.4      339.0
-2 0.03284 0.03632 0.01226    38.38    -121.3    377.3    964.9      351.4
-3 0.03274 0.03643 0.01217    38.39    -121.3    399.7    962.4      373.0
-4 0.03389 0.03658 0.01218    38.39    -121.3    378.8    964.8      351.8
-  static_t potential_t dewpt    RH h2o_MF windspd winddir cpc_3025
-1    28.40       31.35 14.25 42.10  10.64    1.25  311.29    50563
-2    28.08       31.14 14.50 43.56  10.82    1.30  331.23    33147
-3    27.90       31.20 15.60 47.20  11.67    0.40   13.56    58963
-4    28.39       31.46 15.35 45.18  11.43    1.01  318.71    62464
-  cpc_3010 ozone    co   so2     no   no2   noy mz_33    mz_42 mz_45 mz_59
-1     3500 50.45 154.5 2.735 0.3825 2.200 7.450 16.61  0.06361 4.701 5.584
-2     2350 53.56 149.2 1.992 0.3034 1.233 6.936 14.60 -0.02065 3.987 5.358
-3     4369 60.00    NA 2.980     NA    NA    NA 14.30  0.07605 4.426 6.300
-4     4606 60.37    NA 3.179     NA    NA    NA 16.04  0.07861 4.137 6.066
-   mz_69 mz_71    mz_79    mz_93 mz_107   mz_137 mz_43 mz_61  mz_87
-1 0.3564 1.263 0.092474 0.243937 0.2209 0.229548 4.951 2.940 0.3960
-2 0.6360 1.335 0.009852 0.004963 0.2840 0.192106 4.152 2.911 0.2829
-3 0.5267 1.053 0.214906 0.191094 0.4131 0.194156 4.559 2.953 0.2719
-4 0.3577 1.121 0.081007 0.176582 0.4669 0.001657 4.363 2.700 0.3743
-  mz69_71 leg_flag   nox flight  altCut      datCut
-1   1.620        6 2.583     am (0,500] 06-28/18:15
-2   1.971        6 1.536     am (0,500] 06-28/18:15
-3   1.580        6    NA     am (0,500] 06-28/18:15
-4   1.479        6    NA     am (0,500] 06-28/18:15
+   fips       time nSold medListPriceSqft medSoldPriceSqft
+1 45001 2008-10-01    NA         73.06226               NA
+2 45001 2008-11-01    NA         70.71429               NA
+3 45001 2008-12-01    NA         70.71429               NA
+4 45001 2009-01-01    NA         73.43750               NA
+5 45001 2009-02-01    NA         78.69565               NA
+...
 </code></pre>
+
+<p>The key tells us that this is Abbeville county in South Carolina, and the value is the price data for this county.</p>
+
+<h4>Creating a panel function</h4>
+
+<p>To create a Trelliscope display, we need to first provide a <em>panel</em> function, which specifies what to plot for each subset.  It takes as input either a key-value pair or just a value, depending on whether the function has two arguments or one.</p>
+
+<p>For example, here is a panel function that takes a value and creates a lattice <code>xyplot</code> of list and sold price over time:</p>
+
+<pre><code class="r"># create a panel function of list and sold price vs. time
+timePanel &lt;- function(x)
+   xyplot(medListPriceSqft + medSoldPriceSqft ~ time,
+      data = x, auto.key = TRUE, ylab = &quot;Price / Sq. Ft.&quot;)
+</code></pre>
+
+<p>Note that you can use most any R plot command here (base R plots, lattice, ggplot, rCharts, ggvis).</p>
+
+<p>test it on a subset:</p>
+
+<pre><code class="r"># test function on a subset
+timePanel(byCounty[[20]]$value)
+</code></pre>
+
+<p><img src="figures/knitr/quickstart_panel_test-1.png" alt="plot of chunk quickstart_panel_test"> </p>
+
+<p>Great!</p>
+
+<h4>Creating a cognostics function</h4>
+
+<p>Another thing we can do is specify a <em>cognostics</em> function for each subset.  A cognostic is a metric that tells us an interesting attribute about a subset of data, and we can use cognostics to have more worthwhile interactions with all of the panels in the display.  A cognostic function needs to return a list of metrics:</p>
+
+<pre><code class="r"># create a cognostics function of metrics of interest
+priceCog &lt;- function(x) { 
+   zillowString &lt;- gsub(&quot; &quot;, &quot;-&quot;, do.call(paste, getSplitVars(x)))
+   list(
+      slope = cog(coef(lm(medListPriceSqft ~ time, data = x))[2], 
+         desc = &quot;list price slope&quot;),
+      meanList = cogMean(x$medListPriceSqft),
+      meanSold = cogMean(x$medSoldPriceSqft),
+      nObs = cog(length(which(!is.na(x$medListPriceSqft))), 
+         desc = &quot;number of non-NA list prices&quot;),
+      zillowHref = cogHref(
+         sprintf(&quot;http://www.zillow.com/homes/%s_rb/&quot;, zillowString), 
+         desc = &quot;zillow link&quot;)
+   )
+}
+</code></pre>
+
+<p>We use the <code>cog()</code> function to wrap our metrics so that we can provide a description for the cognostic, and we also employ special cognostics functions <code>cogMean()</code> and <code>cogRange()</code> to compute mean and range with a default description.</p>
+
+<p>We should test the cognostics function on a subset:</p>
+
+<pre><code class="r"># test cognostics function on a subset
+priceCog(byCounty[[1]]$value)
+</code></pre>
+
+<pre><code>$slope
+         time 
+-0.0002323686 
+
+$meanList
+[1] 72.76927
+
+$meanSold
+[1] NaN
+
+$nObs
+[1] 66
+
+$zillowHref
+[1] &quot;&lt;a href=\&quot;http://www.zillow.com/homes/Abbeville-County-SC_rb/\&quot; target=\&quot;_blank\&quot;&gt;link&lt;/a&gt;&quot;
+</code></pre>
+
+<h4>Making the display</h4>
+
+<p>Now we can create a Trelliscope display by sending our data, our panel function, and our cognostics function to <code>makeDisplay()</code>:</p>
+
+<pre><code class="r"># create the display and add to vdb
+makeDisplay(byCounty,
+   name = &quot;list_sold_vs_time_quickstart&quot;,
+   desc = &quot;List and sold price over time&quot;,
+   panelFn = timePanel, 
+   cogFn = priceCog,
+   width = 400, height = 400,
+   lims = list(x = &quot;same&quot;))
+</code></pre>
+
+<p>This creates a new entry in our visualization database and stores all of the appropriate information for the Trelliscope viewer to know how to construct the panels.</p>
+
+<p>If you have been dutifully following along with this example in your own R console, you can now view the display with the following:</p>
+
+<pre><code class="r">view()
+</code></pre>
+
+<p>And select the display with the name &quot;list_sold_vs_time_quickstart&quot;.</p>
+
+<p>If you have not been following along but are wondering what that <code>view()</code> command did, you can visit <a href="http://hafen.shinyapps.io/trelliscopeTutorial/" target="_blank">here</a> for an online version.  You will find a list of displays to choose from, of which the one with the name <code>list_sold_vs_time_quickstart</code> is the one we just created.  This brings up the point that you can share your Trelliscope displays online -- more about that as well as how to use the viewer will be covered in the Trelliscope tutorial -- but feel free to play around with the viewer and see what you can discover.</p>
+
+<p>This covers the basics of <code>trelliscope</code>.  Hopefully you now feel comfortable enough to dive into the rest of the tutorial.</p>
+
+</div>
+
+
+<div class='tab-pane' id='multipanel-display'>
+<h3>Multipanel Display</h3>
+
+<p>Trelliscope is based on the notion of <em>multipanel displays</em>.  A multipanel display is one in which the data is split into subsets, typically based on the values of one or more <em>conditioning</em> variables.  A plot function is applied to each subset, and each plot is called a <em>panel</em>.  The multipanel display arranges the panels in rows and columns, reminiscent of a garden trellis.  There are many compelling reasons for this simple visualization approach, and we point the curious reader to more information about this, in particular, <a href="http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/">Trellis Display</a>, and <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples</a>.</p>
+
+<h4>A simple illustration</h4>
+
+<p>To illustrate multipanel displays, we will show examples on a small but famous data set, the <a href="http://www.inside-r.org/r-doc/datasets/iris">iris</a> data, which gives the measurements in centimeters of the sepal and petal length and width for 50 flowers from each of 3 species of iris. The species are setosa, versicolor, and virginica.</p>
+
+<p>A natural way to break this data into subsets is by species.  We can acheive this with the <code>xyplot()</code> function in the <code>lattice</code> package, an R port of Trellis Display, with the following:</p>
+
+<pre><code class="r">library(lattice)
+xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1))
+</code></pre>
+
+<p><img src="figures/knitr/multipanel-1.png" alt="plot of chunk multipanel"> </p>
+
+<p>Here we specify that we want to plot the petal length against sepal length, with the <code>|</code> operator indicating that we want a panel for each species.  Hence species is our conditioning variable.  We also specify that we would like to lay out the panels as 3 columns and 1 row.  Notice that the .</p>
+
+<p>For those more familiar with <code>ggplot2</code>, we can acheive the same effect with using <code>facet_wrap()</code>:</p>
+
+<pre><code class="r">library(ggplot2)
+p &lt;- qplot(Sepal.Length, Petal.Length, data = iris)
+p + facet_wrap(~ Species, ncol = 3)
+</code></pre>
+
+<p><img src="figures/knitr/multipanel2-1.png" alt="plot of chunk multipanel2"> </p>
+
+<p>There are many important aspects of multipanel display that are good to grasp before making Trelliscope displays, and we will cover a couple of these next, <em>axis limits</em> and <em>aspect ratio</em>.</p>
+
+</div>
+
+
+<div class='tab-pane' id='axis-limits'>
+<h3>Axis Limits</h3>
+
+<p>Since one of the most powerful uses of multipanel displays is the ability to make comparisons of panels across different subsets of the data, appropriate choice of axis limits is very important.  When viewing panels of a Trellis display, meaningful visual comparisons between panels greatly depend on how the limits of the x and y axes are determined.  There are three choices for axis limits:</p>
+
+<ul>
+<li><strong>&quot;same&quot;</strong>: the same limits are used for all the panels</li>
+<li><strong>&quot;sliced&quot;</strong>:  the range (max - min) of the scales are constrained to remain the same across panels</li>
+<li><strong>&quot;free&quot;</strong>: the limits for each panel are determined by just the points in that panel</li>
+</ul>
+
+<p>We will illustrate each of these using the lattice <code>xyplot()</code> function since they are readily implemented.  Understanding how to use these settings with <code>xyplot()</code> is not extremely important - we will handle that when we start making Trelliscope displays.  But understanding the concepts and importance is the focus of this section..</p>
+
+<h4>&quot;Same&quot; axes</h4>
+
+<p>Panels with &quot;same&quot; axes all have the same axis limits.  For example, the plot we already created with this data had &quot;same&quot; axes:</p>
+
+<pre><code class="r">xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1))
+</code></pre>
+
+<p><img src="figures/knitr/same_axes-1.png" alt="plot of chunk same_axes"> </p>
+
+<p>Every panel&#39;s x-axis of <code>Sepal.Length</code> starts around 4cm and ends around 8cm, and every panel&#39;s y-axis of <code>Petal.Length</code> ranges from around 1cm to 7cm.  Choosing &quot;same&quot; axis limits helps emphasize that the means of both <code>Sepal.Length</code> and <code>Petal.Length</code> are significantly different for each species.  We can also judge that the <code>Petal.Length</code> appears to change in variability for each species.</p>
+
+<p>&quot;Same&quot; axes are the default setting for <code>xyplot()</code> and are in general a good default choice.  The plotting function pre-computes these axis limits across the whole data set and sets them for us.</p>
+
+<h4>&quot;Sliced&quot; axes</h4>
+
+<p>When setting the axes to &quot;sliced&quot;, the range of the data plotted in each panel is constrained to be the same.  For example, with the iris data:</p>
+
+<pre><code class="r">xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1),
+   scales = list(relation = &quot;sliced&quot;))
+</code></pre>
+
+<p><img src="figures/knitr/sliced_axes-1.png" alt="plot of chunk sliced_axes"> </p>
+
+<p>Now, if we look at the x-axis, we see that each panel has a range of about 3cm (for example, the panel for the setosa species ranges from 3.5cm to 6.5cm) and similarly for the y-axis.  We can no longer easily make judgements about how different each species is in terms of the mean (to do that, we have to actually look at the axis labels, which is not very effective).  But now the change in variability across species is much more clear.  For example, measurements for setosa are less variable around their mean than for the other species.  Choosing &quot;sliced&quot; axes is useful for when we do not care as much about differences in <em>location</em> or when the location of the data for each panel has such a large range that &quot;same&quot; axes keep us from seeing the detail in the data.</p>
+
+<h4>&quot;Free&quot; axes</h4>
+
+<p>With &quot;free&quot; axes, we allow the data in each panel to fill the space of the panel.  For example:</p>
+
+<pre><code class="r">xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1),
+   scales = list(relation = &quot;free&quot;))
+</code></pre>
+
+<p><img src="figures/knitr/free_axes-1.png" alt="plot of chunk free_axes"> </p>
+
+<p>Now it is much more difficult to make useful comparisions across panels, but choosing &quot;free&quot; axes can still be a logical choice when we just care about seeing the full resolution of the data within each panel.</p>
+
+<h4>How to choose axis limits</h4>
+
+<p>Determining suitable axis limits is dependent on what is being visualized, but typically &quot;same&quot; or &quot;sliced&quot; are good choices as they enable panel-to-panel comparisons, which is where much of the power of this type of visualization lies.  You might choose &quot;sliced&quot; if you are interested in relative behaviors in terms of scale, or &quot;same&quot; if you are interested in relative behaviors both in terms of location and scale.  You can make different choices for each axis individually.  It is also often helpful to make multiple versions of the same plot with different axis limit settings for different purposes.</p>
+
+<p>In <code>lattice</code>, the handling of panel axis limits is specified by the <code>scales</code> argument, as we have seen, and we will see that there is a similar notion in Trelliscope.  It is also always possible to manually compute the limits we would like and hard code them into our panel plotting function, although as important as axis limits are, Trelliscope tries to make their use as straightforward as possible.</p>
+
+</div>
+
+
+<div class='tab-pane' id='aspect-ratio'>
+<h3>Aspect Ratio</h3>
+
+<p>This section will be short, but the message is important: in multipanel display (or any display for that matter), aspect ratio matters.  The aspect ratio of a plot is the measure of the height divided by the width of the box bounding the plot area.  The choice of aspect ratio can drastically effect your perception of interesting features in a plot.  </p>
+
+<p>A famous example comes from the built-in R data set <code>sunspot.year</code>, which gives us the yearly numbers of sunspots from 1700 to 1988.  Below are two plots of the same data, each with a different aspect ratio.</p>
+
+<pre><code class="r">xyplot(sunspot.year ~ time(sunspot.year), type = &quot;l&quot;)
+</code></pre>
+
+<p><img src="figures/knitr/aspect_sunspot-1.png" alt="plot of chunk aspect_sunspot"> </p>
+
+<p><img src="figures/knitr/aspect_sunspot2-1.png" alt="plot of chunk aspect_sunspot2"> </p>
+
+<p>If we look at the data in the top plot, we see an obvious cyclical behavior in the number of spots.  However, the bottom plot emphasizes something that was much more difficult to see in the top plot, namely that the sunspot activity that ramps up very quickly tends to taper off more gradually - a very important insight that has implications for how the data is modeled. </p>
+
+<p>In Trelliscope, we will see that the aspect ratio is simply specified by providing the panel bounding box dimensions.</p>
+
+<p>Never let the choice of aspect ratio be chosen by what you think is a convenient panel size for looking at (e.g. square) - choose it wisely.  There are helpful tools to assist the choice of aspect ratio, such as <a href="http://eagereyes.org/basics/banking-45-degrees">banking to 45 degrees</a>, but often the choice is a subjective but informed one.</p>
+
+</div>
+
+
+<div class='tab-pane' id='visualization-databases'>
+<h3>Visualization Databases</h3>
+
+<p>We create several visual displays throughout the course of an analysis.  As John Tukey, the father exploratory data analysis, states:</p>
+
+<blockquote>
+<p>We can expect to need to need a variety of pictures to look at a data set of any complexity.</p>
+</blockquote>
+
+<p>We have found this to be true for every analysis we have been involved in.  When creating so many displays, and particulary for Trellis Display, it becomes important to be able organize them.</p>
+
+<p>We can think of visualizations we create that are worth keeping, sharing, and revisiting as <em>visual artifacts</em>.  The term <em>artifact</em> is <a href="http://dictionary.reference.com/browse/artifact">fitting</a>:</p>
+
+<blockquote>
+<p>artifact [ahr-tuh-fakt]<br>1. any object made by human beings, especially with a view to subsequent use.</p>
+</blockquote>
+
+<p>Trelliscope provides a mechanism to organize and store visual artifacts in a <a href="http://jmlr.org/proceedings/papers/v5/guha09a/guha09a.pdf"><em>visualization database</em></a> (VDB).  Typically we create a VDB for each analysis project we are working on.  Within a VDB, displays can be organized into groups by analysis thread.  Artifacts in a VDB can either be simple plots created from various R plotting packages, like the ones we have seen so far, or Trelliscope displays, which are displays created for a divided dataset with a potentially very large number of subsets.  </p>
+
+<p>Trelliscope provides a way to view and interact with displays in a VDB, as well as easily embed them in a web-based &quot;lab notebook&quot; - a more organized presentatin of the progression of an analysis, which we discuss in the <a href="#viewing-displays">Viewing Displays</a> and <a href="#lab-notebooks">Lab Notebooks</a> sections.</p>
+
+</div>
+
+
+<div class='tab-pane' id='initialize-a-vdb'>
+<h3>Initialize a VDB</h3>
+
+<p>With the fundamentals down, we are now ready to start creating some Trelliscope displays and getting into some details.  </p>
+
+<p>Before we create our first display, we need to initiate and connect to a visualization database (VDB).  A VDB connection is simply a pointer to a directory on disk where all of the VDB files reside or will reside.</p>
+
+<pre><code class="r"># initialize a connection to a new VDB which will
+# go in a directory &quot;vdb&quot; in the current working directory
+conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)
+</code></pre>
+
+<p>If the VDB connection directory doesn&#39;t exist, it will ask whether it should be created.  Giving the VDB a <code>name</code> is optional, but will be useful for later when we sync our VDB to a web server.</p>
+
+<p>In any subsequent R session, we can connect to the existing VDB directory by issuing the same command.  The VDB&#39;s name was stored when we first initialized the VDB, so it does not need to be specified again:</p>
+
+<pre><code class="r"># re-connect to an existing VDB
+conn &lt;- vdbConn(&quot;vdb&quot;)
+</code></pre>
+
+<p>The name can be overridden by specifying a new one.</p>
+
+<p>Most Trelliscope functions need the VDB connection information to know where to put things.  It can be tedious to always supply this, so <code>vdbConn()</code> sets a global R option called <code>&quot;vdbConn&quot;</code> that holds the connection information.  If in a Trelliscope function we do not explicitly specify the connection, the default is to search for the global <code>vdbConn</code> option.  The assumption is that in any one R session, the user will be using just one VDB, and thus there will not be multiple conflicting connections.</p>
+
+<p>We can now look at some examples and start populating the VDB with displays.</p>
+
+</div>
+
+
+<div class='tab-pane' id='division-with-datadr'>
+<h3>Division with datadr</h3>
+
+<p>Since Trelliscope is a multipanel display system, the first step of creating a display is to break the data into subsets, with each subset representing the data to go in one panel of the display.  For a given data set, there can be multiple meaningful ways to split the data.</p>
+
+<p>We achieve data partitioning through the <code>datadr</code> package, the companion package to Trelliscope.  This package implements the Divide &amp; Recombine (D&amp;R) approach to data analysis.  If you have not spent time with <code>datadr</code>, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the <code>datadr</code> <a href="http://tessera.io/docs-datadr">tutorial</a>.</p>
+
+<p>The <code>datadr</code> package provides a mechanism for dividing potentially very large data sets into subsets, applying analytical methods to each subset, and then recombining the results in a statistically valid way.  Here, we use <code>datadr</code> to partition our data, and then Trelliscope will provide a <em>visual recombination</em>.</p>
+
+<h4>Home price data</h4>
+
+<p>We will stick with the housing data we saw in the <a href="#quickstart">quick start</a> section throughout the remainder of this section, but going beyond the quick start, we will focus on several details and provide more in-depth explanations for what is happening.</p>
+
+<p>If you did not go through the quick start, this data consists of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from <a href="http://www.zillow.com">Zillow</a> and obtained from <a href="https://www.quandl.com">quandl</a>.  A pre-processed version of this data is available in a package called <code>housingData</code>, which we will use.  If you have not already installed the package:</p>
+
+<pre><code class="r">devtools::install_github(&quot;hafen/housingData&quot;)
+</code></pre>
+
+<h4>Dividing the housing data</h4>
+
+<p>There are many ways we might want to split up this data - by year, by state, by state and county, etc.  Here, we will divide by state and county as we did before.</p>
+
+<pre><code class="r">library(housingData)
+# divide housing data by county and state
+byCounty &lt;- divide(housing, by = c(&quot;county&quot;, &quot;state&quot;))
+</code></pre>
+
+<p>Let&#39;s look at the resulting distributed data frame (&quot;ddf&quot;) object:</p>
+
+<pre><code class="r"># look at the resulting object
+byCounty
+</code></pre>
+
+<pre><code>
+Distributed data frame backed by &#39;kvMemory&#39; connection
+
+ attribute      | value
+----------------+-----------------------------------------------------------
+ names          | fips(cha), time(Dat), nSold(num), and 2 more
+ nrow           | 224369
+ size (stored)  | 15.73 MB
+ size (object)  | 15.73 MB
+ # subsets      | 2883
+
+* Other attributes: getKeys(), splitSizeDistn(), splitRowDistn(), summary()
+* Conditioning variables: county, state
+</code></pre>
+
+<p>We see that this is a <em>distributed data frame</em> and has almost 2900 subsets.  Let&#39;s look at a subset to make sure it looks how we think it should:</p>
+
+<pre><code class="r"># see what a subset looks like
+byCounty[[1]]
+</code></pre>
+
+<pre><code>$key
+[1] &quot;county=Abbeville County|state=SC&quot;
+
+$value
+   fips       time nSold medListPriceSqft medSoldPriceSqft
+1 45001 2008-10-01    NA         73.06226               NA
+2 45001 2008-11-01    NA         70.71429               NA
+3 45001 2008-12-01    NA         70.71429               NA
+4 45001 2009-01-01    NA         73.43750               NA
+5 45001 2009-02-01    NA         78.69565               NA
+...
+</code></pre>
+
+<p>The result is a key-value pair, with the key indicating that the subset corresponds to Abbeville County in South Carolina.  The value contains the data frame of data we will want to plot.</p>
 
 <p>We have our division.  Now we are ready to make some displays.</p>
 
@@ -766,60 +678,61 @@ $value
 <div class='tab-pane' id='a-bare-bones-display'>
 <h3>A Bare Bones Display</h3>
 
-<p>To quickly get our feet wet with creating a display, we start with a minimal example.  Creating a plot first requires the specification of what you would like to be plotted for each subset.  Just like with <code>lattice</code>, you create a panel function that will be applied to each subset.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in <code>datadr</code>, which can operate either on both a key and a value of just the value (see <a href="http://tesseradata.org/docs-datadr/#key-value-pairs">here</a> for more details).</p>
+<p>To quickly get our feet wet with creating a display, we start with a minimal example.  </p>
+
+<h4>Panel functions</h4>
+
+<p>Creating a plot first requires the specification of what you would like to be plotted for each subset, a <em>panel function</em>.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in <code>datadr</code>, which can operate either on both a key and a value of just the value (see <a href="http://tessera.io/docs-datadr/#key-value-pairs">here</a> for more details).</p>
 
 <p>Some things to know about the panel function:</p>
 
 <ul>
 <li>The panel function is applied to each subset of your divided data object</li>
-<li>The panel function returns something that can be printed to a graphics device or can be rendered in a web page (for example, we have experimantal support for <code>ggvis</code> and plan to support <code>rCharts</code> soon)</li>
+<li>The panel function returns something that can be printed to a graphics device or can be rendered in a web page (for example, we have experimantal support for <code>ggvis</code> and <code>rCharts</code> since they output html and javascript content)</li>
 <li>Those familiar with lattice can think of the panel function as the lattice panel function and the data argument(s) as the lattice packet being plotted (except that you conveniently get the whole data structure instead of just <code>x</code> and <code>y</code>)</li>
-<li>Although we have been referring to lattice and have been showing examples with lattice, you do not need to use lattice in your panel function -- you can use base R graphics, lattice, or ggplot2, etc.</li>
+<li>Although we have been mainly referring to lattice and have been showing examples with lattice, you do not need to use lattice in your panel function -- you can use base R graphics, lattice, or ggplot2, etc.</li>
 <li>However, using something like lattice or ggplot2 adds benefit because these create objects which can be inspected to pull out axis limits, etc. (see our discussion of <code>prepanel</code> functions later on)</li>
 </ul>
 
-<h4>Panel function for <code>co</code> vs. time</h4>
+<h4>Panel function for list price vs. time</h4>
 
-<p>Suppose we want to do a simple time series plot of the log of <code>co</code> vs. time for each geographical block, and we want to add a fitted line to the data.  Using <code>lattice</code> to create the panel function, we can do this with the following:</p>
+<p>Let&#39;s start with a simple scatterplot of list price vs. time, using base R graphics commands.  Specifying a panel function is as simple as that - creating a function that expects the data of a subset as an argument and generates a plot:</p>
 
-<pre><code class="r"># a simple panel function for a trelliscope display
-coPanelFn &lt;- function(d) {
-   xyplot(log2(co) ~ dat_ams, data=d, 
-      type=c(&quot;p&quot;, &quot;g&quot;),
-      panel=function(x, y, ...) {
-         panel.xyplot(x, y, ...)
-         try(panel.lmline(x, y, lty=2), silent=TRUE)
-      })
-}
+<pre><code class="r"># create a panel function of list and sold price vs. time
+bareBonesPanel &lt;- function(x)
+   plot(x$time, x$medListPriceSqft)
 </code></pre>
 
-<p>The argument <code>d</code> (you can call it whatever you like) is the value of one of the subsets of your divided data set.  Let&#39;s test it on a subset of our data:</p>
+<p>When constructing panel functions, it can be useful to pull out one subset of the data and incrementally build the function with this data as an example.  For example, to get the value of the first subset, we can do the following:</p>
 
-<pre><code class="r"># apply the panel function to a subset
-coPanelFn(byLatLon[[2]]$value)
+<pre><code class="r"># get the value of the first subset
+x &lt;- byCounty[[1]]$value
+# construct plotting commands to go in panel function
+plot(x$time, x$medListPriceSqft)
 </code></pre>
 
-<p><img src="figures/knitr/simple_co_apply.png" alt="plot of chunk simple_co_apply"> </p>
+<p><img src="figures/knitr/bb_get_subset-1.png" alt="plot of chunk bb_get_subset"> </p>
+
+<p>We can test our panel function on a subset by passing the value of a subset to the function:</p>
+
+<pre><code class="r"># test function on a subset
+bareBonesPanel(byCounty[[1]]$value)
+</code></pre>
+
+<p><img src="figures/knitr/bb_panel_test-1.png" alt="plot of chunk bb_panel_test"> </p>
 
 <h4>Making the display</h4>
 
 <p>To create a display, applying this panel function over the entire data set, we simply call <code>makeDisplay()</code>:</p>
 
 <pre><code class="r"># create a simple display
-makeDisplay(byLatLon,
-   panelFn = coPanelFn,
-   name    = &quot;co_vs_time_bb&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Bare bones display of co vs. time for each geographic &#39;square&#39; with fitted linear model&quot;
-)
+makeDisplay(byCounty,
+   panelFn = bareBonesPanel,
+   name    = &quot;list_vs_time_barebones&quot;,
+   desc    = &quot;List price per square foot vs. time&quot;)
 </code></pre>
 
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<p>The two most important arguments are the first argument, <code>data</code>, and the panel function, <code>panelFn</code>.  The other arguments in this example simply identify the display, as we saw previously.  We will later see other arguments to <code>makeDisplay()</code> that provide additional useful functionality.</p>
-
-<p>Here, we are putting the display in a group <code>&quot;co&quot;</code> since that is the variable we are currently studying.</p>
+<p>The two most important arguments are the first argument, which is the data to plot, and the panel function, <code>panelFn</code>.  The other arguments in this example simply identify the display.  We will later see other arguments to <code>makeDisplay()</code> that provide additional useful functionality.</p>
 
 <h4>Viewing the display</h4>
 
@@ -829,158 +742,13 @@ makeDisplay(byLatLon,
 view()
 </code></pre>
 
-<p>This will bring up the Trelliscope viewer.  You will get a list of displays to choose from (at this point, just one).  </p>
+<p>This will bring up the Trelliscope viewer in a web browser.  Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended.  If you aren&#39;t following along with the example in your own R console, we have pushed this VDB out to RStudio&#39;s shinyapps.io site <a href="http://hafen.shinyapps.io/tesseraTutorial">here</a>.</p>
 
-<!--If you aren't following along with the example in your own R console, you can look at the display on RStudio's glimmer site [here](http://glimmer.rstudio.com/rhafen/vdbexample2/#group=co&name=co_vs_time_plain).-->
+<p>What you should see in the web browser is a modal box with the title &quot;Open a New Display&quot;.  If at any point you want this box to come back up to choose a display, you can bring it up by clicking the folder icon in the top right of the viewer window.  This will give you a list of displays to choose from.  At this point, there will be one or two displays, depending on whether you ran through the quick start.  </p>
 
-<p>Later we will cover how to sync a local VDB with a web server.</p>
+<p>We want to select the display we just created, which we named &quot;list_vs_time_barebones&quot;.  We can do this by clicking the appropriate row in the list of displays.  This brings up the display in the viewer, showing the first panel of 2883.  You can use the arrow keys to navigate from one panel to the next.</p>
 
-<p>We&#39;ll also talk more about how to use the viewer later, but feel free to play around.</p>
-
-<p>Now, let&#39;s do something that shows all of the other functionality of <code>makeDisplay()</code>, including prepanel functions, cognostics, etc.</p>
-
-</div>
-
-
-<div class='tab-pane' id='axis-limits'>
-<h3>Axis Limits</h3>
-
-<p>As we discussed <a href="#trellis-display">before</a>, scales and axis limits are very important for creating meaningful Trellis displays.  In Trellis Display, axis limits can be computed by specifying the x and y axes as &quot;free&quot;, &quot;sliced&quot;, or &quot;same&quot;.  Based on the specification, each subset is checked against what is being plotted, and the axis limits are computed.  The same can be done for Trelliscope displays.  There are different ways to do this that we will cover in this section.</p>
-
-<p>In the display we just created, we see that the axis limits of the panels appear to be &quot;free&quot;.  This is different from the <code>lattice</code> default of axis limits across panels being &quot;same&quot;.  Since Trelliscope is very general -- any R plotting technology can potentially be used in a panel function -- the default is to not try to do anything with axis limits.</p>
-
-<p>Note: the discussion in this section is constrained to two-dimensional panels (with x and y axes), which covers the vast majority of useful statistical visualization techniques.  If you have panel functions that produce plots that do not fit this (e.g. pie charts -- no!!), then the functionality described in this section is not useful.</p>
-
-<h4>Simple axis limits example</h4>
-
-<pre><code class="r"># setting axis limits in the call to makeDisplay()
-makeDisplay(byLatLon,
-   name    = &quot;co_vs_time_same&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits for x and y&quot;,
-   panelFn = coPanelFn,
-   lims    = list(x=&quot;same&quot;, y=&quot;same&quot;)
-)
-</code></pre>
-
-<pre><code>* Validating &#39;panelFn&#39;...
-* Testing cognostics function on a subset ... ok
-* Precomputed limits not supplied.  Computing axis limits...
-Testing &#39;prepanelFn&#39; on a subset...
-Using &#39;trellis&#39; panelFn to determine limits... dx and dy will not be computed.
-At least one of the variables is not numeric.  Casting as numeric for quantile calculation purposes.
-* Updating displayList...
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<p>This approach only works with <code>lattice</code> and <code>ggplot2</code> panel functions.  Per-panel axis limits are precomputed using the panel function and these are incorporated into the axis limits calculation to be applied to all panels.  The reason we are constrained to <code>lattice</code> and <code>ggplot2</code> is that Trelliscope needs to know the limits of what is being plotted in each panel to determine the overall axis limits, and these can be easily extracted from the resulting object after applying the panel function to a subset.</p>
-
-<p>Here is an example of this display, using <code>ggplot2</code>:</p>
-
-<pre><code class="r"># same display but using ggplot2
-ggCoPanelFn &lt;- function(x) {
-   qplot(dat_ams, log2(co), data=x)
-}
-
-makeDisplay(byLatLon,
-   name    = &quot;co_vs_time_gg&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits for x and y, and using ggplot2&quot;,   
-   panelFn = ggCoPanelFn,
-   lims    = list(x=&quot;same&quot;, y=&quot;same&quot;)
-)
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<p>Note: <code>ggplot2</code> support at the moment is pretty shaky.  For the general continuous axis scales, it should work fine, but more work needs to be done to integrate nicely.</p>
-
-<h4>Specifying a prepanel function</h4>
-
-<p>The previous example is the most simple way to specify axis limits.  However, it comes with a potential cost -- the panel function must be applied to each subset in order to obtain the limits.  For panel functions that take some time to render, this is wasted time.</p>
-
-<p>As an alternative, we can explicitly supply a prepanel function to the <code>lims</code> argument list, called <code>prepanelFn</code>.  This functions in the same way as for <code>lattice</code>, where the prepanel function takes each subset of data and returns a list with <code>xlim</code> and <code>ylim</code>.  For example:</p>
-
-<pre><code class="r"># using a prepanel function to compute axis limits
-preFn &lt;- function(x) {
-   list(ylim=range(log2(x$co)), xlim=range(x$dat_ams))
-}
-
-makeDisplay(byLatLon,
-   name    = &quot;co_vs_time_pre&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits for x and y using a prepanel function&quot;,
-   panelFn = coPanelFn,
-   lims    = list(x=&quot;same&quot;, y=&quot;same&quot; , prepanelFn=preFn)
-)
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<h4>Determining limits beforehand with <code>prepanel()</code></h4>
-
-<p>In both of the above approaches, we computed axis limits at the time of creating the display.  This is not recommended for very large datasets.  There are a few reasons for this.  </p>
-
-<ol>
-<li>Setting the axis limits based on &quot;sliced&quot; or &quot;same&quot; is not very robust to outliers, and we may wish to understand and modify the axis limits prior to creating the display.</li>
-<li>Computing the axis limits can be more costly than creating a display, and it can be good to separate the two, particularly when we may be iterating on getting a panel function just right.</li>
-</ol>
-
-<p>We can use a function, <code>prepanel()</code>, to compute axis limits prior to creating a display.</p>
-
-<p>The main parameter to know about in <code>prepanel()</code> is <code>prepanelFn</code>, which operates in the same way as we saw before -- it is either a <code>lattice</code> or <code>ggplot2</code> panel function or it is a function that takes a subset of the data as an input and returns a list including the elements <code>xlim</code> and <code>ylim</code> (each a vector of the min and max x and y ranges of the data subset).</p>
-
-<pre><code class="r"># compute axis limits prior to creating display using prepanel()
-coTimePre &lt;- prepanel(byLatLon, prepanelFn=coPanelFn)
-</code></pre>
-
-<h4>Determining axis limits from <code>prepanel()</code> output</h4>
-
-<p>We can now determine our axis limits based on the results from <code>prepanel()</code>.  The output from <code>prepanel</code> is an object which has a plot method that can help in the decision of how to specify limits.</p>
-
-<p>To view a plot of the panel axis limits to help in this determination:</p>
-
-<pre><code class="r"># visualize the axis limit computations
-plot(coTimePre)
-</code></pre>
-
-<pre><code>At least one of the variables is not numeric.  Casting as numeric for plotting purposes.
-</code></pre>
-
-<p><img src="figures/knitr/co_pre_plot.png" alt="plot of chunk co_pre_plot"> </p>
-
-<p>This plot orders the axis limits for both the x and y axes for both &quot;same&quot; and &quot;sliced&quot; (with sliced ranges centered around zero).  This can help us to see if we will be squeezing the data for a lot of panels when using &quot;same&quot;, and also helps identify outliers.  In each of the panels of this plot, you can think of the range of the &quot;Panel Limits&quot; axis as the range that will ultimately be chosen for each panel for the given axis and limit method.</p>
-
-<p>For this plot, it appears that slicing the axis limits does not buy us much resolution, and we know that for the time variable axis (x), we would like the limits to always be the same.  Thus, we choose &quot;same&quot; for both axes.</p>
-
-<p>To set our choice, we do the following:</p>
-
-<pre><code class="r"># set limits from our prepanel calculations
-coTimeLims &lt;- setLims(coTimePre) # default is x=&quot;same&quot;, y=&quot;same&quot;
-</code></pre>
-
-<p><code>makeDisplay()</code> can take this object as is argument for <code>lims</code> and will set panel limits accordingly.</p>
-
-<pre><code class="r"># create a display using axis limits from prepanel() and setLims()
-makeDisplay(byLatLon,
-   name    = &quot;co_vs_time_lims&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits for x and y by pre-specifying the axis limits using prepanel() and setLims()&quot;,
-   panelFn = coPanelFn,
-   lims    = coTimeLims
-)
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<h4>Setting the limits in your panel function</h4>
-
-<p>Another option, of course, is to set axis limits explicitly in your panel function.</p>
+<p>While we will provide a more in-depth tutorial on the viewer <a href="#trelliscope-viewer">later</a>, at this point feel free to experiment with some of the viewer features available along the left panel.  The options are broken down into two categories, &quot;View Options&quot; and &quot;Cognostics&quot;.  We will talk about cognostics later in this section, and there is not too much interesting to do with cognostics for this example.  But it is worth taking some time to experiment with the options available in these controls, many of which are self-explanatory, keeping in mind that no harm will be done to the display.</p>
 
 </div>
 
@@ -988,32 +756,45 @@ makeDisplay(byLatLon,
 <div class='tab-pane' id='cognostics'>
 <h3>Cognostics</h3>
 
-<p>Much of the power of the viewer for multi-panel displays (particularly when the panels number in the thousands or higher) lies in the ability to specify metrics that provide interesting information about each panel, with which you can filter, sort, and sample your collection of panels to look for those which are interesting.  John Tukey called a notion similar to this &quot;cognostics&quot;.</p>
+<p>When dealing with large data sets that get partitioned into subsets that number in the thousands or hundreds of thousands, it begins to be infeasible or ineffective to look at all <em>every</em> panel in a Trelliscope display.  For our county example, if we put enough panels on one page, we can page through all ~2900 panels fairly quickly.  But even in this case, we would benefit from an effective way to call panels to our attention that are of most importance, based on different criteria.  We can do such a thing in Trelliscope using <em>cognostics</em>.</p>
 
-<p>We can obtain cognostics for our panels by specifying a <code>cogFn</code> function to <code>makeDisplay()</code>.</p>
+<p>The term <em>cognostics</em> was coined by John Tukey, when he anticipated the situation of having more plots to look at than humanly possible:</p>
 
-<p>The cognostics function is applied to each subset just like the panel function and must return a list which can be flattened into a data frame.  For our geographically split data, there are several cognostics we might be interested in.  Typically the most useful cognostics are arrived upon iteratively.  Here, we specify the number of observations in the subset, the slope of a fitted line to <code>co</code> vs. time, the mean latitude and longitude, and the range of the time variable.</p>
+<blockquote>
+<p>There seems no escape from asking the computer to sort out the displays to be displayed... To do this, the computer must judge the relative different displays, the relative importance of showing them.  This means calculating some &quot;diagnostic quantities.&quot;  ... It seems natural to call such computer guiding <em>diagnostics</em> &quot;cognostics&quot;.  We must learn to choose them, calculate them, and use them.  Else we drown in a sea of many different displays.</p>
+</blockquote>
+
+<p>For our purposes, a &quot;cognostic&quot; in Trelliscope is essentially any single metric about one subset of data that describes some aspect of that subset.  We can compute any number of cognostics for a given display, and then in the Trelliscope viewer we can sort, filter, or sample our panels based on these metrics.  Metrics can include statistical summaries, categorical variables, goodness-of-fit metrics, etc.  We will see several examples in this section.</p>
+
+<h4>Specifying a cognostics function</h4>
+
+<p>The cognostics function is applied to each subset just like the panel function and must return a list which can be flattened into a data frame.  For our data, there are several cognostics we might be interested in.  Typically the most useful cognostics are arrived upon iteratively.  </p>
+
+<p>Here, we specify the slope of a fitted line of list price vs. time, the mean list price, the number of non-NA list price observations, and finally, a special cognostic that is a URL that links to a Zillow display of homes for sale in the county.</p>
 
 <pre><code class="r"># create a cognostics function to be applied to each subset
-coCogFn &lt;- function(x) {
-   slp &lt;- coef(lm(co ~ as.integer(dat_ams), data=x))[2]
-   if(is.na(slp))
-      slp &lt;- 0
+priceCog &lt;- function(x) { 
+   zillowString &lt;- gsub(&quot; &quot;, &quot;-&quot;, do.call(paste, getSplitVars(x)))
    list(
-      nobs = cog(length(which(!is.na(x$co))), desc=&quot;number of observations&quot;),
-      slope = cog(slp, desc=&quot;slope of fitted line&quot;),
-      meanLat = cogMean(x$latitude, desc=&quot;mean latitude&quot;),
-      meanLon = cogMean(x$longitude, desc=&quot;mean longitude&quot;),
-      timeRange = cogRange(as.integer(x$dat_ams[!is.na(x$co)]) / 60^2, desc=&quot;Time range (hours)&quot;)
+      slope = cog(coef(lm(medListPriceSqft ~ time, data = x))[2], 
+         desc = &quot;list price slope&quot;),
+      meanList = cogMean(x$medListPriceSqft),
+      nObs = cog(length(which(!is.na(x$medListPriceSqft))), 
+         desc = &quot;number of non-NA list prices&quot;),
+      zillowHref = cogHref(
+         sprintf(&quot;http://www.zillow.com/homes/%s_rb/&quot;, zillowString), 
+         desc = &quot;zillow link&quot;)
    )
 }
 </code></pre>
 
-<p>The helper functions <code>cog()</code>, <code>cogMean()</code>, <code>cogRange()</code>, etc. can be used when defining the cognostics list.  The most generic, <code>cog()</code> basically wraps the metric you want to compute with additional information, such as the description of the cognostic.  They are not necessary but are helpful.  For example, the difference between <code>cogRange()</code> and <code>range()</code> and others is that there is removal of NAs and extra checking for errors so that the cognostic calculation is robust.</p>
+<p>Note that each metric is wrapped in a function <code>cog()</code> or <code>cog*()</code>. Doing so allows you to control the type of variable and give it a description, which will be useful in the viewer.</p>
 
-<p>Note that if you don&#39;t want to wrap your calculations in <code>cog()</code>, you don&#39;t have to, but doing so allows you to control the type of variable and give it a description.</p>
+<p>The helper functions <code>cogMean()</code>, <code>cogRange()</code>, <code>cogHref()</code>, etc. can be used when defining the cognostics list.  They are not necessary but can be helpful.  For example, the difference between <code>cogRange()</code> and <code>range()</code> and others is that there is removal of NAs and extra checking for errors so that the cognostic calculation is robust.</p>
 
-<!-- Current types are:
+<!--
+
+Current types are:
 - `int `: integer 
 - `num `: floating point
 - `fac `: factor (string)
@@ -1030,44 +811,140 @@ In the future, support for input variables will be added (this existed in older 
 <p>Let&#39;s test the cognostics function on a subset:</p>
 
 <pre><code class="r"># test the cognostics function on a subset
-coCogFn(byLatLon[[1]]$value)
+priceCog(byCounty[[1]]$value)
 </code></pre>
 
-<pre><code>$nobs
-[1] 2
+<pre><code>$slope
+         time 
+-0.0002323686 
 
-$slope
-[1] 0
+$meanList
+[1] 72.76927
 
-$meanLat
-[1] 38.38
+$nObs
+[1] 66
 
-$meanLon
-[1] -121.3
-
-$timeRange
-[1] 0.003611
+$zillowHref
+[1] &quot;&lt;a href=\&quot;http://www.zillow.com/homes/Abbeville-County-SC_rb/\&quot; target=\&quot;_blank\&quot;&gt;link&lt;/a&gt;&quot;
 </code></pre>
 
 <p>Now, let&#39;s add these cognostics to our display:</p>
 
 <pre><code class="r"># add cognostics to the display
-makeDisplay(byLatLon,
-   name    = &quot;co_vs_time&quot;,
-   group   = &quot;co&quot;,
-   desc    = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits and a cognostics function&quot;,
-   panelFn = coPanelFn,
-   cogFn   = coCogFn,
-   lims    = coTimeLims
+makeDisplay(byCounty,
+   panelFn = bareBonesPanel,
+   cogFn   = priceCog,
+   name    = &quot;list_vs_time_cog_simple_cog&quot;,
+   desc    = &quot;List price per square foot vs. time, with cognostics&quot;)
+</code></pre>
+
+<p>Now, when we view this display (which again we can do with <code>view()</code> and selecting the appropriate display from the list), we can use the cognostics to interact with the panels.  For example, in the &quot;Table Sort/Filter&quot; control panel (clickable from the list of options on the left), we can sort or filter the panels baed on any of these metrics.  We can look at counties for only select states, sorted from highest to lowest mean list price, for example.  The additional controls, such as &quot;Univariate Filter&quot; and &quot;Bivariate Filter&quot; allow us to look at plots of the cognostics and visually filter panels.  We will cover this in greater detail in the <a href="#trelliscope-viewer">Viewing Displays</a> section, but feel free to play around right now.  Also, use your imagination for what some other useful cognostics might be and try to add them.</p>
+
+</div>
+
+
+<div class='tab-pane' id='trelliscope-axis-limits'>
+<h3>Trelliscope Axis Limits</h3>
+
+<p>As we discussed <a href="#axis-limits">before</a>, giving consideration to axis limits is very important for creating meaningful Trellis displays.  In Trelliscope, axis limits can be computed by specifying the x and y axes as &quot;free&quot;, &quot;sliced&quot;, or &quot;same&quot;.  The default axis limit specification is &quot;free&quot;, as we saw in the display we just created - each panel&#39;s axis limits are bound by the range of the data in each subset.  Since Trelliscope is very general - any R plotting technology can potentially be used in a panel function - the default is to not try to do anything with axis limits.</p>
+
+<p>Note: the discussion in this section is constrained to two-dimensional panels (with x and y axes), which covers the vast majority of useful statistical visualization techniques.  If you have panel functions that produce plots that do not have quantitative x and y scales (e.g. pie charts - no!!), then the functionality described in this section is not useful.</p>
+
+<h4>How axis limits are computed</h4>
+
+<p>To be able to compute overall axis limits for a display, Trelliscope needs to know about the range of the data in each panel.  Thus, when we create a display with &quot;same&quot; or &quot;sliced&quot; axes, Trelliscope must pass through the data and make these computations.</p>
+
+<p>There are two ways in which Trelliscope can make the per-subset range calculations.  The first is by simply using the panel function itself.  This is the easiest approach, but currently only works with lattice and ggplot2 panel functions.  The second approach is to specify a <em>prepanel function</em>.  We will cover both of these in this section.</p>
+
+<h4>Specifying axis limits with the panel function</h4>
+
+<p>To specify axis limits with a panel function, our panel function needs to use lattice or ggplot2.  This is because these return plot objects from which we can extract the range of the data in the plot.</p>
+
+<pre><code class="r"># lattice panel function of list and sold price vs. time
+latticePanel &lt;- function(x)
+   xyplot(medListPriceSqft ~ time, data = x)
+# test function on a subset
+latticePanel(byCounty[[1]]$value)
+</code></pre>
+
+<p><img src="figures/knitr/lattice_panel-1.png" alt="plot of chunk lattice_panel"> </p>
+
+<p>Suppose we want the x and y axis limits to be &quot;same&quot;</p>
+
+<pre><code class="r"># setting axis limits in the call to makeDisplay()
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   cogFn   = priceCog,
+   name    = &quot;list_vs_time_xy_same&quot;,
+   desc    = &quot;List price per square foot vs. time with x and y axes same&quot;,
+   lims    = list(x = &quot;same&quot;, y = &quot;same&quot;))
+</code></pre>
+
+<p>If you view this display by calling <code>view()</code> and selecting it, you will see that the y-axis now ranges from about 0 to 1500 for every panel and the x-axis ranges from 2009 to 2014 for every panel - they are the &quot;same&quot; across panels.  </p>
+
+<p>You might notice that a y-axis range of $0 to $1500 per square foot is a very large range, and there are probably only a very small number of counties that are in that higher range.  This causes the interesting features such as large relative dips in price within a county to be washed out, and might want us to think more about our choice of axis limits for the y-axis.  We will discuss this in more detail below.</p>
+
+<p>Suppose for now that we want to keep the y-axis &quot;free&quot;, but we want to ensure that the x-axis is the same for every panel.  We can specify the rules for each axis independently:</p>
+
+<pre><code class="r"># setting axis limits in the call to makeDisplay()
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   name    = &quot;list_vs_time_x_same&quot;,
+   desc    = &quot;List price per square foot vs. time with x axis same&quot;,
+   lims    = list(x = &quot;same&quot;, y = &quot;free&quot;))
+</code></pre>
+
+<p>Note that since &quot;free&quot; is the default, we could have omitted <code>y = &quot;free&quot;</code> in the <code>lims</code> argument above.</p>
+
+<!-- Note that ggplot2 support at the moment is pretty shaky.  For the general continuous axis scales, it should work fine, but more work needs to be done to integrate nicely. -->
+
+<h4>Specifying axis limits with a prepanel function</h4>
+
+<p>The previous example is the most simple way to specify axis limits.  However, it comes with a potential cost -- the panel function must be applied to each subset in order to obtain the limits.  For panel functions that take some time to render, this is wasted time.</p>
+
+<p>As an alternative, we can explicitly supply a <em>prepanel function</em> to the <code>lims</code> argument list, called <code>prepanelFn</code>.  This notion will be familiar to lattice users.</p>
+
+<p>The prepanel function takes each subset of data and returns a list with <code>xlim</code> and <code>ylim</code>.  For example:</p>
+
+<pre><code class="r"># using a prepanel function to compute axis limits
+preFn &lt;- function(d) {
+   list(
+      xlim = range(x$time, na.rm = TRUE),
+      ylim = range(d$medListPriceSqft, na.rm = TRUE)
+   )
+}
+
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   name    = &quot;list_vs_time_x_same_pre&quot;,
+   desc    = &quot;List price per square foot vs. time with x and y axes same&quot;,
+   lims    = list(x = &quot;same&quot;, prepanelFn = preFn)
 )
 </code></pre>
 
-<pre><code>Error: numbers of columns of arguments do not match
+<h4>Determining limits beforehand with <code>prepanel()</code></h4>
+
+<p>In both of the above approaches, we computed axis limits at the time of creating the display.  This is not recommended for data with a very large number of subsets.  There are a few reasons for this.  </p>
+
+<ol>
+<li>Setting the axis limits based on &quot;sliced&quot; or &quot;same&quot; is not very robust to outliers, and we may wish to understand and modify the axis limits prior to creating the display.</li>
+<li>Computing the axis limits can be more costly than creating a display, and it can be good to separate the two, particularly when we may be iterating on getting a panel function just right.</li>
+<li>Both of the above approaches require a panel function that allows for axis limits to be both extractable and settable, which does not work for </li>
+</ol>
+
+<p>We can use a function, <code>prepanel()</code>, to compute and investigate axis limits prior to creating a display.</p>
+
+<p>The main parameter to know about in <code>prepanel()</code> is <code>prepanelFn</code>, which operates in the same way as we saw before -- it is either a <code>lattice</code> or <code>ggplot2</code> panel function or it is a function that takes a subset of the data as an input and returns a list including the elements <code>xlim</code> and <code>ylim</code> (each a vector of the min and max x and y ranges of the data subset).</p>
+
+<pre><code class="r"># compute axis limits prior to creating display using prepanel()
+pre &lt;- prepanel(byCounty, prepanelFn = preFn)
 </code></pre>
 
-<!--This display can be viewed [here](http://glimmer.rstudio.com/rhafen/vdbexample/#group=co&name=co_vs_time).-->
+<p>Under construction</p>
 
-<p>With this display, we can start to see the utility of cognostics.  Pressing the &quot;cog&quot; button in the viewer brings up a table of cognostics with ways to sort and filter the panels based on the values of the cognostics.  This is particularly useful when there are more panels than you could possibly view.</p>
+<h4>Setting the limits in your panel function</h4>
+
+<p>Another option, of course, is to set axis limits explicitly in your panel function to whatever you like to achieve the effect of &quot;same&quot; or &quot;sliced&quot;.</p>
 
 </div>
 
@@ -1075,126 +952,71 @@ makeDisplay(byLatLon,
 <div class='tab-pane' id='panel-storage'>
 <h3>Panel Storage</h3>
 
-<p>The default behavior for how panels are stored is to store a reference to the ddo/ddf and then render the panels on-the-fly in the viewer, pulling the appropriate subsets from the data as necessary.  Thus, if we have a very large ddo/ddf on HDFS, we do not make a copy for visualization, and only have to render the images being requested at the time of viewing.  When calling <code>makeDisplay()</code>, only the prepanel and cognostics computations need to be done.</p>
+<p>The default behavior for how panels are stored is to store a reference to the input data object and then render the panels on-the-fly in the viewer, pulling the appropriate subsets from the data as necessary.  Thus, if we have a very large ddo/ddf input object on HDFS, we do not make a copy for visualization, and only have to render the images being requested at the time of viewing.  When calling <code>makeDisplay()</code>, only the prepanel and cognostics computations need to be done.</p>
 
 <p>There is an option to pre-render, which can be useful when rendering the image is compute-intensive.  However, this feature is still being developed and is currently not recommended.</p>
 
 </div>
 
 
-<div class='tab-pane' id='linking-displays'>
-<h3>Linking Displays</h3>
+<div class='tab-pane' id='related-displays'>
+<h3>Related Displays</h3>
 
 <p>We typically have many different ways to look at the same division of data.  When creating a display against a divided dataset, Trelliscope keeps track of the division of the input data, and all displays created on the same division can be linked together in the Trelliscope viewer.</p>
 
-<p>To illustrate this, here we create a display with a panel function that, for each geographical subset, simply shows all of the airplane&#39;s tracks on the grid, with the grid location of the current subset highlighted in gray.  We will see how this display can be useful when being viewed in conjunction with other displays in the <a href="#shiny-viewer">following section</a>.</p>
-
-<pre><code class="r"># panel function for a geographical display
-latLonPanelFn &lt;- function(a) {
-   yy &lt;- as.numeric(strsplit(gsub(&quot;\\(|\\]&quot;, &quot;&quot;, attr(a, &quot;split&quot;)$latCut), &quot;,&quot;)[[1]])
-   xx &lt;- as.numeric(strsplit(gsub(&quot;\\(|\\]&quot;, &quot;&quot;, attr(a, &quot;split&quot;)$lonCut), &quot;,&quot;)[[1]])
-
-   xyplot(airplane$latitude ~ airplane$longitude,
-      groups=airplane$dat_ams &lt; as.POSIXct(&quot;2010-06-28 21:00:00 UTC&quot;),
-      panel=function(x, y, ...) {
-         panel.rect(xx[1], yy[1], xx[2], yy[2], col=&quot;darkgray&quot;)
-         panel.abline(v=lonCuts, col=&quot;gray&quot;)
-         panel.abline(h=latCuts, col=&quot;gray&quot;)
-         panel.xyplot(x, y, ...)
-      }
-   )
-}
-
-# test the panel function on a subset
-latLonPanelFn(byLatLon[[2]]$value)
-</code></pre>
-
-<p><img src="figures/knitr/lat_lon_display.png" alt="plot of chunk lat_lon_display"> </p>
-
-<pre><code class="r"># create the display
-makeDisplay(
-   data = byLatLon,
-   name = &quot;lat_vs_lon&quot;,
-   group = &quot;co&quot;,
-   desc = &quot;airplane tracks&quot;,
-   panelFn = latLonPanelFn
-)
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<p>Note that the panel function uses data objects <code>lonCuts</code> and <code>latCuts</code>, data objects that are only visible in our local environment.  <code>makeDisplay()</code> checks the panel and cognostics functions to detect locally stored data and attaches it to the display object so it will be available at the time of rendering.</p>
+<p>Under construction...</p>
 
 </div>
 
 
-<div class='tab-pane' id='scatterplot-displays'>
-<h3>Scatterplot Displays</h3>
+<div class='tab-pane' id='display-state'>
+<h3>Display State</h3>
 
-<p>Scatterplot matrices become increasingly infeasible as the number of variables grows beyond \(\approx\)10.  Using <code>trelliscope</code>, we can create &quot;scatterplot displays&quot;, where for \(p\) variables we create a panel for each of the \(\tbinom{p}{2}\) pairwise combinations.  We can leverage research on &quot;scagnostics&quot; (scatterplot diagnostics, or cognostics for scatterplots) <a href="http://www.google.com/url?sa=t&amp;rct=j&amp;q=leland%20wilkinson%20scagnostics&amp;source=web&amp;cd=1&amp;ved=0CDIQFjAA&amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.62.6148%26rep%3Drep1%26type%3Dpdf&amp;ei=6spVUcCQDYWl4AOJ_oHoDw&amp;usg=AFQjCNH0rmXCgq5vR-mEkuYz8AC476e6Bw&amp;sig2=VipicfJ0CN0AOJ4pt_yuXg&amp;bvm=bv.44442042,d.dmg&amp;cad=rja)">reference</a>, which includes the R package <a href="http://cran.r-project.org/web/packages/scagnostics/">scagnostics</a> to identify interesting relationships.  We have created a convenience function for doing this, <code>splod()</code> (<strong>s</strong>catter<strong>plo</strong>t <strong>d</strong>isplay).  This function takes a data frame and creates a subset for the data for each pairwise combination of variables.  The panel function is a simple scatterplot, and the cognostics function is a collection of scagnostics.</p>
+<p>Under construction</p>
 
-<p>To illustrate this, we can create a scatterplot display for all of the variables in the <code>airplane</code> data.  First, we call <code>makeSplodDat()</code> to get the data into the correct format:</p>
+<h4>State specification</h4>
 
-<pre><code class="r"># create data for scatterplot display
-airplaneSplodDat &lt;- makeSplodData(airplane, 
-   id.vars=c(&quot;dat_ams&quot;, &quot;flight&quot;, &quot;datCut&quot;))
-</code></pre>
+<h4>Specifying a default state in a display</h4>
 
-<p>This creates all pairwise groupings of variables not found in <code>id.vars</code> and puts them into a &quot;ddf&quot; object.  </p>
+<h4>Opening displays in a given state</h4>
 
-<p>Here&#39;s an example of what a subset looks like:</p>
+<h4>Linking to states in other displays</h4>
 
-<pre><code class="r"># look at a subset of airplaneSplotDat
-airplaneSplodDat[[1]]
-</code></pre>
-
-<pre><code>$key
-[1] &quot;xVar=NO3|yVar=org&quot;
-
-$value
-       x      y             dat_ams flight  altCut      datCut
-1 0.4490  9.263 2010-06-28 16:25:21     am (0,500] 06-28/16:15
-2 0.5890 13.288 2010-06-28 16:25:34     am (0,500] 06-28/16:15
-3 0.5356 12.134 2010-06-28 16:25:46     am (0,500] 06-28/16:15
-4 0.5700 12.357 2010-06-28 16:25:59     am (0,500] 06-28/16:15
-5 0.4567 10.112 2010-06-28 16:26:12     am (0,500] 06-28/16:15
-...
-</code></pre>
-
-<p>We can now create a display for this with <code>splod()</code>:</p>
-
-<pre><code class="r">splod(airplaneSplodDat)
-</code></pre>
-
-<pre><code>Error: numbers of columns of arguments do not match
-</code></pre>
-
-<p>This passes <code>airplaneSplodDat</code> to <code>makeDisplay()</code>, with the default name being the same as the name of the data passed in concatenated with &quot;_splod&quot;, a default description of &quot;Scatterplot display&quot;, a cognostics function that computes several scagnostics (see <code>cogScagnostics()</code>), and a default plotting function that simply plots one variable vs. another.  You can override these and pass additional parameters to makeDisplay such as a custom cognostics function.</p>
-
-<!-- ```{r airplane_splod, cache=TRUE}
-splod(airplane, id.vars=c("dat_ams", "flight", "datCut"))
-``` -->
+<!-- By-state vis with link to by-county -->
 
 </div>
 
 
-<div class='tab-pane' id='syncing-files-with-the-web'>
-<h3>Syncing Files With the Web</h3>
+<div class='tab-pane' id='other-panel-functions'>
+<h3>Other Panel Functions</h3>
 
-<p>Often our D&amp;R environment is on a local workstation which is connected to a distributed computing backend.  We might build up our VDB and web notebook locally and then desire to push the results to a web server which is running <a href="http://www.rstudio.com/shiny/server/">Shiny server</a>.  This is very useful for sharing analysis results with others.</p>
+<p>Under construction</p>
+
+</div>
+
+
+<div class='tab-pane' id='handling-displays'>
+<h3>Handling Displays</h3>
+
+<p>Under construction</p>
+
+</div>
+
+
+<div class='tab-pane' id='sharing-displays'>
+<h3>Sharing Displays</h3>
+
+<p>Often our D&amp;R environment and VDB are on a local workstation.  We might build up our VDB and web notebook locally and then desire to sync the results to a web server which is running <a href="http://www.rstudio.com/shiny/server/">Shiny Server</a>.  This is very useful for sharing analysis results with others.</p>
+
+<h4>Syncing to a web server running Shiny Server</h4>
 
 <p>There is some simple support for this in Trelliscope.  You can initialize a web connection using <code>webConn()</code>, which assumes that your web server is a Linux machine to which you have passwordless ssh capability.  You specify the address of the server, the directory of the VDB, and the name of the VDB under which you would like things stored.</p>
 
-<pre><code class="r"># set up a web connection
-wc &lt;- webConn(user=&quot;rhafen&quot;, ip=&quot;glimmer.rstudio.com&quot;, appDir=&quot;~/ShinyApps&quot;, name=&quot;vdbexample&quot;)
-</code></pre>
+<p>Under construction</p>
 
-<p>Now we can sync our VDB with the web:</p>
+<h4>Syncing to shinyapps.io</h4>
 
-<pre><code class="r"># sync files with the web server
-websync()
-</code></pre>
+<p>Under construction</p>
 
 </div>
 
@@ -1202,78 +1024,7 @@ websync()
 <div class='tab-pane' id='trelliscope-viewer'>
 <h3>Trelliscope Viewer</h3>
 
-<div class="alert alert-warning">This section is based on an older version of the Trelliscope Viewer.</div>
-
-<p>The Trelliscope viewer we have encountered throughout this document is a server-side web viewer that uses <a href="http://www.rstudio.com/shiny/">Shiny</a>.  Shiny basically provides a live R session running behind the web viewer, facilitating all of the interaction.</p>
-
-<p>The viewer is a work in progress.  There are many possible features.</p>
-
-<p>Below we describe some of the components of the viewer.</p>
-
-<h4>Panel View</h4>
-
-<p>This is the main component of the viewer.  Once you have selected a display to view, the panel view tiles the panels of the chosen display and allows you to page through them.  Left and right keys or the buttons on the header bar page through panels.  The text box at the top of the window specifies (approximately) how many panels to tile across the screen (exact number is based on the aspect ratio of the panels).</p>
-
-<h4>&quot;View&quot; Modal</h4>
-
-<p>Click the &quot;view&quot; button.  You can specify which cognostics to display below each panel.  The second tab, &quot;plotFn&quot; will let you change the plot function applied to each subset (this only works when <code>storage</code> is &quot;localData&quot;<code>or</code>&quot;rhipeData&quot;`.</p>
-
-<h4>&quot;Cognostics&quot; Modal</h4>
-
-<p>Here, you can sort and filter the panels based on their cognostics.  Click the histograms to get an interactive histogram with which you can specify a range.  On the multivariate selection row, click and drag table cells to specify all variables you want to do multivariate filtering on.  If you choose 2 variables, you are given an interactive scatterplot on which you can select ranges to filter on.  If you select more than 2 variables, you get a bivariate view of a projection pursuit to filter on (actual filtering in this case doesn&#39;t work right now).  I need to give some more thought to making this interface optimal.  The load, save, reset filter settings don&#39;t work right now.  When you leave this modal, you go back to panel view with the panels arranged according to what you did in the cognostics panel.</p>
-
-<h4>Changing the Display</h4>
-
-<p>This is available as first menu item in the display button dropdown.  It simply brings up a modal that lets you select a different display to view.</p>
-
-<h4>Adding a Related Display</h4>
-
-<p>Displays with the same set of keys can have their panels displayed together.  (When a display is created, a hash is made of the sorted unique panel keys.  If two displays have the same hash, it means that they have the exact same collection of panel keys).</p>
-
-<p>As an example, change the display to &quot;airTemp_vs_date&quot;.  Then select &quot;Add Related&quot; from the &quot;Display&quot; button dropdown and select &quot;lat_vs_lon&quot;.  Now you can view the movement of the buoy in association with the time series plots, and filter these to explore whether the lat/lon binning looks valid.</p>
-
-<h4>Keyboard Shortcuts</h4>
-
-<p>There are some keyboard shortcuts for convenience:</p>
-
-<ul>
-<li><strong>&quot;c&quot;</strong>: open cognostics modal</li>
-<li><strong>&quot;v&quot;</strong>: open view modal</li>
-<li><strong>&quot;d&quot;</strong>: open display modal</li>
-<li><strong>&quot;r&quot;</strong>: open related displays modal</li>
-<li><strong>esc</strong>: leave a modal and return to panel view</li>
-</ul>
-
-<!-- #### To Come
-
-- A dropdown for each column (variable) in the cognostics table with options to:
-  - apply a transformation to the variable
-  - randomly sample displays to view across the distribution of this variable
-  - if a continuous variable, discretize into bins
-- A collapsible sidebar in the panel view that allows you to see where specified cognostics for the panels currently being viewed lie with respect those cognostics of all panels - either in a univariate or bivariate view
-- Ability to specify panel-to-panel relationships within and between displays through cognostics, specified with something like `"group1/name1/key1;group2/name2/key2"`
-- Add an interactive network graph using d3 for panel-to-panel relationships, used to select panels of interest
-- Multi-user per-panel input / user "authentication"
-- ... -->
-
-</div>
-
-
-<div class='tab-pane' id='cognostics-interactions'>
-<h3>Cognostics Interactions</h3>
-
-<p>The current viewer is a proof-of-concept, and I&#39;d like to see much more functionality here in the future.  In particular, the following are interactive filtering / sorting behaviors we would like to see for each cognostics type:</p>
-
-<ul>
-<li><strong>Numeric</strong>: filter / expore by univariate quantile plot / histogram - for groups of numeric variables, filter by scatterplot</li>
-<li><strong>Factor (Categorical)</strong>: filter / explore by dropdown of categories, frequency bar chart, regular expression input</li>
-<li><strong>Date/time</strong>: filter / explore by time window slider, time of day, day of week, calendar range, regular expression input</li>
-<li><strong>Geo</strong>: filter / explore by lat/lon projected onto map</li>
-<li><strong>Relation</strong>: specified by a list of keys pointing to other subsets (within same dataset or in others) - filter / explore by node groupings in a network graph which might be organized or colored by other cognostics variables</li>
-<li><strong>Hierarchy</strong>: a label that is found in a hierarchy specified externally to the record (in a separate metadata file) - filter / explore by treemap, etc.</li>
-</ul>
-
-<p>Filters and interactivity based on combinations of cognostics would also be desirable, such as a numeric cognostic plotted versus a time cognostic as a time series, etc.</p>
+<p>This section is under construction, but will soon provide a guide to all of the viewer features complete with screenshots.</p>
 
 </div>
 
@@ -1283,60 +1034,48 @@ websync()
 
 <p>You can go through most of the examples we&#39;ve seen so far in this tutorial with a simple installation of R and the Trelliscope package and its R package dependencies.  </p>
 
-<p>To deal with much larger datasets, scaling comes automatically with Trelliscope&#39;s dependency on <code>datadr</code> -- any backend supported by <code>datadr</code> is supported by Trelliscope.  These currently include Hadoop and local disk.</p>
+<p>To deal with much larger datasets, scaling comes automatically with Trelliscope&#39;s dependency on <code>datadr</code> - any backend supported by <code>datadr</code> is supported by Trelliscope.  These currently include Hadoop and local disk.</p>
 
 <h4>Using data on localDisk as input</h4>
 
 <p>Here is a quick example of how to create a Trelliscope display using input data that is stored on local disk.</p>
 
-<p>First, let&#39;s convert our in-memory <code>byLatLon</code> object to a &quot;localDiskConn&quot; object:</p>
+<p>First, let&#39;s convert our in-memory <code>byCounty</code> object to a &quot;localDiskConn&quot; object:</p>
 
-<pre><code class="r"># convert byLatLon to a localDiskConn object
-byLatLonLD &lt;- convert(byLatLon, 
-   localDiskConn(file.path(tempdir(), &quot;byLatLon&quot;), autoYes=TRUE))
+<pre><code class="r"># convert byCounty to a localDiskConn object
+byCountyLD &lt;- convert(byCounty, 
+   localDiskConn(file.path(tempdir(), &quot;byCounty&quot;)))
 </code></pre>
+
+<p>This will prompt that it is okay to create this directory.</p>
 
 <p>Now, we simply specify this object as the input to <code>makeDisplay()</code>:</p>
 
 <pre><code class="r"># make display using local disk connection as input
-makeDisplay(byLatLonLD,
-   name      = &quot;co_vs_time_ld&quot;,
-   group     = &quot;co&quot;,
-   desc      = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits and a cognostics function, with the data source being a local disk connection&quot;,
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   lims      = coTimeLims
-)
+makeDisplay(byCountyLD, ...)
 </code></pre>
 
 <p>The input connection is saved with the display object, and the data is used as the input when panels are rendered.  If we want to pre-render the panels, we can specify an argument <code>output</code>, which can be any <code>datadr</code> data connection.</p>
 
 <h4>Using data on HDFS as storage and Hadoop/RHIPE as compute</h4>
 
-<p>To illustrate creating a display with data on HDFS, we first convert <code>byLatLon</code> to an &quot;hdfsConn&quot; object:</p>
+<p>To illustrate creating a display with data on HDFS, we first convert <code>byCounty</code> to an &quot;hdfsConn&quot; object:</p>
 
-<pre><code class="r"># convert byLatLon to hdfsConn
-byLatLonHDFS &lt;- convert(byLatLon, 
-   hdfsConn(&quot;/tmp/byLatLon&quot;, autoYes=TRUE))
+<pre><code class="r"># convert byCounty to hdfsConn
+byCountyHDFS &lt;- convert(byCounty, 
+   hdfsConn(&quot;/tmp/byCounty&quot;))
 </code></pre>
 
 <p>Since we will be pulling data at random by key from this object, we need to convert it to a Hadoop mapfile using <code>makeExtractable()</code> (<code>datadr</code> tries to make things mapfiles as much as possible, and <code>makeDisplay()</code> will check for this and let you know if your data does not comply).  </p>
 
-<pre><code class="r"># make byLatLonHDFS subsets extractable by key
-byLatLonHDFS &lt;- makeExtractable(byLatLonHDFS)
+<pre><code class="r"># make byCountyHDFS subsets extractable by key
+byCountyHDFS &lt;- makeExtractable(byCountyHDFS)
 </code></pre>
 
 <p>Now, to create the display:</p>
 
 <pre><code class="r"># make display using local disk connection as input
-makeDisplay(byLatLonHDFS,
-   name      = &quot;co_vs_time_hdfs&quot;,
-   group     = &quot;co&quot;,
-   desc      = &quot;Plot of co vs. time for each geographic &#39;square&#39; with with fitted line, illustrating the use of &#39;same&#39; axis limits and a cognostics function, with the data source being a HDFS connection&quot;,
-   panelFn   = coPanelFn,
-   cogFn     = coCogFn,
-   lims      = coTimeLims
-)
+makeDisplay(byCountyHDFS, ...)
 </code></pre>
 
 </div>
@@ -1358,10 +1097,10 @@ makeDisplay(byLatLonHDFS,
 <p>If you would like to run through all of the code examples in this documentation without having to pick out each line of code from the text, below are files with the R code for each section.  All but the final section on scalable backends should run on a workstation with no other dependencies but the required R packages.  The scalable backend code requires other components to be installed, such as Hadoop or MongoDB.</p>
 
 <ul>
-<li><a href="code/1intro.R">Getting Started, Trellis Display, VDBs</a></li>
-<li><a href="code/2displays.R">Trelliscope Displays</a></li>
-<li><a href="code/4webnotebook.R">Web Notebooks</a></li>
-<li><a href="code/5misc.R">Scalable Backends</a></li>
+<li><a href="code/2quickstart.R">Quick start</a></li>
+<li><a href="code/3fundamentals.R">Trelliscope Fundamentals</a></li>
+<li><a href="code/4displays.R">Trelliscope Displays</a></li>
+<li><a href="code/6misc.R">Scalable Backends</a></li>
 </ul>
 
 </div>
