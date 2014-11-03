@@ -1,0 +1,70 @@
+## Misc ##
+
+### Scalable System ###
+
+You can go through most of the examples we've seen so far in this tutorial with a simple installation of R and the Trelliscope package and its R package dependencies.  
+
+To deal with much larger datasets, scaling comes automatically with Trelliscope's dependency on `datadr` - any backend supported by `datadr` is supported by Trelliscope.  These currently include Hadoop and local disk.
+ 
+#### Using data on localDisk as input
+
+Here is a quick example of how to create a Trelliscope display using input data that is stored on local disk.
+
+First, let's convert our in-memory `byCounty` object to a "localDiskConn" object:
+
+```{r localdisk, eval=FALSE}
+# convert byCounty to a localDiskConn object
+byCountyLD <- convert(byCounty, 
+   localDiskConn(file.path(tempdir(), "byCounty")))
+```
+
+This will prompt that it is okay to create this directory.
+
+Now, we simply specify this object as the input to `makeDisplay()`:
+
+```{r makedisplay_ld, eval=FALSE}
+# make display using local disk connection as input
+makeDisplay(byCountyLD, ...)
+```
+
+The input connection is saved with the display object, and the data is used as the input when panels are rendered.  If we want to pre-render the panels, we can specify an argument `output`, which can be any `datadr` data connection.
+
+#### Using data on HDFS as storage and Hadoop/RHIPE as compute
+
+To illustrate creating a display with data on HDFS, we first convert `byCounty` to an "hdfsConn" object:
+
+```{r hdfs, eval=FALSE}
+# convert byCounty to hdfsConn
+byCountyHDFS <- convert(byCounty, 
+   hdfsConn("/tmp/byCounty"))
+```
+
+Since we will be pulling data at random by key from this object, we need to convert it to a Hadoop mapfile using `makeExtractable()` (`datadr` tries to make things mapfiles as much as possible, and `makeDisplay()` will check for this and let you know if your data does not comply).  
+
+```{r makeextractable, eval=FALSE}
+# make byCountyHDFS subsets extractable by key
+byCountyHDFS <- makeExtractable(byCountyHDFS)
+```
+
+Now, to create the display:
+
+```{r makedisplay_hdfs, eval=FALSE}
+# make display using local disk connection as input
+makeDisplay(byCountyHDFS, ...)
+```
+
+### FAQ ###
+
+#### What should I do if I have an issue or feature request?
+
+Please post an issue on [github](https://github.com/tesseradata/trelliscope/issues).
+
+### R Code ###
+
+If you would like to run through all of the code examples in this documentation without having to pick out each line of code from the text, below are files with the R code for each section.  All but the final section on scalable backends should run on a workstation with no other dependencies but the required R packages.  The scalable backend code requires other components to be installed, such as Hadoop or MongoDB.
+
+- [Quick start](code/2quickstart.R)
+- [Trelliscope Fundamentals](code/3fundamentals.R)
+- [Trelliscope Displays](code/4displays.R)
+- [Scalable Backends](code/6misc.R)
+

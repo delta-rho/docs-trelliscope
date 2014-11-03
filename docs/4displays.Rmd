@@ -1,0 +1,396 @@
+## Trelliscope Display ##
+
+### Initialize a VDB ###
+
+With the fundamentals down, we are now ready to start creating some Trelliscope displays and getting into some details.  
+
+Before we create our first display, we need to initiate and connect to a visualization database (VDB).  A VDB connection is simply a pointer to a directory on disk where all of the VDB files reside or will reside.
+
+```{r echo=FALSE, purl=FALSE, include=FALSE, warning=FALSE, error=FALSE, message=FALSE}
+#### hidden ####
+conn <- vdbConn("vdb", autoYes = TRUE, name = "tesseraTutorial")
+```
+
+```{r vdb_conn, message=FALSE}
+# initialize a connection to a new VDB which will
+# go in a directory "vdb" in the current working directory
+conn <- vdbConn("vdb", name = "tesseraTutorial")
+```
+
+If the VDB connection directory doesn't exist, it will ask whether it should be created.  Giving the VDB a `name` is optional, but will be useful for later when we sync our VDB to a web server.
+
+In any subsequent R session, we can connect to the existing VDB directory by issuing the same command.  The VDB's name was stored when we first initialized the VDB, so it does not need to be specified again:
+
+```{r vdb_reinit}
+# re-connect to an existing VDB
+conn <- vdbConn("vdb")
+```
+
+The name can be overridden by specifying a new one.
+
+Most Trelliscope functions need the VDB connection information to know where to put things.  It can be tedious to always supply this, so `vdbConn()` sets a global R option called `"vdbConn"` that holds the connection information.  If in a Trelliscope function we do not explicitly specify the connection, the default is to search for the global `vdbConn` option.  The assumption is that in any one R session, the user will be using just one VDB, and thus there will not be multiple conflicting connections.
+
+We can now look at some examples and start populating the VDB with displays.
+
+### Division with datadr ###
+
+Since Trelliscope is a multipanel display system, the first step of creating a display is to break the data into subsets, with each subset representing the data to go in one panel of the display.  For a given data set, there can be multiple meaningful ways to split the data.
+
+We achieve data partitioning through the `datadr` package, the companion package to Trelliscope.  This package implements the Divide & Recombine (D&R) approach to data analysis.  If you have not spent time with `datadr`, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the `datadr` [tutorial](http://tessera.io/docs-datadr).
+
+The `datadr` package provides a mechanism for dividing potentially very large data sets into subsets, applying analytical methods to each subset, and then recombining the results in a statistically valid way.  Here, we use `datadr` to partition our data, and then Trelliscope will provide a *visual recombination*.
+
+#### Home price data
+
+We will stick with the housing data we saw in the [quick start](#quickstart) section throughout the remainder of this section, but going beyond the quick start, we will focus on several details and provide more in-depth explanations for what is happening.
+
+If you did not go through the quick start, this data consists of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from [Zillow](http://www.zillow.com) and obtained from [quandl](https://www.quandl.com).  A pre-processed version of this data is available in a package called `housingData`, which we will use.  If you have not already installed the package:
+
+```{r quickstart_install2, eval=FALSE, echo=TRUE}
+devtools::install_github("hafen/housingData")
+```
+
+#### Dividing the housing data
+
+There are many ways we might want to split up this data - by year, by state, by state and county, etc.  Here, we will divide by state and county as we did before.
+
+```{r quickstart_loaddata, eval=TRUE, echo=FALSE, results="hide", message=FALSE, purl=FALSE}
+load("_ignore/housing/byCounty.Rdata")
+```
+
+```{r divide, eval=FALSE, echo=TRUE}
+library(housingData)
+# divide housing data by county and state
+byCounty <- divide(housing, by = c("county", "state"))
+```
+
+Let's look at the resulting distributed data frame ("ddf") object:
+
+```{r}
+# look at the resulting object
+byCounty
+```
+
+We see that this is a *distributed data frame* and has almost 2900 subsets.  Let's look at a subset to make sure it looks how we think it should:
+
+```{r }
+# see what a subset looks like
+byCounty[[1]]
+```
+
+The result is a key-value pair, with the key indicating that the subset corresponds to Abbeville County in South Carolina.  The value contains the data frame of data we will want to plot.
+
+We have our division.  Now we are ready to make some displays.
+
+### A Bare Bones Display ###
+
+To quickly get our feet wet with creating a display, we start with a minimal example.  
+
+#### Panel functions
+
+Creating a plot first requires the specification of what you would like to be plotted for each subset, a *panel function*.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in `datadr`, which can operate either on both a key and a value of just the value (see [here](http://tessera.io/docs-datadr/#key-value-pairs) for more details).
+
+Some things to know about the panel function:
+
+- The panel function is applied to each subset of your divided data object
+- The panel function returns something that can be printed to a graphics device or can be rendered in a web page (for example, we have experimantal support for `ggvis` and `rCharts` since they output html and javascript content)
+- Those familiar with lattice can think of the panel function as the lattice panel function and the data argument(s) as the lattice packet being plotted (except that you conveniently get the whole data structure instead of just `x` and `y`)
+- Although we have been mainly referring to lattice and have been showing examples with lattice, you do not need to use lattice in your panel function -- you can use base R graphics, lattice, or ggplot2, etc.
+- However, using something like lattice or ggplot2 adds benefit because these create objects which can be inspected to pull out axis limits, etc. (see our discussion of `prepanel` functions later on)
+
+#### Panel function for list price vs. time
+
+Let's start with a simple scatterplot of list price vs. time, using base R graphics commands.  Specifying a panel function is as simple as that - creating a function that expects the data of a subset as an argument and generates a plot:
+
+```{r bb_panel, eval=TRUE, echo=TRUE}
+# create a panel function of list and sold price vs. time
+bareBonesPanel <- function(x)
+   plot(x$time, x$medListPriceSqft)
+```
+
+When constructing panel functions, it can be useful to pull out one subset of the data and incrementally build the function with this data as an example.  For example, to get the value of the first subset, we can do the following:
+
+```{r bb_get_subset, eval=TRUE, echo=TRUE, fig.height=5}
+# get the value of the first subset
+x <- byCounty[[1]]$value
+# construct plotting commands to go in panel function
+plot(x$time, x$medListPriceSqft)
+```
+
+We can test our panel function on a subset by passing the value of a subset to the function:
+
+```{r bb_panel_test, eval=TRUE, echo=TRUE, fig.height=5}
+# test function on a subset
+bareBonesPanel(byCounty[[1]]$value)
+```
+
+#### Making the display
+
+To create a display, applying this panel function over the entire data set, we simply call `makeDisplay()`:
+
+```{r simple_co_display, eval=FALSE, fig.show=FALSE, message=FALSE}
+# create a simple display
+makeDisplay(byCounty,
+   panelFn = bareBonesPanel,
+   name    = "list_vs_time_barebones",
+   desc    = "List price per square foot vs. time")
+```
+
+The two most important arguments are the first argument, which is the data to plot, and the panel function, `panelFn`.  The other arguments in this example simply identify the display.  We will later see other arguments to `makeDisplay()` that provide additional useful functionality.
+
+#### Viewing the display
+
+To view the display:
+
+```r
+# open the Trelliscope viewer for the VDB
+view()
+```
+
+This will bring up the Trelliscope viewer in a web browser.  Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended.  If you aren't following along with the example in your own R console, we have pushed this VDB out to RStudio's shinyapps.io site [here](http://hafen.shinyapps.io/tesseraTutorial).
+
+What you should see in the web browser is a modal box with the title "Open a New Display".  If at any point you want this box to come back up to choose a display, you can bring it up by clicking the folder icon in the top right of the viewer window.  This will give you a list of displays to choose from.  At this point, there will be one or two displays, depending on whether you ran through the quick start.  
+
+We want to select the display we just created, which we named "list_vs_time_barebones".  We can do this by clicking the appropriate row in the list of displays.  This brings up the display in the viewer, showing the first panel of 2883.  You can use the arrow keys to navigate from one panel to the next.
+
+While we will provide a more in-depth tutorial on the viewer [later](#trelliscope-viewer), at this point feel free to experiment with some of the viewer features available along the left panel.  The options are broken down into two categories, "View Options" and "Cognostics".  We will talk about cognostics later in this section, and there is not too much interesting to do with cognostics for this example.  But it is worth taking some time to experiment with the options available in these controls, many of which are self-explanatory, keeping in mind that no harm will be done to the display.
+
+### Cognostics ###
+
+When dealing with large data sets that get partitioned into subsets that number in the thousands or hundreds of thousands, it begins to be infeasible or ineffective to look at all *every* panel in a Trelliscope display.  For our county example, if we put enough panels on one page, we can page through all ~2900 panels fairly quickly.  But even in this case, we would benefit from an effective way to call panels to our attention that are of most importance, based on different criteria.  We can do such a thing in Trelliscope using *cognostics*.
+
+The term *cognostics* was coined by John Tukey, when he anticipated the situation of having more plots to look at than humanly possible:
+
+>There seems no escape from asking the computer to sort out the displays to be displayed... To do this, the computer must judge the relative different displays, the relative importance of showing them.  This means calculating some "diagnostic quantities."  ... It seems natural to call such computer guiding *diagnostics* "cognostics".  We must learn to choose them, calculate them, and use them.  Else we drown in a sea of many different displays.
+
+For our purposes, a "cognostic" in Trelliscope is essentially any single metric about one subset of data that describes some aspect of that subset.  We can compute any number of cognostics for a given display, and then in the Trelliscope viewer we can sort, filter, or sample our panels based on these metrics.  Metrics can include statistical summaries, categorical variables, goodness-of-fit metrics, etc.  We will see several examples in this section.
+
+#### Specifying a cognostics function
+
+The cognostics function is applied to each subset just like the panel function and must return a list which can be flattened into a data frame.  For our data, there are several cognostics we might be interested in.  Typically the most useful cognostics are arrived upon iteratively.  
+
+Here, we specify the slope of a fitted line of list price vs. time, the mean list price, the number of non-NA list price observations, and finally, a special cognostic that is a URL that links to a Zillow display of homes for sale in the county.
+
+```{r price_cog}
+# create a cognostics function to be applied to each subset
+priceCog <- function(x) { 
+   zillowString <- gsub(" ", "-", do.call(paste, getSplitVars(x)))
+   list(
+      slope = cog(coef(lm(medListPriceSqft ~ time, data = x))[2], 
+         desc = "list price slope"),
+      meanList = cogMean(x$medListPriceSqft),
+      nObs = cog(length(which(!is.na(x$medListPriceSqft))), 
+         desc = "number of non-NA list prices"),
+      zillowHref = cogHref(
+         sprintf("http://www.zillow.com/homes/%s_rb/", zillowString), 
+         desc = "zillow link")
+   )
+}
+```
+
+Note that each metric is wrapped in a function `cog()` or `cog*()`. Doing so allows you to control the type of variable and give it a description, which will be useful in the viewer.
+
+The helper functions `cogMean()`, `cogRange()`, `cogHref()`, etc. can be used when defining the cognostics list.  They are not necessary but can be helpful.  For example, the difference between `cogRange()` and `range()` and others is that there is removal of NAs and extra checking for errors so that the cognostic calculation is robust.
+
+<!--
+
+Current types are:
+- `int `: integer 
+- `num `: floating point
+- `fac `: factor (string)
+- `date`: date
+- `time`: datetime
+- `geo `: geographic (a vector of lat and lon)
+- `rel `: relation (not implemented)
+- `hier`: hierarchy (not implemented)
+
+If type is not specified, it is inferred based on the data being processed.
+
+In the future, support for input variables will be added (this existed in older versions).  These will not be computed based on the data, but will be placeholders for users to provide panel-specific input. -->
+
+Let's test the cognostics function on a subset:
+
+```{r cog_apply}
+# test the cognostics function on a subset
+priceCog(byCounty[[1]]$value)
+```
+
+Now, let's add these cognostics to our display:
+
+```{r set_time_lims, eval=FALSE, message=FALSE}
+# add cognostics to the display
+makeDisplay(byCounty,
+   panelFn = bareBonesPanel,
+   cogFn   = priceCog,
+   name    = "list_vs_time_cog_simple_cog",
+   desc    = "List price per square foot vs. time, with cognostics")
+```
+
+Now, when we view this display (which again we can do with `view()` and selecting the appropriate display from the list), we can use the cognostics to interact with the panels.  For example, in the "Table Sort/Filter" control panel (clickable from the list of options on the left), we can sort or filter the panels baed on any of these metrics.  We can look at counties for only select states, sorted from highest to lowest mean list price, for example.  The additional controls, such as "Univariate Filter" and "Bivariate Filter" allow us to look at plots of the cognostics and visually filter panels.  We will cover this in greater detail in the [Viewing Displays](#trelliscope-viewer) section, but feel free to play around right now.  Also, use your imagination for what some other useful cognostics might be and try to add them.
+
+### Trelliscope Axis Limits ###
+
+As we discussed [before](#axis-limits), giving consideration to axis limits is very important for creating meaningful Trellis displays.  In Trelliscope, axis limits can be computed by specifying the x and y axes as "free", "sliced", or "same".  The default axis limit specification is "free", as we saw in the display we just created - each panel's axis limits are bound by the range of the data in each subset.  Since Trelliscope is very general - any R plotting technology can potentially be used in a panel function - the default is to not try to do anything with axis limits.
+
+Note: the discussion in this section is constrained to two-dimensional panels (with x and y axes), which covers the vast majority of useful statistical visualization techniques.  If you have panel functions that produce plots that do not have quantitative x and y scales (e.g. pie charts - no!!), then the functionality described in this section is not useful.
+
+#### How axis limits are computed
+
+To be able to compute overall axis limits for a display, Trelliscope needs to know about the range of the data in each panel.  Thus, when we create a display with "same" or "sliced" axes, Trelliscope must pass through the data and make these computations.
+
+There are two ways in which Trelliscope can make the per-subset range calculations.  The first is by simply using the panel function itself.  This is the easiest approach, but currently only works with lattice and ggplot2 panel functions.  The second approach is to specify a *prepanel function*.  We will cover both of these in this section.
+
+#### Specifying axis limits with the panel function
+
+To specify axis limits with a panel function, our panel function needs to use lattice or ggplot2.  This is because these return plot objects from which we can extract the range of the data in the plot.
+
+
+```{r lattice_panel, eval=TRUE, echo=TRUE, fig.height=5}
+# lattice panel function of list and sold price vs. time
+latticePanel <- function(x)
+   xyplot(medListPriceSqft ~ time, data = x)
+# test function on a subset
+latticePanel(byCounty[[1]]$value)
+```
+
+Suppose we want the x and y axis limits to be "same"
+
+```{r simple_scales, eval=FALSE}
+# setting axis limits in the call to makeDisplay()
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   cogFn   = priceCog,
+   name    = "list_vs_time_xy_same",
+   desc    = "List price per square foot vs. time with x and y axes same",
+   lims    = list(x = "same", y = "same"))
+```
+
+If you view this display by calling `view()` and selecting it, you will see that the y-axis now ranges from about 0 to 1500 for every panel and the x-axis ranges from 2009 to 2014 for every panel - they are the "same" across panels.  
+
+You might notice that a y-axis range of \$0 to \$1500 per square foot is a very large range, and there are probably only a very small number of counties that are in that higher range.  This causes the interesting features such as large relative dips in price within a county to be washed out, and might want us to think more about our choice of axis limits for the y-axis.  We will discuss this in more detail below.
+
+Suppose for now that we want to keep the y-axis "free", but we want to ensure that the x-axis is the same for every panel.  We can specify the rules for each axis independently:
+
+```{r simple_scales2, eval=FALSE}
+# setting axis limits in the call to makeDisplay()
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   name    = "list_vs_time_x_same",
+   desc    = "List price per square foot vs. time with x axis same",
+   lims    = list(x = "same", y = "free"))
+```
+
+Note that since "free" is the default, we could have omitted `y = "free"` in the `lims` argument above.
+
+<!-- Note that ggplot2 support at the moment is pretty shaky.  For the general continuous axis scales, it should work fine, but more work needs to be done to integrate nicely. -->
+
+
+#### Specifying axis limits with a prepanel function
+
+The previous example is the most simple way to specify axis limits.  However, it comes with a potential cost -- the panel function must be applied to each subset in order to obtain the limits.  For panel functions that take some time to render, this is wasted time.
+
+As an alternative, we can explicitly supply a *prepanel function* to the `lims` argument list, called `prepanelFn`.  This notion will be familiar to lattice users.
+
+The prepanel function takes each subset of data and returns a list with `xlim` and `ylim`.  For example:
+
+```{r display_prepanel, eval=FALSE, message=FALSE}
+# using a prepanel function to compute axis limits
+preFn <- function(d) {
+   list(
+      xlim = range(x$time, na.rm = TRUE),
+      ylim = range(d$medListPriceSqft, na.rm = TRUE)
+   )
+}
+
+makeDisplay(byCounty,
+   panelFn = latticePanel,
+   name    = "list_vs_time_x_same_pre",
+   desc    = "List price per square foot vs. time with x and y axes same",
+   lims    = list(x = "same", prepanelFn = preFn)
+)
+```
+
+#### Determining limits beforehand with `prepanel()`
+
+In both of the above approaches, we computed axis limits at the time of creating the display.  This is not recommended for data with a very large number of subsets.  There are a few reasons for this.  
+
+1. Setting the axis limits based on "sliced" or "same" is not very robust to outliers, and we may wish to understand and modify the axis limits prior to creating the display.
+2. Computing the axis limits can be more costly than creating a display, and it can be good to separate the two, particularly when we may be iterating on getting a panel function just right.
+3. Both of the above approaches require a panel function that allows for axis limits to be both extractable and settable, which does not work for 
+
+We can use a function, `prepanel()`, to compute and investigate axis limits prior to creating a display.
+
+The main parameter to know about in `prepanel()` is `prepanelFn`, which operates in the same way as we saw before -- it is either a `lattice` or `ggplot2` panel function or it is a function that takes a subset of the data as an input and returns a list including the elements `xlim` and `ylim` (each a vector of the min and max x and y ranges of the data subset).
+
+```{r prepanel, eval=FALSE, message=FALSE}
+# compute axis limits prior to creating display using prepanel()
+pre <- prepanel(byCounty, prepanelFn = preFn)
+```
+
+Under construction
+
+
+#### Setting the limits in your panel function
+
+Another option, of course, is to set axis limits explicitly in your panel function to whatever you like to achieve the effect of "same" or "sliced".
+
+### Panel Storage ###
+
+The default behavior for how panels are stored is to store a reference to the input data object and then render the panels on-the-fly in the viewer, pulling the appropriate subsets from the data as necessary.  Thus, if we have a very large ddo/ddf input object on HDFS, we do not make a copy for visualization, and only have to render the images being requested at the time of viewing.  When calling `makeDisplay()`, only the prepanel and cognostics computations need to be done.
+
+There is an option to pre-render, which can be useful when rendering the image is compute-intensive.  However, this feature is still being developed and is currently not recommended.
+
+### Related Displays ###
+
+We typically have many different ways to look at the same division of data.  When creating a display against a divided dataset, Trelliscope keeps track of the division of the input data, and all displays created on the same division can be linked together in the Trelliscope viewer.
+
+Under construction...
+
+
+
+### Display State ###
+
+Under construction
+
+#### State specification
+
+#### Specifying a default state in a display
+
+#### Opening displays in a given state
+
+#### Linking to states in other displays
+
+<!-- By-state vis with link to by-county -->
+
+### Other Panel Functions ###
+
+Under construction
+
+
+
+
+### Handling Displays ###
+
+Under construction
+
+
+
+### Sharing Displays ###
+
+
+
+Often our D&R environment and VDB are on a local workstation.  We might build up our VDB and web notebook locally and then desire to sync the results to a web server which is running [Shiny Server](http://www.rstudio.com/shiny/server/).  This is very useful for sharing analysis results with others.
+
+#### Syncing to a web server running Shiny Server
+
+There is some simple support for this in Trelliscope.  You can initialize a web connection using `webConn()`, which assumes that your web server is a Linux machine to which you have passwordless ssh capability.  You specify the address of the server, the directory of the VDB, and the name of the VDB under which you would like things stored.
+
+Under construction
+
+#### Syncing to shinyapps.io
+
+Under construction
+
+
+
+

@@ -1,0 +1,123 @@
+## Trelliscope Fundamentals ##
+
+### Multipanel Display ###
+
+Trelliscope is based on the notion of *multipanel displays*.  A multipanel display is one in which the data is split into subsets, typically based on the values of one or more *conditioning* variables.  A plot function is applied to each subset, and each plot is called a *panel*.  The multipanel display arranges the panels in rows and columns, reminiscent of a garden trellis.  There are many compelling reasons for this simple visualization approach, and we point the curious reader to more information about this, in particular, [Trellis Display](http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/), and [small multiples](http://en.wikipedia.org/wiki/Small_multiple).
+
+#### A simple illustration
+
+To illustrate multipanel displays, we will show examples on a small but famous data set, the [iris](http://www.inside-r.org/r-doc/datasets/iris) data, which gives the measurements in centimeters of the sepal and petal length and width for 50 flowers from each of 3 species of iris. The species are setosa, versicolor, and virginica.
+
+A natural way to break this data into subsets is by species.  We can acheive this with the `xyplot()` function in the `lattice` package, an R port of Trellis Display, with the following:
+
+```{r multipanel, eval=TRUE, echo=TRUE, fig.height=4}
+library(lattice)
+xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1))
+```
+
+Here we specify that we want to plot the petal length against sepal length, with the `|` operator indicating that we want a panel for each species.  Hence species is our conditioning variable.  We also specify that we would like to lay out the panels as 3 columns and 1 row.  Notice that the .
+
+For those more familiar with `ggplot2`, we can acheive the same effect with using `facet_wrap()`:
+
+```{r multipanel2, eval=TRUE, echo=TRUE, fig.height=4}
+library(ggplot2)
+p <- qplot(Sepal.Length, Petal.Length, data = iris)
+p + facet_wrap(~ Species, ncol = 3)
+```
+
+There are many important aspects of multipanel display that are good to grasp before making Trelliscope displays, and we will cover a couple of these next, *axis limits* and *aspect ratio*.
+
+### Axis Limits ###
+
+Since one of the most powerful uses of multipanel displays is the ability to make comparisons of panels across different subsets of the data, appropriate choice of axis limits is very important.  When viewing panels of a Trellis display, meaningful visual comparisons between panels greatly depend on how the limits of the x and y axes are determined.  There are three choices for axis limits:
+
+- **"same"**: the same limits are used for all the panels
+- **"sliced"**:  the range (max - min) of the scales are constrained to remain the same across panels
+- **"free"**: the limits for each panel are determined by just the points in that panel
+
+We will illustrate each of these using the lattice `xyplot()` function since they are readily implemented.  Understanding how to use these settings with `xyplot()` is not extremely important - we will handle that when we start making Trelliscope displays.  But understanding the concepts and importance is the focus of this section..
+
+#### "Same" axes
+
+Panels with "same" axes all have the same axis limits.  For example, the plot we already created with this data had "same" axes:
+
+```{r same_axes, eval=TRUE, echo=TRUE, fig.height=3.5}
+xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1))
+```
+
+Every panel's x-axis of `Sepal.Length` starts around 4cm and ends around 8cm, and every panel's y-axis of `Petal.Length` ranges from around 1cm to 7cm.  Choosing "same" axis limits helps emphasize that the means of both `Sepal.Length` and `Petal.Length` are significantly different for each species.  We can also judge that the `Petal.Length` appears to change in variability for each species.
+
+"Same" axes are the default setting for `xyplot()` and are in general a good default choice.  The plotting function pre-computes these axis limits across the whole data set and sets them for us.
+
+#### "Sliced" axes
+
+When setting the axes to "sliced", the range of the data plotted in each panel is constrained to be the same.  For example, with the iris data:
+
+```{r sliced_axes, eval=TRUE, echo=TRUE, fig.height=3}
+xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1),
+   scales = list(relation = "sliced"))
+```
+
+Now, if we look at the x-axis, we see that each panel has a range of about 3cm (for example, the panel for the setosa species ranges from 3.5cm to 6.5cm) and similarly for the y-axis.  We can no longer easily make judgements about how different each species is in terms of the mean (to do that, we have to actually look at the axis labels, which is not very effective).  But now the change in variability across species is much more clear.  For example, measurements for setosa are less variable around their mean than for the other species.  Choosing "sliced" axes is useful for when we do not care as much about differences in *location* or when the location of the data for each panel has such a large range that "same" axes keep us from seeing the detail in the data.
+
+#### "Free" axes
+
+With "free" axes, we allow the data in each panel to fill the space of the panel.  For example:
+
+```{r free_axes, eval=TRUE, echo=TRUE, fig.height=3}
+xyplot(Petal.Length ~ Sepal.Length | Species, 
+   data = iris, layout = c(3, 1),
+   scales = list(relation = "free"))
+```
+
+Now it is much more difficult to make useful comparisions across panels, but choosing "free" axes can still be a logical choice when we just care about seeing the full resolution of the data within each panel.
+
+#### How to choose axis limits
+
+Determining suitable axis limits is dependent on what is being visualized, but typically "same" or "sliced" are good choices as they enable panel-to-panel comparisons, which is where much of the power of this type of visualization lies.  You might choose "sliced" if you are interested in relative behaviors in terms of scale, or "same" if you are interested in relative behaviors both in terms of location and scale.  You can make different choices for each axis individually.  It is also often helpful to make multiple versions of the same plot with different axis limit settings for different purposes.
+
+In `lattice`, the handling of panel axis limits is specified by the `scales` argument, as we have seen, and we will see that there is a similar notion in Trelliscope.  It is also always possible to manually compute the limits we would like and hard code them into our panel plotting function, although as important as axis limits are, Trelliscope tries to make their use as straightforward as possible.
+
+### Aspect Ratio ###
+
+This section will be short, but the message is important: in multipanel display (or any display for that matter), aspect ratio matters.  The aspect ratio of a plot is the measure of the height divided by the width of the box bounding the plot area.  The choice of aspect ratio can drastically effect your perception of interesting features in a plot.  
+
+A famous example comes from the built-in R data set `sunspot.year`, which gives us the yearly numbers of sunspots from 1700 to 1988.  Below are two plots of the same data, each with a different aspect ratio.
+
+```{r aspect_sunspot, eval=TRUE, echo=TRUE}
+xyplot(sunspot.year ~ time(sunspot.year), type = "l")
+```
+
+```{r aspect_sunspot2, eval=TRUE, echo=FALSE, fig.height=1.5}
+xyplot(sunspot.year ~ time(sunspot.year), type = "l")
+```
+
+If we look at the data in the top plot, we see an obvious cyclical behavior in the number of spots.  However, the bottom plot emphasizes something that was much more difficult to see in the top plot, namely that the sunspot activity that ramps up very quickly tends to taper off more gradually - a very important insight that has implications for how the data is modeled. 
+
+In Trelliscope, we will see that the aspect ratio is simply specified by providing the panel bounding box dimensions.
+
+Never let the choice of aspect ratio be chosen by what you think is a convenient panel size for looking at (e.g. square) - choose it wisely.  There are helpful tools to assist the choice of aspect ratio, such as [banking to 45 degrees](http://eagereyes.org/basics/banking-45-degrees), but often the choice is a subjective but informed one.
+
+### Visualization Databases ###
+
+We create several visual displays throughout the course of an analysis.  As John Tukey, the father exploratory data analysis, states:
+
+> We can expect to need to need a variety of pictures to look at a data set of any complexity.
+
+We have found this to be true for every analysis we have been involved in.  When creating so many displays, and particulary for Trellis Display, it becomes important to be able organize them.
+
+We can think of visualizations we create that are worth keeping, sharing, and revisiting as *visual artifacts*.  The term *artifact* is [fitting](http://dictionary.reference.com/browse/artifact):
+
+> artifact [ahr-tuh-fakt]<br>1. any object made by human beings, especially with a view to subsequent use.
+
+Trelliscope provides a mechanism to organize and store visual artifacts in a [*visualization database*](http://jmlr.org/proceedings/papers/v5/guha09a/guha09a.pdf) (VDB).  Typically we create a VDB for each analysis project we are working on.  Within a VDB, displays can be organized into groups by analysis thread.  Artifacts in a VDB can either be simple plots created from various R plotting packages, like the ones we have seen so far, or Trelliscope displays, which are displays created for a divided dataset with a potentially very large number of subsets.  
+
+Trelliscope provides a way to view and interact with displays in a VDB, as well as easily embed them in a web-based "lab notebook" - a more organized presentatin of the progression of an analysis, which we discuss in the [Viewing Displays](#viewing-displays) and [Lab Notebooks](#lab-notebooks) sections.
+
+
+
+
+

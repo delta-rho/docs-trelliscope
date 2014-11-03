@@ -1,196 +1,35 @@
+# Trelliscope Tutorial #
 
+## Intro ##
 
+### Background ###
 
+Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment.  Trelliscope is a component in the [Tessera](tessera.io) environment.
 
-library(trelliscope)
+For those familiar with [Trellis Display](http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/), [faceting in ggplot](http://docs.ggplot2.org/0.9.3.1/facet_wrap.html), or the notion of [small multiples](http://en.wikipedia.org/wiki/Small_multiple), Trelliscope provides a scalable way to break a set of data into pieces, apply a plot method to each piece, and then arrange those plots in a grid and interactively sort, filter, and query panels of the display based on metrics of interest.  With Trelliscope, we are able to create multipanel displays on data with a very large number of subsets and view them in an interactive and meaningful way.
 
+Another important function of trelliscope is the organization of all of the Trelliscope displays and other visual artifacts we have deemed worthy of presentation into what we call a "visualization database", which can be easily shared with other researchers in a way that they can interact with.
 
+To start getting a feel for Trelliscope, continue to the next section, "Quickstart".
 
 
+#### Reference
 
-# initialize a connection to a new VDB to be located at /private/tmp/vdbtest
-vdbDir <- file.path(tempdir(), "vdbtest")
-conn <- vdbConn(vdbDir, autoYes = TRUE, name = "myProject")
+Related projects:
+   - [datadr][datadr]: R package providing the D&R framework
+   - [RHIPE][rhipe]: the engine that enables D&R to work with large, complex data
 
+References:
+   - [tessera.io][tessera.io]
+   - [Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data][trspaper]
+   - [Large complex data: divide and recombine (D&R) with RHIPE][drpaper]
+   - [Visualization Databases for the Analysis of Large Complex Datasets][vdbpaper]
 
-
-data(airplane)
-head(airplane)
-
-
-
-# look at co vs. time
-Sys.setenv(TZ="UTC")
-xyplot(co ~ dat_ams, data = airplane, aspect = 0.2)
-
-
-
-# distinguish "am" and "pm" flights
-midTime <- as.POSIXct("2010-06-28 21:00:00 UTC")
-airplane$flight <- ifelse(airplane$dat_ams < midTime, "am", "pm")
-
-
-
-# look at altitude vs. time
-xyplot(altitude ~ dat_ams, data = airplane, aspect = 0.2)
-
-
-
-# create a discrete version of altitude
-airplane$altCut <- cut(airplane$altitude, seq(0, 3000, by = 500))
-
-
-
-# take a look at airplane tracks
-xyplot(latitude ~ longitude, data = airplane,
-   groups = flight,
-   aspect = "iso",
-   alpha = 0.5,
-   auto.key = list(space = "right")
-)
-
-
-
-# look at tracks with altitude and flight
-library(RColorBrewer)
-xyplot(latitude ~ longitude | flight, 
-   data = airplane,
-   panel = function(x, y, ...) {
-      panel.fill("#E0E0E0")
-      panel.grid(h = -1, v = -1, col = "lightgray")
-      panel.xyplot(x, y, ...)
-   },
-   groups = altCut,
-   between = list(x = 0.5),
-   aspect = "iso",
-   par.settings = list(superpose.symbol = list(col = brewer.pal(6, "Accent"))),
-   auto.key = list(space = "right")
-)
-
-
-
-# break time into 15 minute intervals
-airplane$datCut <- sprintf("%s:%02d",
-   format(airplane$dat_ams, "%m-%d/%H"), 
-   floor(as.integer(format(airplane$dat_ams, "%M")) / 15) * 15
-)
-
-
-
-# plot of airplane tracks by 15 minute intervals
-arrowPanel <- function(x, y, ...) {
-   n <- length(x)
-   panel.grid(h = -1, v = -1)
-   panel.arrows(x[1:(n-1)], y[1:(n-1)], x[2:n], y[2:n], 
-      length = 0.05, alpha = 0.3, col = "blue")
-}
-
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   aspect = "iso",
-   subset = flight == "pm"
-)
-
-
-
-# example of both x and y axes "free"
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = "free"), 
-      y = list(relation="free")),
-   subset = flight == "pm"
-)
-
-
-
-# example of both x and y axes "sliced"
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = "sliced"), 
-      y = list(relation="sliced")),
-   subset = flight == "pm"
-)
-
-
-
-# prepanel example
-xyplot(latitude ~ longitude | datCut,
-   data = airplane,
-   panel = arrowPanel,
-   prepanel = function(x, y) {
-      list(xlim = range(x) + c(-1, 1), ylim = range(y) + c(-1, 1))
-   },
-   as.table = TRUE,
-   between = list(x = 0.25, y = 0.25),
-   layout = c(5, 2),
-   scales = list(x = list(relation = "free"), 
-      y = list(relation="free")),
-   subset = flight == "pm"
-)
-
-
-
-# re-connect to our VDB
-conn <- vdbConn(file.path(tempdir(), "vdbtest"))
-
-
-
-# add a lattice plot to our VDB
-p <- xyplot(latitude ~ longitude | flight, 
-   data = airplane,
-   panel = function(x, y, ...) {
-      panel.fill("#E0E0E0")
-      panel.grid(h = -1, v = -1, col = "lightgray")
-      panel.xyplot(x, y, ...)
-   },
-   groups = altCut,
-   between = list(x = 0.5),
-   aspect = "iso",
-   par.settings = list(superpose.symbol = 
-      list(col = brewer.pal(6, "Accent"))),
-   auto.key = list(space = "right"))
-
-addDisplay(p, 
-   name  = "tracks_byflight", 
-   group = "exploratory",
-   desc  = "The tracks of the airplane with a panel for each of the morning and evening flights.  Color by altitude of plane.",
-   width = 800, height = 450)
-
-
-
-# list the files in the "displays" directory of the VDB
-list.files(file.path(vdbDir, "displays"))
-
-
-
-# list the files in the "exploratory" group
-list.files(file.path(vdbDir, "displays", "exploratory"))
-
-
-
-# look at files in the "tracks_byflight" directory
-list.files(file.path(vdbDir, "displays", "exploratory", "tracks_byflight"))
-
-
-
-# list all displays in the VDB
-listDisplays()
-
-
-
-# view the tracks_by_flight display
-view("tracks_byflight")
-
+[rhipe]: http://github.com/tesseradata/RHIPE
+[datadr]: http://github.com/tesseradata/datadr
+[tessera.io]: http://tessera.io
+[trspaper]: http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf
+[drpaper]: http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full
+[vdbpaper]: http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf
+[trellis]: http://www.cs.ubc.ca/~tmm/courses/infovis/readings/trellis.jstor.pdf
 
