@@ -909,7 +909,7 @@ makeDisplay(byCounty,
 <pre><code class="r"># using a prepanel function to compute axis limits
 preFn &lt;- function(d) {
    list(
-      xlim = range(x$time, na.rm = TRUE),
+      xlim = range(d$time, na.rm = TRUE),
       ylim = range(d$medListPriceSqft, na.rm = TRUE)
    )
 }
