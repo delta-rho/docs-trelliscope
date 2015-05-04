@@ -1,8 +1,8 @@
-### Quickstart ###
+## Quickstart
 
 Before getting into the details, we'll first go over a quick example to provide a feel for what can be done with Trelliscope.  This example is adapted from the quick start example in the [datadr](tessera.io/docs-datadr) documentation, but with a specific focus on Trelliscope.
 
-#### Package installation
+### Package installation
 
 First, we need to install the necessary components, `datadr` and `trelliscope`.  These are R packages that we install from github.
 
@@ -21,7 +21,7 @@ We will use as an example a data set consisting of the median list and sold pric
 devtools::install_github("hafen/housingData")
 ```
 
-#### Environment setup
+### Environment setup
 
 Now we load the packages and look at the housing data:
 
@@ -37,7 +37,7 @@ str(housing)
 
 We see that we have a data frame with the information we discussed, in addition to the number of units sold.
 
-#### Setting up a visualization database
+### Setting up a visualization database
 
 We create many plots throughout the course of analysis, and with Trelliscope, we can store these in a "visualization database" (VDB), which is a directory on our computer where all of the information about our display artifacts is stored.  Typically we will set up a single VDB for each project we are working on.  To initialize and connect to a VDB, we call the `vdbConn()` function with the path where our VDB is located (or where we would like it to be located), and optionally give it a name.
 
@@ -48,14 +48,14 @@ conn <- vdbConn("vdb", name = "tesseraTutorial")
 
 This connects to a directory called `"vdb"` relative to our current working directory.  The first time you do this it will ask to make sure you want to create the directory.  R holds this connection in its global options so that subsequent calls will know where to put things without explicitly specifying the connection each time.
 
-#### Visualization by county and state
+### Visualization by county and state
 
 Trelliscope allows us to visualize large data sets in detail.  We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.
 
 An interesting thing to look at with the housing data is the median list and sold price over time by county and state.  To split the data in this way, we use the `divide()` function from the `datadr` package.  It is recommended to have some familiarity with the [datadr](tessera.io/docs-datadr) package.
 
 ```{r quickstart_loaddata, eval=TRUE, echo=FALSE, results="hide", message=FALSE, purl=FALSE}
-# byCounty <- divide(housing, 
+# byCounty <- divide(housing,
 #    by = c("county", "state"), update = TRUE)
 # save(byCounty, file = "housing/byCounty.Rdata")
 load("_ignore/housing/byCounty.Rdata")
@@ -64,7 +64,7 @@ load("_ignore/housing/byCounty.Rdata")
 
 ```{r quickstart_divide, eval=FALSE, echo=TRUE}
 # divide housing data by county and state
-byCounty <- divide(housing, 
+byCounty <- divide(housing,
    by = c("county", "state"))
 ```
 
@@ -84,7 +84,7 @@ byCounty[[1]]
 
 The key tells us that this is Abbeville county in South Carolina, and the value is the price data for this county.
 
-#### Creating a panel function
+### Creating a panel function
 
 To create a Trelliscope display, we need to first provide a *panel* function, which specifies what to plot for each subset.  It takes as input either a key-value pair or just a value, depending on whether the function has two arguments or one.
 
@@ -107,23 +107,23 @@ timePanel(byCounty[[20]]$value)
 
 Great!
 
-#### Creating a cognostics function
+### Creating a cognostics function
 
 Another thing we can do is specify a *cognostics* function for each subset.  A cognostic is a metric that tells us an interesting attribute about a subset of data, and we can use cognostics to have more worthwhile interactions with all of the panels in the display.  A cognostic function needs to return a list of metrics:
 
 ```{r quickstart_cog, eval=TRUE, echo=TRUE}
 # create a cognostics function of metrics of interest
-priceCog <- function(x) { 
+priceCog <- function(x) {
    zillowString <- gsub(" ", "-", do.call(paste, getSplitVars(x)))
    list(
-      slope = cog(coef(lm(medListPriceSqft ~ time, data = x))[2], 
+      slope = cog(coef(lm(medListPriceSqft ~ time, data = x))[2],
          desc = "list price slope"),
       meanList = cogMean(x$medListPriceSqft),
       meanSold = cogMean(x$medSoldPriceSqft),
-      nObs = cog(length(which(!is.na(x$medListPriceSqft))), 
+      nObs = cog(length(which(!is.na(x$medListPriceSqft))),
          desc = "number of non-NA list prices"),
       zillowHref = cogHref(
-         sprintf("http://www.zillow.com/homes/%s_rb/", zillowString), 
+         sprintf("http://www.zillow.com/homes/%s_rb/", zillowString),
          desc = "zillow link")
    )
 }
@@ -138,7 +138,7 @@ We should test the cognostics function on a subset:
 priceCog(byCounty[[1]]$value)
 ```
 
-#### Making the display
+### Making the display
 
 Now we can create a Trelliscope display by sending our data, our panel function, and our cognostics function to `makeDisplay()`:
 
@@ -147,7 +147,7 @@ Now we can create a Trelliscope display by sending our data, our panel function,
 makeDisplay(byCounty,
    name = "list_sold_vs_time_quickstart",
    desc = "List and sold price over time",
-   panelFn = timePanel, 
+   panelFn = timePanel,
    cogFn = priceCog,
    width = 400, height = 400,
    lims = list(x = "same"))

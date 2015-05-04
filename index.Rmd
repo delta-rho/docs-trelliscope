@@ -1,0 +1,45 @@
+---
+title: "trelliscope"
+subtitle: "Tutorial"
+author: Ryan Hafen
+copyright: Ryan Hafen
+output:
+  packagedocs:
+    toc: true
+navpills: |
+  <li class="active"><a href='index.html'>Docs</a></li>
+  <li><a href='rd.html'>Package Ref</a></li>
+  <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
+brand: |-
+  <a href="http://tessera.io">
+  <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'>
+  </a>
+---
+
+```{r echo=FALSE, purl=FALSE}
+knitr::opts_chunk$set(comment = NA)
+set.seed(1234)
+# function to create a link to the corresponding entry in Rd.html
+rdl <- function(txt) {
+  txt2 <- gsub("\\.", "_", tolower(gsub("\\(\\)", "", txt)))
+  paste0("<code><a target='_blank' href='rd.html#", txt2, "'>", txt,"</a></code>")
+}
+```
+
+```{r in-1, child='docs/1intro.Rmd'}
+```
+
+```{r in-2, child='docs/2quickstart.Rmd'}
+```
+
+```{r in-3, child='docs/3fundamentals.Rmd'}
+```
+
+```{r in-4, child='docs/4displays.Rmd'}
+```
+
+```{r in-5, child='docs/5viewer.Rmd'}
+```
+
+```{r in-6, child='docs/6misc.Rmd'}
+```

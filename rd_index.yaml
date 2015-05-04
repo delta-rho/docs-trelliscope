@@ -1,0 +1,63 @@
+-
+  section_name: Making Displays
+  description:
+  topics:
+    - makeDisplay
+    - qtrellis
+    - splod
+-
+  section_name: Handling Displays
+  description:
+  topics:
+    - vdbConn
+    - view
+    - listDisplays
+    - getDisplay
+    - removeDisplay
+-
+  section_name: Cognostics
+  description:
+  topics:
+    - cog
+    - cogMean
+    - cogRange
+    - cogLoessRMSE
+    - cogHref
+    - cogDisplayHref
+    - cogScagnostics
+-
+  section_name: Sharing Displays
+  description:
+  topics:
+    - deployToShinyApps
+    - syncLocalData
+    - webConn
+    - webSync
+-
+  section_name: Misc
+  description:
+  topics:
+    - airplane
+    - batting
+    - noMargins
+    - validateState
+    - makeStateHash
+    - makeSplodData
+    - prepanel
+
+
+# - Ignore
+# cogConn-methods
+# hash-methods
+# mr-methods
+# setLims
+# splodCogFn
+# splodPanelFn
+# plot.trsPre
+# print.displayObj
+# encodePNG
+# makePNG
+# applyCogFn
+# dfCogConn
+
+

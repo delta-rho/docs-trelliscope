@@ -1,0 +1,1277 @@
+---
+title: "trelliscope"
+subtitle: "Package Reference"
+author: Ryan Hafen
+copyright: Ryan Hafen
+output:
+  packagedocs:
+    toc: true
+rd_page: true
+navpills: |
+  <li><a href='index.html'>Docs</a></li>
+  <li class="active"><a href='rd.html'>Package Ref</a></li>
+  <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
+brand: |-
+  <a href="http://tessera.io">
+  <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'>
+  </a>
+---
+<h1>Trelliscope</h1>
+
+<p><strong>Author:</strong> </p>
+<p><strong>Version:</strong> 0.8.2.4</p>
+<p><strong>Date:</strong> 2015-05-04</p>
+<p><strong>License:</strong> BSD_3_clause + file LICENSE</p>
+
+<h4>Description</h4>
+<p>Trelliscope provides a way to create, organize, and view
+multi-panel displays, a collection of which is called a visualization
+database (VDB).  This package provides a mechanism for extending the ideas
+of Trellis Display to easily generate and organize plots, providing a
+dynamic viewer for tiling panels of a display across the screen and paging
+through them. There is also a mechanism to generate built-in or
+user-defined "cognostic" metrics for each panel of a display , and the
+viewer has the ability to sort or filter the pages based on these
+cognostics.  This is useful for large multi-panel displays where it is not
+possible to view each panel, allowing only panels with interesting features
+to be presented.</p>
+
+<h4>Depends</h4>
+<p>
+R (>= 2.15.1),
+base,
+datadr (>= 0.7.3),
+lattice (>= 0.20-23),
+ggplot2</p>
+
+<h4>Suggests</h4>
+<p>
+Cairo,
+dplyr,
+testthat (>= 0.8.1),
+roxygen2 (>= 4.0.0),
+scagnostics,
+shinyapps</p>
+
+# Making Displays
+
+
+
+## makeDisplay
+
+<h3>Create a Trelliscope Display</h3>
+
+Create a trelliscope display and add it to a visualization database (VDB)
+
+<h4>Usage</h4>
+<pre class="r"><code>makeDisplay(data, name, group = "common", desc = "", height = 500,
+  width = 500, panelFn = NULL, lims = list(x = "free", y = "free",
+  prepanelFn = NULL), cogFn = NULL, state = NULL, preRender = FALSE,
+  cogConn = dfCogConn(), output = NULL, conn = getOption("vdbConn"),
+  verbose = TRUE, keySig = NULL, params = NULL, packages = NULL,
+  control = NULL)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>data</dt>
+  <dd class="rd-dd">data of class "ddo" or "ddf" (see <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/ddo>ddo</a></code>, <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/ddf>ddf</a></code>)</dd>
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the display (no special characters, spaces are converted to underscores)</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">the group the display belongs to, where displays are organized into groups (no special characters, spaces are
+converted to underscores).  Defaults to "common"</dd>
+  <dt>desc</dt>
+  <dd class="rd-dd">a description of the display (used in the viewer and in notebooks)</dd>
+  <dt>height</dt>
+  <dd class="rd-dd">reference dimensions (in pixels) for each panel (panels will be resized based on available space in the viewer)</dd>
+  <dt>width</dt>
+  <dd class="rd-dd">reference dimensions (in pixels) for each panel (panels will be resized based on available space in the viewer)</dd>
+  <dt>panelFn</dt>
+  <dd class="rd-dd">a function that produces a plot and takes one argument, which will be the current split of the data being passed to it.  It is recommended that you first test <code>panelFn</code> on a single key-value pair using <code>panelFn(data[[1]][[2]])</code>. This function must return either an object of class "ggplot", "trellis", or return "NULL" (for base plot commands)</dd>
+  <dt>lims</dt>
+  <dd class="rd-dd">either an object of class "trsLims" as obtained from <code><a href=#setlims>setLims</a></code> or a list with elements x, y, and prepanelFn, that specify how to apply <code><a href=#prepanel>prepanel</a></code> and <code><a href=#setlims>setLims</a></code></dd>
+  <dt>cogFn</dt>
+  <dd class="rd-dd">a function that returns a named list, where each element of the list is a cognostic feature (with length 1). This list must be coerceable to a 1-row data frame. The function should take one argument, which will be the current split of the data being passed to it.  Useful to test with <code>cogFn(divExample(dat))</code></dd>
+  <dt>state</dt>
+  <dd class="rd-dd">if specified, this tells the viewer the default parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see <code><a href=#validatestate>validateState</a></code> for details)</dd>
+  <dt>preRender</dt>
+  <dd class="rd-dd">should the panels be pre-rendered and stored (<code>TRUE</code>), or rendered on-the-fly (<code>FALSE</code>, default)?  Default is recommended unless rendering is very expensive.  See Details.</dd>
+  <dt>cogConn</dt>
+  <dd class="rd-dd">a connection to store the cognostics data.  By default, this is <code><a href=#dfcogconn>dfCogConn</a>()</code>.</dd>
+  <dt>output</dt>
+  <dd class="rd-dd">how to store the panels and metadata for the display (unnecessary to specify in most cases -- see details)</dd>
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+  <dt>verbose</dt>
+  <dd class="rd-dd">print status messages?</dd>
+  <dt>keySig</dt>
+  <dd class="rd-dd">a user-defined key signature (string - see details)</dd>
+  <dt>params</dt>
+  <dd class="rd-dd">a named list of parameters external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dt>packages</dt>
+  <dd class="rd-dd">a vector of R package names that contain functions used in <code>panelFn</code> or <code>cogFn</code> (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dt>control</dt>
+  <dd class="rd-dd">parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl>rhipeControl</a></code> and <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl>localDiskControl</a></code></dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">Many of the parameters are optional or have defaults.  For several examples, see the documentation at tessera.io: <a href = http://tessera.io/docs-trelliscope>http://tessera.io/docs-trelliscope</a></p>
+
+  <p class="rd-p">Panels by default are not pre-rendered. Instead, this function creates a display object and computes and stores the cognostics.  Panels are then rendered on the fly by the Tessera backend and pushed to the Trelliscope viewer as html with the panel images embedded in the html.  If a user would like to pre-render the images for every subset (using <code>preRender = TRUE</code>), then by default the image files for the panels will be stored to a local disk connection (see <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/localDiskConn>localDiskConn</a></code>) inside the VDB directory, organized in subdirectories by group and name of the display.  Optionally, the user can specify the <code>output</code> parameter to be any valid "kvConnection" object, as long as it is one that persists on disk (e.g. <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/hdfsConn>hdfsConn</a></code>).</p>
+
+  <p class="rd-p"><code>keySig</code> does not generally need to be specified.  It is useful to specify when creating multiple displays that you would like to be treated as related displays, so that you can view them side by side.  Two displays are determined to be related when their key signatures, typically computed as a md5 hash of the complete collection of keys, match.  Sometimes two displays will have data where the keys match for a significant portion of subsets, but not all.  Manually specifying the same <code>keySig</code> for each can ensure that they will be treated as related displays.</p>
+
+
+
+<h4>Examples</h4>
+<pre class="r"><code># see docs</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#prepanel>prepanel</a></code>, <code><a href=#setlims>setLims</a></code>, <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/divide>divide</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## qtrellis
+
+<h3>Quick trelliscope display for data frame-like inputs</h3>
+
+
+<h4>Usage</h4>
+<pre class="r"><code>qtrellis(x, panel = NULL, cog = NULL, by = NULL, layout = c(1, 1),
+  conn = getOption("vdbConn"), ...)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">either a data frame</dd>
+  <dt>panel</dt>
+  <dd class="rd-dd">a function taking one argument (which will be a subset of the input data frame) and returning a plot</dd>
+  <dt>cog</dt>
+  <dd class="rd-dd">an optional cognostics funtion to be applied to each subset</dd>
+  <dt>by</dt>
+  <dd class="rd-dd">if the input is a data frame, a character vector of column names to split the data by</dd>
+  <dt>layout</dt>
+  <dd class="rd-dd">a vector indicating the number of rows and columns to arrange the panels in by default</dd>
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists or if you would like to use a temporary one for this display</dd>
+  <dt>...</dt>
+  <dd class="rd-dd">parameters passed to <code><a href=#makedisplay>makeDisplay</a></code> - most importantly <code>name</code>, <code>group</code> (see note below), <code>width</code>, and <code>height</code></dd>
+</dl>
+
+  <h4>Note</h4>
+
+  <p class="rd-p">If you dont have a vdb connection set up (see <code><a href=#vdbconn>vdbConn</a></code>), a temporary one will be created and used, and you can think of the plot as disposable.  If you would like the plot to persist, set up a vdb connection.  Likewise, if you dont supply <code>name</code> and <code>group</code>, the plot will be stored under defaults "qtrellis_plot" and "__qtrellis", and a subsequent call will cause the previous display with this name and group to be replaced.  Therefore, if you want your display to persist, make sure a vdb connection has been set up prior to calling this function, and give it a unique name.</p>
+
+
+
+<h4>Examples</h4>
+<pre class="r"><code>panel <- function(x)
+  xyplot(Sepal.Width ~ Sepal.Length, data = x)
+
+p <- divide(iris, by = "Species") %>%
+  qtrellis(panel, layout = c(1, 3))
+p
+
+# data frame input (need to specify 'by')
+iris %>% qtrellis(panel, by = "Species")
+
+# dplyr grouped tbl input
+library(dplyr)
+p <- iris %>%
+  group_by(Species) %>%
+  qtrellis(panel, layout = c(1, 3))
+p</code></pre>
+
+
+
+## splod
+
+<h3>Create a Scatterplot Display</h3>
+
+Create a scatterplot display (splod)
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>data</dt>
+  <dd class="rd-dd">a data.frame or an object of class "splodDat"</dd>
+  <dt>id.vars</dt>
+  <dd class="rd-dd">variables to ignore when computing all pairs of variables</dd>
+  <dt>name,desc,cogFn,panelFn,verbose,...</dt>
+  <dd class="rd-dd">parameters passed to <code><a href=#makedisplay>makeDisplay</a></code></dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+an object of class localDiv that can be passed to <code><a href=#splod>splod</a></code>
+</dl></p>
+
+
+  <h4>References</h4>
+
+  <p class="rd-p">Wilkinsons scagnostics paper.</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#makedisplay>makeDisplay</a></code>, <code><a href=#makesploddata>makeSplodData</a></code>, <code><a href=#splodpanelfn>splodPanelFn</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+# Handling Displays
+
+
+
+## vdbConn
+
+<h3>Connect to a VDB</h3>
+
+Connect to a visualization catabase
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>path</dt>
+  <dd class="rd-dd">The path on the local file system where the directory for the VDB is located</dd>
+  <dt>name</dt>
+  <dd class="rd-dd">the name for the VDB (if null, uses the name of the parent directory)</dd>
+  <dt>autoYes</dt>
+  <dd class="rd-dd">should questions to proceed with directory creation operations be automatically answered with "yes"?</dd>
+  <dt>verbose</dt>
+  <dd class="rd-dd">logical - print messages about what is being done</dd>
+</dl>
+
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## view
+
+<h3>View a Display or Run Shiny Display Viewer</h3>
+
+View a display or run Shiny display viewer
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>name,group</dt>
+  <dd class="rd-dd">optional parameters to load the viewer with a pre-specified display - if not specified, the viewer will launch with a list to choose from</dd>
+  <dt>state</dt>
+  <dd class="rd-dd">an optional list of state variables to set the default viewing state for layout, sorting, filtering, and labels (see details)</dd>
+  <dt>openBrowser</dt>
+  <dd class="rd-dd">should the browser be automatically launched?</dd>
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+  <dt>port</dt>
+  <dd class="rd-dd">what port to use for the viewer</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">The state</p>
+
+
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## listDisplays
+
+<h3>List Displays in a VDB</h3>
+
+List displays in a VDB.
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+</dl>
+
+
+
+<h4>See also</h4>
+
+<code><a href=#makedisplay>makeDisplay</a></code>, <code><a href=#removedisplay>removeDisplay</a></code>, <code><a href=#view>view</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## getDisplay
+
+<h3>Retrieve Display Object from VDB</h3>
+
+Retrieve a display object from a VDB.
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the display</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">the group of the display</dd>
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">If a display is uniquely determined by its name, then group is not required.</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#makedisplay>makeDisplay</a></code>, <code><a href=#removedisplay>removeDisplay</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## removeDisplay
+
+<h3>Remove a Display from a VDB</h3>
+
+Remove a display from a VDB.
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the display</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">the group of the display</dd>
+  <dt>conn</dt>
+  <dd class="rd-dd">VDB connection info, typically stored in options("vdbConn") at the beginning of a session, and not necessary to specify here if a valid "vdbConn" object exists</dd>
+  <dt>autoYes</dt>
+  <dd class="rd-dd">should questions to proceed with display removal be automatically answered with "yes"?</dd>
+  <dt>verbose</dt>
+  <dd class="rd-dd">logical - print messages about what is being done</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">If a display is uniquely determined by its name, then group is not required.</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#makedisplay>makeDisplay</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+# Cognostics
+
+
+
+## cog
+
+<h3>Create a Cognostics Object</h3>
+
+Create a cognostics object.  To be used inside of the function passed to the <code>cogFn</code> argument of <code><a href='makeDisplay.html'>makeDisplay</a></code> for each cognostics value to be computed for each subset.
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>val</dt>
+  <dd class="rd-dd">a scalar value (numeric, characer, date, etc.)</dd>
+  <dt>desc</dt>
+  <dd class="rd-dd">a description for this cognostic value</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">optional categorization of the cognostic for organizational purposes</dd>
+  <dt>type</dt>
+  <dd class="rd-dd">the desired type of cognostic you would like to compute (see details)</dd>
+  <dt>defLabel</dt>
+  <dd class="rd-dd">should this cognostic be used as a panel label in the viewer by default?</dd>
+  <dt>defActive</dt>
+  <dd class="rd-dd">should this cognostic be active (available for sort / filter / sample) by default?</dd>
+  <dt>filterable</dt>
+  <dd class="rd-dd">should this cognostic be filterable?  Default is <code>TRUE</code>.  It can be useful to set this to <code>FALSE</code> if the cognostic is categorical with many unique values and is only desired to be used as a panel label.</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">Different types of cognostics can be specified through the <code>type</code> argument that will affect how the user is able to interact with those cognostics in the viewer.  This can usually be ignored because it will be inferred from the implicit data type of <code>val</code>.  But there are special types of cognostics, such as geographic coordinates and relations (not implemented) that can be specified as well.  Current possibilities for <code>type</code> are "key", "integer", "numeric", "factor", "date", "time", "geo", "rel", "hier", "href".</p>
+
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+object of class "cog"
+</dl></p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#makedisplay>makeDisplay</a></code>, <code><a href=#cogrange>cogRange</a></code>, <code><a href=#cogmean>cogMean</a></code>, <code><a href=#cogscagnostics>cogScagnostics</a></code>, <code><a href=#cogloessrmse>cogLoessRMSE</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogMean
+
+<h3>Compute Mean Cognostic</h3>
+
+Compute mean to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre class="r"><code>cogMean(x, desc = "mean", group = "common", defLabel = FALSE,
+  defActive = TRUE, filterable = TRUE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">numeric vector from which to compute the mean</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>cogMean(rnorm(100))</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#cog>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogRange
+
+<h3>Compute Range Cognostic</h3>
+
+Compute range to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre class="r"><code>cogRange(x, desc = "range (max - min)", group = "common",
+  defLabel = FALSE, defActive = TRUE, filterable = TRUE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">numeric vector from which to compute the range</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>cogRange(rnorm(100))</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#cog>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogLoessRMSE
+
+<h3>Compute RMSE of Loess Fit Cognostic</h3>
+
+Compute RMSE of loess fit as a cognostic to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre class="r"><code>cogLoessRMSE(..., desc = "RMSE of residuals from loess fit",
+  group = "common", defLabel = FALSE, defActive = TRUE,
+  filterable = TRUE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+  <dt>...</dt>
+  <dd class="rd-dd">arguments to be passed to <code>link{loess}</code>, such as the formula, data, smoothing parameters, etc.</dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>cogLoessRMSE(dist ~ speed, span = 0.5, data = cars)</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#cog>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogHref
+
+<h3>Href Cognostic</h3>
+
+Create href to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre class="r"><code>cogHref(x, label = "link", desc = "link", group = "common",
+  target = "_blank", defLabel = FALSE, defActive = FALSE,
+  filterable = FALSE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">URL to link to</dd>
+  <dt>label</dt>
+  <dd class="rd-dd">label of the href</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+  <dt>target</dt>
+  <dd class="rd-dd">value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>cogHref("www.google.com")</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#cog>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogDisplayHref
+
+<h3>DisplayHref Cognostic</h3>
+
+Create href that points to another trelliscope display with optional state
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>displayName</dt>
+  <dd class="rd-dd">the name of the display</dd>
+  <dt>displayGroup</dt>
+  <dd class="rd-dd">the group the display belongs to</dd>
+  <dt>state</dt>
+  <dd class="rd-dd">if specified, this tells the viewer the default parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see <code><a href=#validatestate>validateState</a></code> for details)</dd>
+  <dt>label</dt>
+  <dd class="rd-dd">label of the href</dd>
+  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+  <dt>target</dt>
+  <dd class="rd-dd">value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+a hash string
+</dl></p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#validatestate>validateState</a></code>, <code><a href=#coghref>cogHref</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## cogScagnostics
+
+<h3>Compute Scagnostics</h3>
+
+Compute list of scagnostics (see <code><a href='http://www.inside-r.org/packages/cran/scagnostics/docs/scagnostics'>scagnostics</a></code>) to be used as cognostics in a trelliscope display.
+
+<h4>Usage</h4>
+<pre class="r"><code>cogScagnostics(x, y, group = "scagnostics", defLabel = FALSE,
+  defActive = TRUE, filterable = TRUE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">vector of the x-axis data for a scatterplot</dd>
+  <dt>y</dt>
+  <dd class="rd-dd">vector of the y-axis data for a scatterplot</dd>
+  <dt>group,defLabel,defActive,filterable</dt>
+  <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>cogScagnostics(iris$Sepal.Length, iris$Sepal.Width)</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#cog>cog</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+# Sharing Displays
+
+
+
+## deployToShinyApps
+
+<h3>Deploy VDB to shinyapps.io</h3>
+
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>vdbConn</dt>
+  <dd class="rd-dd">VDB connection settings</dd>
+  <dt>appName</dt>
+  <dd class="rd-dd">name of application (app will be available at https://[account].shinyapps.io/[appName]/) - if not supplied, will use the name of VDB connection</dd>
+  <dt>account</dt>
+  <dd class="rd-dd">passed to <code>shinyapps::configureApp</code></dd>
+  <dt>redeploy</dt>
+  <dd class="rd-dd">passed to <code>shinyapps::configureApp</code></dd>
+  <dt>size</dt>
+  <dd class="rd-dd">passed to <code>shinyapps::configureApp</code></dd>
+  <dt>instances</dt>
+  <dd class="rd-dd">passed to <code>shinyapps::configureApp</code></dd>
+  <dt>quiet</dt>
+  <dd class="rd-dd">passed to <code>shinyapps::configureApp</code></dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">If you do not have a shinyapps.io account and have not set your account info, first visit here prior to calling this function: <a href = #http://shiny.rstudio.com/articles/shinyapps>http://shiny.rstudio.com/articles/shinyapps.html</a>.</p>
+
+
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+<code><a href='syncLocalData.html'>syncLocalData</a></code>
+
+
+
+
+## syncLocalData
+
+<h3>Sync localDisk Objects to VDB</h3>
+
+Sync localDisk data that is used for VDB displays located throughout the system to a 'data' directory inside the VDB - useful for collecting data before syncing with a web server, and used inside of <code><a href='webSync.html'>webSync</a></code>.
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>vdbConn</dt>
+  <dd class="rd-dd">VDB connection settings</dd>
+  <dt>rsync</dt>
+  <dd class="rd-dd">location of rsync binary</dd>
+</dl>
+
+
+
+<h4>See also</h4>
+
+<code><a href=#websync>webSync</a></code>, <code><a href=#webconn>webConn</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## webConn
+
+<h3>Initialize a Web Connection</h3>
+
+Initialize a connection to a web server
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>user</dt>
+  <dd class="rd-dd">the username to log on to the web server</dd>
+  <dt>ip</dt>
+  <dd class="rd-dd">the IP address of the web server - if <code>NULL</code>, it is assumed that your web server is on the same machine that you are working on</dd>
+  <dt>appDir</dt>
+  <dd class="rd-dd">the directory where Shiny apps go on the web server - defaults to the default location of /srv/shiny-server</dd>
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the directory in <code>appDir</code> under which to store the application - if not supplied, it defaults to the name provided in the vdb connection</dd>
+</dl>
+
+
+
+<h4>See also</h4>
+
+<code><a href=#websync>webSync</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## webSync
+
+<h3>Sync VDB and notebook Files to a Web Server</h3>
+
+Sync VDB and notebook files to a web server
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>vdbConn</dt>
+  <dd class="rd-dd">VDB connection settings</dd>
+  <dt>webConn</dt>
+  <dd class="rd-dd">web connection settings</dd>
+  <dt>fixPermissions</dt>
+  <dd class="rd-dd">should an attempt be made to fix permissions in the web directory?</dd>
+  <dt>verbose</dt>
+  <dd class="rd-dd">show rsync output</dd>
+  <dt>rsync</dt>
+  <dd class="rd-dd">location of rsync binary</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">This requires rsync to be installed on your machine.  If you are syncing via ssh, this only works if public key authentication is enabled between your local machine and the remote server.</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#webconn>webConn</a></code>, <code><a href=#synclocaldata>syncLocalData</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+# Misc
+
+
+
+## airplane
+
+<h3>Airplane Data</h3>
+
+Airplane data
+
+  <h4>Format</h4>
+
+  <p class="rd-p">A data frame with 1479 rows and 47 variables</p>
+
+
+  <h4>Details</h4>
+
+  <p class="rd-p"><ul>
+<li> dat_ams.      : POSIXct, format: "2010-06-28 16:25:21" "2010-06-28 16:25:34" ...
+  </li>
+<li> org.          : num  9.26 13.29 12.13 12.36 10.11 ...
+  </li>
+<li> NO3.          : num  0.449 0.589 0.536 0.57 0.457 ...
+  </li>
+<li> SO4.          : num  0.115 0.193 0.232 0.307 0.197 ...
+  </li>
+<li> NH4.          : num  0.126 0.229 0.224 0.179 0.172 ...
+  </li>
+<li> CHL.          : num  0.01119 0.01748 0.00607 0.03346 0.00683 ...
+  </li>
+<li> org_err.      : num  0.111 0.117 0.116 0.116 0.115 ...
+  </li>
+<li> NO3_err.      : num  0.0172 0.0181 0.0177 0.0182 0.0175 ...
+  </li>
+<li> SO4_err.      : num  0.0222 0.0244 0.0252 0.0253 0.025 ...
+  </li>
+<li> NH4_err.      : num  0.0331 0.0331 0.0331 0.0332 0.0331 ...
+  </li>
+<li> CHl_err.      : num  0.0124 0.0122 0.0123 0.0123 0.0123 ...
+  </li>
+<li> latitude.     : num  38.7 38.7 38.7 38.7 38.7 ...
+  </li>
+<li> longitude.    : num  -121 -121 -121 -121 -121 ...
+  </li>
+<li> altitude.     : num  354 369 385 393 388 ...
+  </li>
+<li> static_p.     : num  968 966 964 963 964 ...
+  </li>
+<li> altitude_p.   : num  327 341 356 365 360 ...
+  </li>
+<li> static_t.     : num  28.4 28.7 28.6 28.5 28.8 ...
+  </li>
+<li> potential_t.  : num  31.3 31.7 31.7 31.7 32 ...
+  </li>
+<li> dewpt.        : num  14.1 13.5 13.4 12.9 11.1 ...
+  </li>
+<li> RH.           : num  41.6 39.3 39.3 38.5 33.5 ...
+  </li>
+<li> h2o_MF.       : num  10.54 10.11 10.05 9.8 8.68 ...
+  </li>
+<li> windspd.      : num  3.45 3.9 4.14 4.12 4.7 4.54 3.42 3.1 2.98 2.64 ...
+  </li>
+<li> winddir.      : num  330 325 320 318 317 ...
+  </li>
+<li> cpc_3025.     : num  5508 3915 4037 3969 3567 ...
+  </li>
+<li> cpc_3010.     : num  483 352 364 348 314 ...
+  </li>
+<li> ozone.        : num  46.8 44.3 45.2 45.5 40.4 ...
+  </li>
+<li> co.           : num  109.7 97.6 101.2 103.1 91.8 ...
+  </li>
+<li> so2.          : num  NA NA NA NA NA NA NA 0.6 0.465 0.644 ...
+  </li>
+<li> no.           : num  0.3074 0.0514 0.1456 0.1593 0.115 ...
+  </li>
+<li> no2.          : num  1.745 0.358 0.573 0.688 0.8 ...
+  </li>
+<li> noy.          : num  5.25 3.48 4.09 4.02 3.53 ...
+  </li>
+<li> mz_33.        : num  16.7 14.6 14.4 14.1 11.1 ...
+  </li>
+<li> mz_42.        : num  0.1024 0.1176 0.1333 0.0916 0.0407 ...
+  </li>
+<li> mz_45.        : num  5.98 5.22 5.19 4.84 5.07 ...
+  </li>
+<li> mz_59.        : num  8.49 7.71 6.85 7.08 6.46 ...
+  </li>
+<li> mz_69.        : num  1.589 0.811 0.791 0.904 0.911 ...
+  </li>
+<li> mz_71.        : num  3.88 3.65 3.35 2.94 2.74 ...
+  </li>
+<li> mz_79.        : num  0.417 0.243 0.192 0.261 0.178 ...
+  </li>
+<li> mz_93.        : num  0.446 0.571 0.454 0.218 0.185 ...
+  </li>
+<li> mz_107.       : num  0.686 0.869 0.661 0.78 0.265 ...
+  </li>
+<li> mz_137.       : num  0.519 0.452 0.093 0.353 0.348 ...
+  </li>
+<li> mz_43.        : num  8.52 8.3 8.17 8.38 6.87 ...
+  </li>
+<li> mz_61.        : num  5.39 5.13 5.1 5.17 4.96 ...
+  </li>
+<li> mz_87.        : num  0.302 0.235 0.418 0.298 0.364 ...
+  </li>
+<li> mz69_71.      : num  5.47 4.46 4.14 3.84 3.65 ...
+  </li>
+<li> leg_flag.     : int  13 13 13 13 3 3 3 3 3 3 ...
+  </li>
+<li> nox.          : num  2.053 0.41 0.718 0.847 0.915 ...
+</li>
+</ul></p>
+
+  <p class="rd-p"></p>
+
+
+
+
+
+
+## batting
+
+<h3>Batting Data</h3>
+
+Batting data
+
+  <h4>Format</h4>
+
+  <p class="rd-p">A data frame with 1406 rows and 22 variables</p>
+
+
+  <h4>Details</h4>
+
+  <p class="rd-p"><ul>
+<li> playerID. : Factor w/ 17908 levels "aardsda01","aaronha01",..: 1 6 34 34 37 40 40 41 46 51 ...
+  </li>
+<li> yearID.   : int  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012 ...
+  </li>
+<li> stint.    : int  1 1 1 2 1 1 2 1 1 1 ...
+  </li>
+<li> teamID.   : Factor w/ 149 levels "ALT","ANA","ARI",..: 93 58 71 72 66 45 96 16 116 94 ...
+  </li>
+<li> lgID.     : Factor w/ 6 levels "AA","AL","FL",..: 2 4 2 4 2 2 2 2 2 4 ...
+  </li>
+<li> G.        : int  1 37 8 92 22 26 1 69 153 45 ...
+  </li>
+<li> AB.       : int  NA 7 24 195 70 0 NA 0 607 0 ...
+  </li>
+<li> R.        : int  NA 0 1 28 5 0 NA 0 84 0 ...
+  </li>
+<li> H.        : int  NA 1 5 48 18 0 NA 0 137 0 ...
+  </li>
+<li> X2B.      : int  NA 0 3 8 2 0 NA 0 22 0 ...
+  </li>
+<li> X3B.      : int  NA 0 0 1 1 0 NA 0 2 0 ...
+  </li>
+<li> HR.       : int  NA 0 0 3 1 0 NA 0 12 0 ...
+  </li>
+<li> RBI.      : int  NA 0 5 19 15 0 NA 0 50 0 ...
+  </li>
+<li> SB.       : int  NA 0 0 6 0 0 NA 0 13 0 ...
+  </li>
+<li> CS.       : int  NA 0 0 2 0 0 NA 0 3 0 ...
+  </li>
+<li> BB.       : int  NA 0 2 35 2 0 NA 0 59 0 ...
+  </li>
+<li> SO.       : int  NA 3 5 51 13 0 NA 0 124 0 ...
+  </li>
+<li> IBB.      : int  NA 0 0 3 0 0 NA 0 7 0 ...
+  </li>
+<li> HBP.      : int  NA 0 0 0 1 0 NA 0 0 0 ...
+  </li>
+<li> SH.       : int  NA 0 0 0 0 0 NA 0 1 0 ...
+  </li>
+<li> SF.       : int  NA 0 1 0 1 0 NA 0 1 0 ...
+  </li>
+<li> GIDP.     : int  NA 1 1 6 1 0 NA 0 3 0 ...
+  </li>
+<li> price. price in US dollars (\$326--\$18,823)
+</li>
+</ul></p>
+
+  <p class="rd-p"></p>
+
+
+
+
+
+
+## noMargins
+
+<h3>Remove Margins from Trellis/Lattice Plot</h3>
+
+Removes whitespace surrounding a trellis plot.  Ideal for <code><a href='makeDisplay.html'>makeDisplay</a></code> because when tiling multiple panels, a lot of space is wasted with the margins.
+
+<h4>Usage</h4>
+<pre class="r"><code>noMargins(..., topkey = FALSE, rightkey = FALSE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>topkey</dt>
+  <dd class="rd-dd">should extra space be added for a top key?</dd>
+  <dt>rightkey</dt>
+  <dd class="rd-dd">should extra space be added for a right key?</dd>
+  <dt>...</dt>
+  <dd class="rd-dd">a list of other parameters to be passed to par.settings</dd>
+</dl>
+
+
+<h4>Examples</h4>
+<pre class="r"><code>xyplot(c(1:10) ~ c(1:10) | sample(letters[1:2], 10, replace=TRUE),
+  par.settings=noMargins()
+)
+
+# with additional par.settings...
+xyplot(c(1:10) ~ c(1:10) | sample(letters[1:2], 10, replace=TRUE),
+  par.settings=noMargins(
+    list(plot.symbol=list(col="black"))
+  )
+)</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=http://www.inside-r.org/r-doc/lattice/xyplot>xyplot</a></code>, <code><a href=#makedisplay>makeDisplay</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## validateState
+
+<h3>Validate State Parameters</h3>
+
+Validate state parameters for a Trelliscope display
+
+<h4>Usage</h4>
+<pre class="r"><code>validateState(x, name = NULL, group = NULL, displayObj = NULL)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">a list of state parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see details)</dd>
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the display (optional but recommended - if checking state against variable names, etc. of the display is desired)</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">the group the display belongs to</dd>
+  <dt>displayObj</dt>
+  <dd class="rd-dd">the display object (can be specified in place of <code>name</code> and <code>group</code>)</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">Trelliscope allows you to specify either a default state in <code><a href=#makedisplay>makeDisplay</a></code> or specify the state of the display when you call <code><a href=#view>view</a></code>.  Aspects of the display that can be controlled with the state include:
+<ul>
+<li> labels a vector of names of cognostics to be shown as labels underneath each panel.  If not specified, the default is to show labels for any of the splitting variables that created the partition of the data being plotted.
+ </li>
+<li> layout a list with optional elements <code>nrow</code>, <code>ncol</code>, and <code>arrange</code>.  <code>nrow</code> and <code>ncol</code> specify the arrangement of the panels into rows and columns (<code>nrow = 1</code> and <code>ncol = 1</code> are defaults), and <code>arrange</code> can be either "row" or "col" and specified whether to sort the panels by row or by column ("row" is default)
+ </li>
+<li> sort a named list where each name corresponds to a cognostic name and the value is either "asc" or "desc" for sorting in ascending or descending order.  The order in which sorting is applied to each variable is according to the order of the variables specified.
+ </li>
+<li> filter a named list where each name corresponds to a cognostic name and the value is a specification of either "regex" or "select" for categorical variables, or a range, "from" and "to", for quantitative variables.  For a "regex", a simple regular expression string is specified, and the filter finds all matches for the regular expression against the variable.  For "select" a vector of strings is specified, and all exact matches are returned.  For the range filter, all values of the specified variable within the range "from" and "to" are returned.  If either "from" or "to" are omitted, they are treated as <code>-Inf</code> and <code>Inf</code> respectively.
+</li>
+</ul></p>
+
+  <p class="rd-p"></p>
+
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+a modified state parameter list that is valid, an object of class "cogState"
+</dl></p>
+
+
+
+<h4>Examples</h4>
+<pre class="r"><code>state <- list(
+  sort = list(state = "desc", county = "asc"),
+  filter = list(
+    county = list(regex = "Ben"),
+    state = list(select = c("OR", "WA")),
+    meanList = list(from = 50, to = 150)
+  ),
+  layout = list(nrow = 2, ncol = 4),
+  labels = c("county", "state")
+)
+validateState(state)</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#view>view</a></code>, <code><a href=#cogdisplayhref>cogDisplayHref</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## makeStateHash
+
+<h3>Make a URL hash out of state information</h3>
+
+Make a URL hash out of cognostics state information
+
+<h4>Usage</h4>
+<pre class="r"><code>makeStateHash(x, name = NULL, group = NULL)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>x</dt>
+  <dd class="rd-dd">a list of cognostics state parameters</dd>
+  <dt>name</dt>
+  <dd class="rd-dd">the name of the display</dd>
+  <dt>group</dt>
+  <dd class="rd-dd">the group the display belongs to</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+a URL hash
+</dl></p>
+
+
+
+<h4>Examples</h4>
+<pre class="r"><code>x <- list(
+  sort = list(state = "desc", county = "asc"),
+  filter = list(
+    county = list(regex = "Bent"),
+    state = list(select = "WA"),
+    meanList = list(from = 0, to = 1)
+  ),
+  layout = list(nrow = 2, ncol = 4),
+  labels = c("county", "state")
+)
+makeStateHash(validateState(x))</code></pre>
+
+<h4>See also</h4>
+
+<code><a href=#validatestate>validateState</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## makeSplodData
+
+<h3>Create Data Plottable by splod</h3>
+
+Create pairwise scatterplot data plottable by splod
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>data</dt>
+  <dd class="rd-dd">a data.frame</dd>
+  <dt>id.vars</dt>
+  <dd class="rd-dd">variables to ignore when computing all pairs of variables</dd>
+  <dt>...</dt>
+  <dd class="rd-dd">TODO</dd>
+</dl>
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+an object of class localDiv and splodDat that can be passed to <code><a href=#splod>splod</a></code>
+</dl></p>
+
+
+  <h4>References</h4>
+
+  <p class="rd-p">Wilkinsons scagnostics paper.</p>
+
+
+
+
+<h4>See also</h4>
+
+<code><a href=#splod>splod</a></code>, <code><a href=#splodpanelfn>splodPanelFn</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+
+
+## prepanel
+
+<h3>Prepanel Function for Trelliscope Displays</h3>
+
+Apply a prepanel function to objects of class "ddo" or "ddf" to determine ranges of x and y axis limits prior to creating a trelliscope display (<code><a href='makeDisplay.html'>makeDisplay</a></code>).  Useful in conjunction with <code><a href='setLims.html'>setLims</a></code>.
+
+<h4>Usage</h4>
+<pre class="r"><code>prepanel(data, prepanelFn = NULL, params = NULL, packages = NULL,
+  control = NULL, verbose = TRUE)</code></pre>
+
+<h4>Arguments</h4>
+<dl class="rd-dl">
+  <dt>data</dt>
+  <dd class="rd-dd">an object of class "localDiv" or "rhData"</dd>
+  <dt>prepanelFn</dt>
+  <dd class="rd-dd">a prepanel function that returns a list specifying <code>xlim</code> and <code>ylim</code> for determining axis limits, and optionally <code>dx</code> and <code>dy</code> for determining aspect ratio (used to define slopes of line segments used for banking computations).  prepanelFn can also be a panelFn (see <code><a href=#makedisplay>makeDisplay</a></code>) that returns either an object of class "trellis" or "ggplot", since xlim and ylim can be determined from these.</dd>
+  <dt>params</dt>
+  <dd class="rd-dd">a named list of parameters external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dt>packages</dt>
+  <dd class="rd-dd">a vector of R package names that contain functions used in <code>prepanelFn</code> (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dt>control</dt>
+  <dd class="rd-dd">parameters specifying how the backend should handle things (most-likely parameters to <code>rhwatch</code> in RHIPE) - see <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/rhipeControl>rhipeControl</a></code> and <code><a href=http://www.inside-r.org/packages/cran/datadr/docs/localDiskControl>localDiskControl</a></code></dd>
+  <dt>verbose</dt>
+  <dd class="rd-dd">print status messages?</dd>
+</dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">The plot method plots the sorted axis ranges for the x and y axis for the case of "same" (all axis limits share the same range) and "sliced" (all axis limits share the) and can be useful in helping determine how to ultimately set the limits.</p>
+
+  <p class="rd-p">You do not need to use <code>prepanel()</code> to ultimately create a display with <code><a href=#makedisplay>makeDisplay</a>()</code>, but if you bypass, you will either need to specify your own limits in your plot command, or do nothing, in which case each individual plot will have limits based on the data in the split being plotted (the axes will be "free").</p>
+
+  <p class="rd-p">Axis limits are very important.  What makes viewing groups of plots of subsets of data ("small multiples") so powerful is being able to make meaningful visual comparisons across plots.  This is much easier to do if scales for each plot are commensurate.</p>
+
+  <p class="rd-p">This function is also useful for identifying subsets with very large outlying values, and in conjunction with <code><a href=#setlims>setLims</a></code>, allows you to account for that prior to the expensive process of creating all of the plots.</p>
+
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+object of class "trsPre".  This is a list of the x and y axis ranges for each split, along with the aspect ratio banking value if <code>dx</code> and <code>dy</code> are supplied in <code>prepanelFn</code>.  Can be used with <code><a href=#plot.trspre>plot.trsPre</a></code> and <code><a href=#setlims>setLims</a></code>.
+</dl></p>
+
+
+
+<h4>Examples</h4>
+<pre class="r"><code>irisSplit <- divide(iris, "Species")
+irisPreFn <- function(x) {
+  list(
+    xlim = range(x$Sepal.Length),
+    ylim = range(x$Sepal.Width)
+  )
+}
+irisPre <- prepanel(irisSplit, prepanelFn = irisPreFn)
+plot(irisPre)#' </code></pre>
+
+<h4>See also</h4>
+
+<code><a href=http://www.inside-r.org/packages/cran/ggplot2/docs/aes_position>x</a></code>
+<code><a href=#plot.trspre>plot.trsPre</a></code>, <code><a href=#setlims>setLims</a></code>, <code><a href=#makedisplay>makeDisplay</a></code>
+
+
+<h4>Author</h4>
+
+Ryan Hafen
+
+
+

@@ -1,0 +1,18 @@
+---
+title: "trelliscope"
+subtitle: "Package Reference"
+author: Ryan Hafen
+copyright: Ryan Hafen
+output:
+  packagedocs:
+    toc: true
+rd_page: true
+navpills: |
+  <li><a href='index.html'>Docs</a></li>
+  <li class="active"><a href='rd.html'>Package Ref</a></li>
+  <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
+brand: |-
+  <a href="http://tessera.io">
+  <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'>
+  </a>
+---
