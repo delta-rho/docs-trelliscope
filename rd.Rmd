@@ -18,9 +18,8 @@ brand: |-
 ---
 <h1>Trelliscope</h1>
 
-<p><strong>Author:</strong> </p>
+<p><strong>Authors:</strong> <a href="mailto:rhafen@gmail.com">Ryan Hafen</a> [aut, cre]</p>
 <p><strong>Version:</strong> 0.8.2.4</p>
-<p><strong>Date:</strong> 2015-05-04</p>
 <p><strong>License:</strong> BSD_3_clause + file LICENSE</p>
 
 <h4>Description</h4>
@@ -38,11 +37,21 @@ to be presented.</p>
 
 <h4>Depends</h4>
 <p>
-R (>= 2.15.1),
 base,
-datadr (>= 0.7.3),
+datadr (>= 0.7.5.7),
 lattice (>= 0.20-23),
 ggplot2</p>
+
+<h4>Imports</h4>
+<p>
+data.table,
+base64enc,
+shiny (>= 0.10.0),
+digest,
+jsonlite,
+fastICA,
+hexbin,
+png</p>
 
 <h4>Suggests</h4>
 <p>
@@ -52,6 +61,9 @@ testthat (>= 0.8.1),
 roxygen2 (>= 4.0.0),
 scagnostics,
 shinyapps</p>
+
+<h4>Enhances</h4>
+<p>(none)</p>
 
 # Making Displays
 
