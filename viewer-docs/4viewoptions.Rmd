@@ -1,0 +1,31 @@
+
+# View Options
+
+The View Option section controls how your visualization will look.  Here you are able to change the number of panels per page along with the panel arrangement.
+
+## Panel Layout
+
+One of the most important features of Trelliscope is the ability to display multiple panels at once.  In this control panel you can specify the arrangement of the panels on each page by entering the number of rows and columns of panels per page. Future functionality for fixing / varying levels of cognostics per page to come.
+
+**Example:**
+Here the user has chosen 2 rows and 3 columns.  The interactive control panel shows how the display panels will be arranged on your screen. 
+<br>
+![picture1](figures/PL.png)
+
+
+## Panel Labels
+In the panel labels control panel you will be able to specify which cognostics to view underneath each visualization. Select cognostics to view by clicking and/or dragging the 'Show' column.
+
+<br>
+**Example:**
+Here the user has selected the date, meanPower and rangePower cognostics.  
+![picture2](figures/PLab.png)
+<br>
+<br>
+<br>
+This figure shows one of the resulting display panels, with the new section highlighted in red. 
+![picture3](figures/PLabex.png)
+
+## Related Displays
+The related displays tab will allow users to select additional displays (if any) that have been created on the same partitioning to view with the currently selected display. If additional displays are selected, only one subset per page will be shown.
+

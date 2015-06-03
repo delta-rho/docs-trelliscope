@@ -2,13 +2,14 @@
 title: "trelliscope"
 subtitle: "Package Reference"
 author: Ryan Hafen
-copyright: Ryan Hafen
+copyright: Tessera team
 output:
   packagedocs:
     toc: true
 rd_page: true
 navpills: |
   <li><a href='index.html'>Docs</a></li>
+  <li><a href='viewer.html'>Viewer Docs</a></li>
   <li class="active"><a href='rd.html'>Package Ref</a></li>
   <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
 brand: |-
@@ -19,7 +20,7 @@ brand: |-
 <h1>Trelliscope</h1>
 
 <p><strong>Authors:</strong> <a href="mailto:rhafen@gmail.com">Ryan Hafen</a> [aut, cre]</p>
-<p><strong>Version:</strong> 0.8.2.4</p>
+<p><strong>Version:</strong> 0.8.3</p>
 <p><strong>License:</strong> BSD_3_clause + file LICENSE</p>
 
 <h4>Description</h4>
@@ -46,7 +47,8 @@ ggplot2</p>
 <p>
 data.table,
 base64enc,
-shiny (>= 0.10.0),
+shiny (>= 0.12.0),
+htmlwidgets (>= 0.4.0),
 digest,
 jsonlite,
 fastICA,
@@ -76,12 +78,12 @@ shinyapps</p>
 Create a trelliscope display and add it to a visualization database (VDB)
 
 <h4>Usage</h4>
-<pre class="r"><code>makeDisplay(data, name, group = "common", desc = "", height = 500,
-  width = 500, panelFn = NULL, lims = list(x = "free", y = "free",
-  prepanelFn = NULL), cogFn = NULL, state = NULL, preRender = FALSE,
-  cogConn = dfCogConn(), output = NULL, conn = getOption("vdbConn"),
-  verbose = TRUE, keySig = NULL, params = NULL, packages = NULL,
-  control = NULL)</code></pre>
+<pre class="r"><code>makeDisplay(data, name, group = "common", desc = "", mdDesc = NULL,
+  height = 500, width = 500, panelFn = NULL, lims = list(x = "free", y =
+  "free", prepanelFn = NULL), cogFn = NULL, state = NULL,
+  preRender = FALSE, cogConn = dfCogConn(), output = NULL,
+  conn = getOption("vdbConn"), verbose = TRUE, keySig = NULL,
+  params = NULL, packages = NULL, control = NULL)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
@@ -94,6 +96,8 @@ Create a trelliscope display and add it to a visualization database (VDB)
 converted to underscores).  Defaults to "common"</dd>
   <dt>desc</dt>
   <dd class="rd-dd">a description of the display (used in the viewer and in notebooks)</dd>
+  <dt>mdDesc</dt>
+  <dd class="rd-dd">an optional longer-form description of the display and data, which can be text or can be a path to a markdown file or file with html snippets.  The description will appear in the "Display Information" panel in the Trelliscope viewer.</dd>
   <dt>height</dt>
   <dd class="rd-dd">reference dimensions (in pixels) for each panel (panels will be resized based on available space in the viewer)</dd>
   <dt>width</dt>
@@ -119,7 +123,7 @@ converted to underscores).  Defaults to "common"</dd>
   <dt>keySig</dt>
   <dd class="rd-dd">a user-defined key signature (string - see details)</dd>
   <dt>params</dt>
-  <dd class="rd-dd">a named list of parameters external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
+  <dd class="rd-dd">a named list of objects external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
   <dt>packages</dt>
   <dd class="rd-dd">a vector of R package names that contain functions used in <code>panelFn</code> or <code>cogFn</code> (most should be taken care of automatically such that this is rarely necessary to specify)</dd>
   <dt>control</dt>
@@ -252,19 +256,35 @@ Ryan Hafen
 
 <h3>Connect to a VDB</h3>
 
-Connect to a visualization catabase
+Connect to a new or existing visualization database
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
   <dt>path</dt>
   <dd class="rd-dd">The path on the local file system where the directory for the VDB is located</dd>
   <dt>name</dt>
-  <dd class="rd-dd">the name for the VDB (if null, uses the name of the parent directory)</dd>
+  <dd class="rd-dd">A character string giving the name of the VDB. If the VDB already exists and <code>name = NULL</code>,
+the previous name is used.  If the VDB exists and a string is provided for <code>name</code>, the name is overwritten.
+The primary purpose of the <code>name</code> argument is to facilitate deploying the trelliscope display as a Shiny app.
+See the <code>appName</code> argument of <code><a href=#deploytoshinyapps>deployToShinyApps</a></code></dd>
   <dt>autoYes</dt>
   <dd class="rd-dd">should questions to proceed with directory creation operations be automatically answered with "yes"?</dd>
   <dt>verbose</dt>
-  <dd class="rd-dd">logical - print messages about what is being done</dd>
+  <dd class="rd-dd">should messages be printed about what is being done?</dd>
 </dl>
+
+  <h4>Details</h4>
+
+  <p class="rd-p">Connecting to a VDB is required prior to calling <code><a href=#makedisplay>makeDisplay</a></code> or <code><a href=#view>view</a></code>.</p>
+
+
+  <h4>Value</h4>
+
+  <p class="rd-p"><dl>
+An object of class <code>vdbConn</code> that contains the path and name of the VDB. This object is also assigned
+to the <code>vdbConn</code> option, and can be retrieved via <code>getOption("vdbConn")</code>
+</dl></p>
+
 
 
 
@@ -433,6 +453,10 @@ Create a cognostics object.  To be used inside of the function passed to the <co
   <dd class="rd-dd">should this cognostic be active (available for sort / filter / sample) by default?</dd>
   <dt>filterable</dt>
   <dd class="rd-dd">should this cognostic be filterable?  Default is <code>TRUE</code>.  It can be useful to set this to <code>FALSE</code> if the cognostic is categorical with many unique values and is only desired to be used as a panel label.</dd>
+  <dt>sortable</dt>
+  <dd class="rd-dd">should this cognostic be sortable?</dd>
+  <dt>log</dt>
+  <dd class="rd-dd">when being used in the viewer for visual univariate and bivariate filters, should the log be computed?  Useful when the distribution of the cognostic is very long-tailed or has large outliers.  Can either be a logical or a positive integer indicating the base.</dd>
 </dl>
 
   <h4>Details</h4>
@@ -469,13 +493,13 @@ Compute mean to be used as cognostics in a trelliscope display.
 
 <h4>Usage</h4>
 <pre class="r"><code>cogMean(x, desc = "mean", group = "common", defLabel = FALSE,
-  defActive = TRUE, filterable = TRUE)</code></pre>
+  defActive = TRUE, filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
   <dt>x</dt>
   <dd class="rd-dd">numeric vector from which to compute the mean</dd>
-  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dt>desc,group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
 </dl>
 
@@ -503,13 +527,14 @@ Compute range to be used as cognostics in a trelliscope display.
 
 <h4>Usage</h4>
 <pre class="r"><code>cogRange(x, desc = "range (max - min)", group = "common",
-  defLabel = FALSE, defActive = TRUE, filterable = TRUE)</code></pre>
+  defLabel = FALSE, defActive = TRUE, filterable = TRUE,
+  sortable = TRUE, log = FALSE)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
   <dt>x</dt>
   <dd class="rd-dd">numeric vector from which to compute the range</dd>
-  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dt>desc,group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
 </dl>
 
@@ -538,11 +563,11 @@ Compute RMSE of loess fit as a cognostic to be used as cognostics in a trellisco
 <h4>Usage</h4>
 <pre class="r"><code>cogLoessRMSE(..., desc = "RMSE of residuals from loess fit",
   group = "common", defLabel = FALSE, defActive = TRUE,
-  filterable = TRUE)</code></pre>
+  filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
-  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dt>desc,group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
   <dt>...</dt>
   <dd class="rd-dd">arguments to be passed to <code>link{loess}</code>, such as the formula, data, smoothing parameters, etc.</dd>
@@ -573,7 +598,7 @@ Create href to be used as cognostics in a trelliscope display.
 <h4>Usage</h4>
 <pre class="r"><code>cogHref(x, label = "link", desc = "link", group = "common",
   target = "_blank", defLabel = FALSE, defActive = FALSE,
-  filterable = FALSE)</code></pre>
+  filterable = FALSE, sortable = TRUE, log = FALSE)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
@@ -581,7 +606,7 @@ Create href to be used as cognostics in a trelliscope display.
   <dd class="rd-dd">URL to link to</dd>
   <dt>label</dt>
   <dd class="rd-dd">label of the href</dd>
-  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dt>desc,group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
   <dt>target</dt>
   <dd class="rd-dd">value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
@@ -619,7 +644,7 @@ Create href that points to another trelliscope display with optional state
   <dd class="rd-dd">if specified, this tells the viewer the default parameter settings (such as layout, sorting, filtering, etc.) to use when the display is viewed (see <code><a href=#validatestate>validateState</a></code> for details)</dd>
   <dt>label</dt>
   <dd class="rd-dd">label of the href</dd>
-  <dt>desc,group,defLabel,defActive,filterable</dt>
+  <dt>desc,group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
   <dt>target</dt>
   <dd class="rd-dd">value to be used for the <code>target</code> attribute of the <code>a</code> html tag - default is "_blank" which will open the link in a new window</dd>
@@ -654,7 +679,7 @@ Compute list of scagnostics (see <code><a href='http://www.inside-r.org/packages
 
 <h4>Usage</h4>
 <pre class="r"><code>cogScagnostics(x, y, group = "scagnostics", defLabel = FALSE,
-  defActive = TRUE, filterable = TRUE)</code></pre>
+  defActive = TRUE, filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 
 <h4>Arguments</h4>
 <dl class="rd-dl">
@@ -662,7 +687,7 @@ Compute list of scagnostics (see <code><a href='http://www.inside-r.org/packages
   <dd class="rd-dd">vector of the x-axis data for a scatterplot</dd>
   <dt>y</dt>
   <dd class="rd-dd">vector of the y-axis data for a scatterplot</dd>
-  <dt>group,defLabel,defActive,filterable</dt>
+  <dt>group,defLabel,defActive,filterable,sortable,log</dt>
   <dd class="rd-dd">arguments passed to <code><a href=#cog>cog</a></code></dd>
 </dl>
 
@@ -692,7 +717,7 @@ Ryan Hafen
 <h4>Arguments</h4>
 <dl class="rd-dl">
   <dt>vdbConn</dt>
-  <dd class="rd-dd">VDB connection settings</dd>
+  <dd class="rd-dd">A vdbConn object containing the VDB connection settings</dd>
   <dt>appName</dt>
   <dd class="rd-dd">name of application (app will be available at https://[account].shinyapps.io/[appName]/) - if not supplied, will use the name of VDB connection</dd>
   <dt>account</dt>

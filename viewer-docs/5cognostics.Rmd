@@ -1,0 +1,44 @@
+
+# Cognostics
+
+Cognostics are different metrics use to explore the data.  In this section the user can quickly sort, filter, or sample our panels based on these metrics.  Cognostics can include statistical summaries, categorical variables, goodness-of-fit metrics, etc.
+
+
+## Table Sort / Filter
+One of the most important aspects of Trelliscope viewer is the ability to quickly organize display panels in a way that is useful.  The table sort/filter control panel provides ways to reorder and subset display panels.  The center table of the panel shows a row for each of the display panels in the order that they will be shown in the viewer.  The table has many interactive features.  To sort display panels by one of the cognostics, click the sorting buttons that appear in the column headers (shift-click on the column sorting buttons for multi-column sorting).  Below the center table are range boxes, which allow filtering of the displays, and histograms of the cognostics to give a quick view of the distribution.  
+
+**Example:**
+Here the user clicked the down arrow next to meanPower to sort the display panels from smallest meanPower to largest. The user has also filtered the display to only show panels for days from the months of June and July.
+<br>
+
+![picture6](figures/TS.png)
+<br>
+<br>
+All active sorting or filters will be displayed at the bottom of the viewer.  To remove sorts or filters click the "x" icon next to the cognostic name.
+<br>
+![picture7](figures/TS2.png)
+
+## Univariate Filter
+The univariate filter control panel is based on a single cognostic guided by a visual display of the distribution of the cognostic. This distribution can be displayed with a quantile plot or a histogram.  The user can select a variable to view and click and drag on the display to specify filtering.  This can be useful when trying to isolate or remove outliers from the displays.  
+
+<br>
+A quantile plot displays data by proportion(f-value), across the x-axis.
+
+**Example:**
+Here the user has noticed a portion of the data with minimum values of zero.  They have decided to select only these days for display by highlighting only this portion of the quantile plot. 
+![picture7](figures/UF.png)
+
+## Bivariate Filter
+The bivariate filter control panel is based on pairs of cognostics through an interactive scatterplot.  The user can select two variables to view and then click and drag on the display to specify filtering.
+
+**Example:**
+Here the user has decided to only show displays from the final 100 days of the year that also have meanPower of above 214.
+![picture8](figures/BF.png)
+
+## Active Cognostics  
+Users can choose which Cognostics to make available for sorting and creating subsets of the displays.
+
+**Example:**
+Here the user has decided to remove the week cognostic.
+![picture8](figures/AC.png)
+

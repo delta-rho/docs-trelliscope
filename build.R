@@ -26,6 +26,11 @@ render("index.Rmd", output_format = pdof)
 check_output("index.html")
 system("open index.html")
 
+# generate viewer.html
+render("viewer.Rmd", output_format = pdof)
+check_output("viewer.html")
+system("open viewer.html")
+
 # generate rd.html
 render_rd("rd_skeleton.Rmd", "trelliscope", code_path,
   rd_index = "rd_index.yaml",output_format = pdof)

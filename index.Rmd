@@ -2,12 +2,13 @@
 title: "trelliscope"
 subtitle: "Tutorial"
 author: Ryan Hafen
-copyright: Ryan Hafen
+copyright: Tessera team
 output:
   packagedocs:
     toc: true
 navpills: |
   <li class="active"><a href='index.html'>Docs</a></li>
+  <li><a href='viewer.html'>Viewer Docs</a></li>
   <li><a href='rd.html'>Package Ref</a></li>
   <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
 brand: |-

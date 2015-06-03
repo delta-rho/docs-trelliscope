@@ -71,6 +71,9 @@
 <li>
 <a href='index.html'>Docs</a>
 </li>
+<li>
+<a href='viewer.html'>Viewer Docs</a>
+</li>
 <li class="active">
 <a href='rd.html'>Package Ref</a>
 </li>
@@ -137,7 +140,7 @@ Trelliscope
 <strong>Authors:</strong> <a href="mailto:rhafen@gmail.com">Ryan Hafen</a> [aut, cre]
 </p>
 <p>
-<strong>Version:</strong> 0.8.2.4
+<strong>Version:</strong> 0.8.3
 </p>
 <p>
 <strong>License:</strong> BSD_3_clause + file LICENSE
@@ -158,7 +161,7 @@ base, datadr (&gt;= 0.7.5.7), lattice (&gt;= 0.20-23), ggplot2
 Imports
 </h4>
 <p>
-data.table, base64enc, shiny (&gt;= 0.10.0), digest, jsonlite, fastICA, hexbin, png
+data.table, base64enc, shiny (&gt;= 0.12.0), htmlwidgets (&gt;= 0.4.0), digest, jsonlite, fastICA, hexbin, png
 </p>
 <h4>
 Suggests
@@ -183,12 +186,12 @@ Create a Trelliscope Display
 <h4>
 Usage
 </h4>
-<pre class="r"><code>makeDisplay(data, name, group = "common", desc = "", height = 500,
-  width = 500, panelFn = NULL, lims = list(x = "free", y = "free",
-  prepanelFn = NULL), cogFn = NULL, state = NULL, preRender = FALSE,
-  cogConn = dfCogConn(), output = NULL, conn = getOption("vdbConn"),
-  verbose = TRUE, keySig = NULL, params = NULL, packages = NULL,
-  control = NULL)</code></pre>
+<pre class="r"><code>makeDisplay(data, name, group = "common", desc = "", mdDesc = NULL,
+  height = 500, width = 500, panelFn = NULL, lims = list(x = "free", y =
+  "free", prepanelFn = NULL), cogFn = NULL, state = NULL,
+  preRender = FALSE, cogConn = dfCogConn(), output = NULL,
+  conn = getOption("vdbConn"), verbose = TRUE, keySig = NULL,
+  params = NULL, packages = NULL, control = NULL)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -216,6 +219,12 @@ desc
 </dt>
 <dd class="rd-dd">
 a description of the display (used in the viewer and in notebooks)
+</dd>
+<dt>
+mdDesc
+</dt>
+<dd class="rd-dd">
+an optional longer-form description of the display and data, which can be text or can be a path to a markdown file or file with html snippets. The description will appear in the “Display Information” panel in the Trelliscope viewer.
 </dd>
 <dt>
 height
@@ -293,7 +302,7 @@ a user-defined key signature (string - see details)
 params
 </dt>
 <dd class="rd-dd">
-a named list of parameters external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)
+a named list of objects external to the input data that are needed in the distributed computing (most should be taken care of automatically such that this is rarely necessary to specify)
 </dd>
 <dt>
 packages
@@ -476,7 +485,7 @@ Author
 <h3>
 Connect to a VDB
 </h3>
-<p>Connect to a visualization catabase</p>
+<p>Connect to a new or existing visualization database</p>
 <h4>
 Arguments
 </h4>
@@ -491,7 +500,7 @@ The path on the local file system where the directory for the VDB is located
 name
 </dt>
 <dd class="rd-dd">
-the name for the VDB (if null, uses the name of the parent directory)
+A character string giving the name of the VDB. If the VDB already exists and <code>name = NULL</code>, the previous name is used. If the VDB exists and a string is provided for <code>name</code>, the name is overwritten. The primary purpose of the <code>name</code> argument is to facilitate deploying the trelliscope display as a Shiny app. See the <code>appName</code> argument of <code><a href=#deploytoshinyapps>deployToShinyApps</a></code>
 </dd>
 <dt>
 autoYes
@@ -503,9 +512,23 @@ should questions to proceed with directory creation operations be automatically 
 verbose
 </dt>
 <dd class="rd-dd">
-logical - print messages about what is being done
+should messages be printed about what is being done?
 </dd>
 </dl>
+<h4>
+Details
+</h4>
+<p class="rd-p">
+Connecting to a VDB is required prior to calling <code><a href=#makedisplay>makeDisplay</a></code> or <code><a href=#view>view</a></code>.
+</p>
+<h4>
+Value
+</h4>
+<p class="rd-p">
+<dl>
+An object of class <code>vdbConn</code> that contains the path and name of the VDB. This object is also assigned to the <code>vdbConn</code> option, and can be retrieved via <code>getOption(“vdbConn”)</code>
+</dl>
+</p>
 <h4>
 Author
 </h4>
@@ -744,6 +767,18 @@ filterable
 <dd class="rd-dd">
 should this cognostic be filterable? Default is <code>TRUE</code>. It can be useful to set this to <code>FALSE</code> if the cognostic is categorical with many unique values and is only desired to be used as a panel label.
 </dd>
+<dt>
+sortable
+</dt>
+<dd class="rd-dd">
+should this cognostic be sortable?
+</dd>
+<dt>
+log
+</dt>
+<dd class="rd-dd">
+when being used in the viewer for visual univariate and bivariate filters, should the log be computed? Useful when the distribution of the cognostic is very long-tailed or has large outliers. Can either be a logical or a positive integer indicating the base.
+</dd>
 </dl>
 <h4>
 Details
@@ -778,7 +813,7 @@ Compute Mean Cognostic
 Usage
 </h4>
 <pre class="r"><code>cogMean(x, desc = "mean", group = "common", defLabel = FALSE,
-  defActive = TRUE, filterable = TRUE)</code></pre>
+  defActive = TRUE, filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -790,7 +825,7 @@ x
 numeric vector from which to compute the mean
 </dd>
 <dt>
-desc,group,defLabel,defActive,filterable
+desc,group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -819,7 +854,8 @@ Compute Range Cognostic
 Usage
 </h4>
 <pre class="r"><code>cogRange(x, desc = "range (max - min)", group = "common",
-  defLabel = FALSE, defActive = TRUE, filterable = TRUE)</code></pre>
+  defLabel = FALSE, defActive = TRUE, filterable = TRUE,
+  sortable = TRUE, log = FALSE)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -831,7 +867,7 @@ x
 numeric vector from which to compute the range
 </dd>
 <dt>
-desc,group,defLabel,defActive,filterable
+desc,group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -861,13 +897,13 @@ Usage
 </h4>
 <pre class="r"><code>cogLoessRMSE(..., desc = "RMSE of residuals from loess fit",
   group = "common", defLabel = FALSE, defActive = TRUE,
-  filterable = TRUE)</code></pre>
+  filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 <h4>
 Arguments
 </h4>
 <dl class="rd-dl">
 <dt>
-desc,group,defLabel,defActive,filterable
+desc,group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -903,7 +939,7 @@ Usage
 </h4>
 <pre class="r"><code>cogHref(x, label = "link", desc = "link", group = "common",
   target = "_blank", defLabel = FALSE, defActive = FALSE,
-  filterable = FALSE)</code></pre>
+  filterable = FALSE, sortable = TRUE, log = FALSE)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -921,7 +957,7 @@ label
 label of the href
 </dd>
 <dt>
-desc,group,defLabel,defActive,filterable
+desc,group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -981,7 +1017,7 @@ label
 label of the href
 </dd>
 <dt>
-desc,group,defLabel,defActive,filterable
+desc,group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -1020,7 +1056,7 @@ Compute Scagnostics
 Usage
 </h4>
 <pre class="r"><code>cogScagnostics(x, y, group = "scagnostics", defLabel = FALSE,
-  defActive = TRUE, filterable = TRUE)</code></pre>
+  defActive = TRUE, filterable = TRUE, sortable = TRUE, log = FALSE)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -1038,7 +1074,7 @@ y
 vector of the y-axis data for a scatterplot
 </dd>
 <dt>
-group,defLabel,defActive,filterable
+group,defLabel,defActive,filterable,sortable,log
 </dt>
 <dd class="rd-dd">
 arguments passed to <code><a href=#cog>cog</a></code>
@@ -1073,7 +1109,7 @@ Arguments
 vdbConn
 </dt>
 <dd class="rd-dd">
-VDB connection settings
+A vdbConn object containing the VDB connection settings
 </dd>
 <dt>
 appName
@@ -1888,7 +1924,7 @@ Author
   <div id="footer">
     <div class="container">
       <div class="col-md-6">
-                <p>&copy; Ryan Hafen, 2015</p>
+                <p>&copy; Tessera team, 2015</p>
               </div>
       <div class="col-md-6">
         <p class="pull-right">created with <a href="https://github.com/hafen/packagedocs">packagedocs</a></p>

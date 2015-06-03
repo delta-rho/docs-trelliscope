@@ -2,13 +2,14 @@
 title: "trelliscope"
 subtitle: "Package Reference"
 author: Ryan Hafen
-copyright: Ryan Hafen
+copyright: Tessera team
 output:
   packagedocs:
     toc: true
 rd_page: true
 navpills: |
   <li><a href='index.html'>Docs</a></li>
+  <li><a href='viewer.html'>Viewer Docs</a></li>
   <li class="active"><a href='rd.html'>Package Ref</a></li>
   <li><a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a></li>
 brand: |-

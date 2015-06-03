@@ -1,0 +1,195 @@
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc" />
+
+    <meta name="author" content="Tessera team" />
+  
+  
+  <title>trelliscope</title>
+
+    <script src="assets/jquery-1.11.0/jquery.min.js"></script>
+  <link href="assets/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="assets/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+  <script src="assets/bootstrap-3.3.2/shim/html5shiv.min.js"></script>
+  <script src="assets/bootstrap-3.3.2/shim/respond.min.js"></script>
+  <link href="assets/highlight-8.4/tomorrow.css" rel="stylesheet" />
+  <script src="assets/highlight-8.4/highlight.pack.js"></script>
+  <link href="assets/fontawesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+  <script src="assets/stickykit-1.1.1/sticky-kit.min.js"></script>
+  <script src="assets/jqueryeasing-1.3/jquery.easing.min.js"></script>
+  <link href="assets/packagedocs-0.0.1/pd.css" rel="stylesheet" />
+  <script src="assets/packagedocs-0.0.1/pd.js"></script>
+  <script src="assets/packagedocs-0.0.1/pd-collapse-toc.js"></script>
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+
+<body>
+
+  
+  <header class="navbar navbar-white navbar-fixed-top" role="banner" id="header">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+                <span class="navbar-brand">
+<a href="http://tessera.io"> <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'> </a>
+        </span>
+                <a href="#content-top" class="navbar-brand page-scroll">
+        trelliscope - Viewer Guide
+        </a>
+      </div>
+            <nav class="collapse navbar-collapse" role="navigation">
+        <ul class="nav nav-pills pull-right">
+<li>
+<a href='index.html'>Docs</a>
+</li>
+<li class="active">
+<a href='viewer.html'>Viewer Docs</a>
+</li>
+<li>
+<a href='rd.html'>Package Ref</a>
+</li>
+<li>
+<a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a>
+</li>
+        </ul>
+      </nav>
+          </div>
+  </header>
+
+  <!-- Begin Body -->
+  <div class="container">
+    <div class="row">
+            <div class="col-md-3" id="sidebar-col">
+        <div id="toc">
+          <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#getting-started">Getting started</a><ul>
+          <li><a href="#viewer-layout">Viewer Layout</a></li>
+          </ul></li>
+          <li><a href="#display-information">Display Information</a></li>
+          <li><a href="#view-options">View Options</a><ul>
+          <li><a href="#panel-layout">Panel Layout</a></li>
+          <li><a href="#panel-labels">Panel Labels</a></li>
+          <li><a href="#related-displays">Related Displays</a></li>
+          </ul></li>
+          <li><a href="#cognostics">Cognostics</a><ul>
+          <li><a href="#table-sort-filter">Table Sort / Filter</a></li>
+          <li><a href="#univariate-filter">Univariate Filter</a></li>
+          <li><a href="#bivariate-filter">Bivariate Filter</a></li>
+          <li><a href="#active-cognostics">Active Cognostics</a></li>
+          </ul></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-9" id="content-col">
+      
+<div id="content-top"></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This navigation guide will introduce the options within the Trelliscope viewer and how to use them. For information on creating a Trelliscope viewer see the <a href="http://tessera.io/docs-trelliscope/#introduction">tutorial</a>.</p>
+<p>Trelliscope is a visualization tool that provides interactive exploration of large collections of plots. Trelliscope enables detailed, flexible visualization of large data sets by partitioning data into subsets, applying a plot method to each subset to create a panel, and then allowing the analyst to interactively view the panels. Interaction is provided by the ability to sort and filter the panels based on metrics computed for each subset that describe behaviors of interest. These metrics are called cognostics</p>
+<p>In addition, Trelliscope results can be easily shared with other researchers in a way that they can view and interact with.</p>
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<p>When the user has generated or opened a new display of visualization panels using Trelliscope in their browser a list of one or more displays will appear. Once the user selects a display from the list, a plot will be shown in the viewer.</p>
+<p><img src="figures/start1.png" alt="picture1" /></p>
+<div id="viewer-layout" class="section level2">
+<h2>Viewer Layout</h2>
+<p>The Trelliscope viewer has three main features.</p>
+<p><img src="figures/start2.png" alt="picture1" /></p>
+<div id="main-display" class="section level3">
+<h3>Main Display</h3>
+<p>The main display (highlighted in orange) is the center viewing area that will show all graphical and numerical information about the data set.</p>
+</div>
+<div id="main-menu" class="section level3">
+<h3>Main Menu</h3>
+<p>The main menu (highlighted in yellow) has tabs the user can select to adjust many different aspects of the main display. (covered in more detail later in this guide)</p>
+</div>
+<div id="navigation-banner" class="section level3">
+<h3>Navigation Banner</h3>
+<p>The navigation banner (highlighted in green) includes arrows allow for scrolling through the display panels. The folder icon will return the opening list of related displays. The information icon will display additional information about Trelliscope (including hotkeys for easier navigation).</p>
+</div>
+</div>
+</div>
+<div id="display-information" class="section level1">
+<h1>Display Information</h1>
+<p>The display information tab contains information about the current display and the data it is based on. This includes attributes, cognostics, a sample of the data, and the R code that was run to create the visualization in each display.</p>
+<p><img src="figures/DI.png" alt="picture1" /></p>
+</div>
+<div id="view-options" class="section level1">
+<h1>View Options</h1>
+<p>The View Option section controls how your visualization will look. Here you are able to change the number of panels per page along with the panel arrangement.</p>
+<div id="panel-layout" class="section level2">
+<h2>Panel Layout</h2>
+<p>One of the most important features of Trelliscope is the ability to display multiple panels at once. In this control panel you can specify the arrangement of the panels on each page by entering the number of rows and columns of panels per page. Future functionality for fixing / varying levels of cognostics per page to come.</p>
+<p><strong>Example:</strong> Here the user has chosen 2 rows and 3 columns. The interactive control panel shows how the display panels will be arranged on your screen. <br> <img src="figures/PL.png" alt="picture1" /></p>
+</div>
+<div id="panel-labels" class="section level2">
+<h2>Panel Labels</h2>
+<p>In the panel labels control panel you will be able to specify which cognostics to view underneath each visualization. Select cognostics to view by clicking and/or dragging the ‘Show’ column.</p>
+<p><br> <strong>Example:</strong> Here the user has selected the date, meanPower and rangePower cognostics.<br /><img src="figures/PLab.png" alt="picture2" /> <br> <br> <br> This figure shows one of the resulting display panels, with the new section highlighted in red. <img src="figures/PLabex.png" alt="picture3" /></p>
+</div>
+<div id="related-displays" class="section level2">
+<h2>Related Displays</h2>
+<p>The related displays tab will allow users to select additional displays (if any) that have been created on the same partitioning to view with the currently selected display. If additional displays are selected, only one subset per page will be shown.</p>
+</div>
+</div>
+<div id="cognostics" class="section level1">
+<h1>Cognostics</h1>
+<p>Cognostics are different metrics use to explore the data. In this section the user can quickly sort, filter, or sample our panels based on these metrics. Cognostics can include statistical summaries, categorical variables, goodness-of-fit metrics, etc.</p>
+<div id="table-sort-filter" class="section level2">
+<h2>Table Sort / Filter</h2>
+<p>One of the most important aspects of Trelliscope viewer is the ability to quickly organize display panels in a way that is useful. The table sort/filter control panel provides ways to reorder and subset display panels. The center table of the panel shows a row for each of the display panels in the order that they will be shown in the viewer. The table has many interactive features. To sort display panels by one of the cognostics, click the sorting buttons that appear in the column headers (shift-click on the column sorting buttons for multi-column sorting). Below the center table are range boxes, which allow filtering of the displays, and histograms of the cognostics to give a quick view of the distribution.</p>
+<p><strong>Example:</strong> Here the user clicked the down arrow next to meanPower to sort the display panels from smallest meanPower to largest. The user has also filtered the display to only show panels for days from the months of June and July. <br></p>
+<p><img src="figures/TS.png" alt="picture6" /> <br> <br> All active sorting or filters will be displayed at the bottom of the viewer. To remove sorts or filters click the “x” icon next to the cognostic name. <br> <img src="figures/TS2.png" alt="picture7" /></p>
+</div>
+<div id="univariate-filter" class="section level2">
+<h2>Univariate Filter</h2>
+<p>The univariate filter control panel is based on a single cognostic guided by a visual display of the distribution of the cognostic. This distribution can be displayed with a quantile plot or a histogram. The user can select a variable to view and click and drag on the display to specify filtering. This can be useful when trying to isolate or remove outliers from the displays.</p>
+<p><br> A quantile plot displays data by proportion(f-value), across the x-axis.</p>
+<p><strong>Example:</strong> Here the user has noticed a portion of the data with minimum values of zero. They have decided to select only these days for display by highlighting only this portion of the quantile plot. <img src="figures/UF.png" alt="picture7" /></p>
+</div>
+<div id="bivariate-filter" class="section level2">
+<h2>Bivariate Filter</h2>
+<p>The bivariate filter control panel is based on pairs of cognostics through an interactive scatterplot. The user can select two variables to view and then click and drag on the display to specify filtering.</p>
+<p><strong>Example:</strong> Here the user has decided to only show displays from the final 100 days of the year that also have meanPower of above 214. <img src="figures/BF.png" alt="picture8" /></p>
+</div>
+<div id="active-cognostics" class="section level2">
+<h2>Active Cognostics</h2>
+<p>Users can choose which Cognostics to make available for sorting and creating subsets of the displays.</p>
+<p><strong>Example:</strong> Here the user has decided to remove the week cognostic. <img src="figures/AC.png" alt="picture8" /></p>
+</div>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div class="container">
+      <div class="col-md-6">
+                <p>&copy; Tessera team, 2015</p>
+              </div>
+      <div class="col-md-6">
+        <p class="pull-right">created with <a href="https://github.com/hafen/packagedocs">packagedocs</a></p>
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>

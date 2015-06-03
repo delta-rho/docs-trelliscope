@@ -1,0 +1,6 @@
+
+# Display Information
+
+The display information tab contains information about the current display and the data it is based on.  This includes attributes, cognostics, a sample of the data, and the R code that was run to create the visualization in each display. 
+
+![picture1](figures/DI.png)
