@@ -8,3 +8,5 @@ Trelliscope is a visualization tool that provides interactive exploration of lar
 
 In addition, Trelliscope results can be easily shared with other researchers in a way that they can view and interact with.
 
+**Examples:**
+Throughout this guide there will be example screenshots.  If you would like to follow along, the Trelliscope viewer that created these examples can be found [here](https://ascm.shinyapps.io/amw-power/).  This viewer was created with a dataset that contains recordings of the energy consumption and outdoor air temperature of four retail buildings at various locations in the U.S. at 15 min. intervals during 2010.
