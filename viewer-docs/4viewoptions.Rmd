@@ -31,8 +31,8 @@ The related displays tab will allow users to select additional displays (if any)
 
 **Example:**
 Here the user would like to compare a second display that has been created from the data.  
-![picture3](figures/RD1.png)
+![picture3](figures/RD01.png)
 <br>
 <br>
 Here are the resulting panels.  The user can scroll through these panels, and apply the cognostic sorting and filtering in the same way as individual displays.
-![picture3](figures/RD2.png)
+![picture3](figures/RD02.png)
