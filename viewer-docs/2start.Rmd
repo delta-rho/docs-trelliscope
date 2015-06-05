@@ -16,7 +16,7 @@ The Trelliscope viewer has three main features.
 The main display (highlighted in orange) is the center viewing area that will show all graphical and numerical information about the data set.
 
 ### Main Menu
-The main menu (highlighted in yellow) has tabs the user can select to adjust many different aspects of the main display.  (covered in more detail later in this guide)
+The main menu (highlighted in yellow) has tabs the user can select to adjust many different aspects of the main display (covered in more detail later in this guide).
 
 
 ### Navigation Banner
