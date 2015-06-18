@@ -165,7 +165,7 @@ conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)</code></
 <div id="visualization-by-county-and-state" class="section level3">
 <h3>Visualization by county and state</h3>
 <p>Trelliscope allows us to visualize large data sets in detail. We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.</p>
-<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="tessera.io/docs-datadr">datadr</a> package.</p>
+<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="http://tessera.io/docs-datadr">datadr</a> package.</p>
 <pre class="r"><code># divide housing data by county and state
 byCounty &lt;- divide(housing,
    by = c(&quot;county&quot;, &quot;state&quot;))</code></pre>
