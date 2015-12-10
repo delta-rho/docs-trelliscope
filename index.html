@@ -45,7 +45,7 @@
                 <span class="navbar-brand">
 <a href="http://tessera.io"> <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'> </a>
         </span>
-                <a href="#content-top" class="navbar-brand page-scroll">
+                <a href="index.html" class="navbar-brand page-scroll">
         trelliscope - Tutorial
         </a>
       </div>
@@ -377,6 +377,7 @@ conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)</code></
 <p>In any subsequent R session, we can connect to the existing VDB directory by issuing the same command. The VDB’s name was stored when we first initialized the VDB, so it does not need to be specified again:</p>
 <pre class="r"><code># re-connect to an existing VDB
 conn &lt;- vdbConn(&quot;vdb&quot;)</code></pre>
+<pre><code>*** Copying latest viewer to vdb directory...</code></pre>
 <p>The name can be overridden by specifying a new one.</p>
 <p>Most Trelliscope functions need the VDB connection information to know where to put things. It can be tedious to always supply this, so <code>vdbConn()</code> sets a global R option called <code>&quot;vdbConn&quot;</code> that holds the connection information. If in a Trelliscope function we do not explicitly specify the connection, the default is to search for the global <code>vdbConn</code> option. The assumption is that in any one R session, the user will be using just one VDB, and thus there will not be multiple conflicting connections.</p>
 <p>We can now look at some examples and start populating the VDB with displays.</p>
