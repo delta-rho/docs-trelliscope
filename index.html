@@ -116,14 +116,14 @@
 <h1>Introduction</h1>
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment. Trelliscope is a component in the <a href="tessera.io">Tessera</a> environment.</p>
+<p>Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment. Trelliscope is a component in the <a href="http://tessera.io">Tessera</a> environment.</p>
 <p>For those familiar with <a href="http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/">Trellis Display</a>, <a href="http://docs.ggplot2.org/0.9.3.1/facet_wrap.html">faceting in ggplot</a>, or the notion of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples</a>, Trelliscope provides a scalable way to break a set of data into pieces, apply a plot method to each piece, and then arrange those plots in a grid and interactively sort, filter, and query panels of the display based on metrics of interest. With Trelliscope, we are able to create multipanel displays on data with a very large number of subsets and view them in an interactive and meaningful way.</p>
 <p>Another important function of trelliscope is the organization of all of the Trelliscope displays and other visual artifacts we have deemed worthy of presentation into what we call a “visualization database”, which can be easily shared with other researchers in a way that they can interact with.</p>
 <p>To start getting a feel for Trelliscope, continue to the next section, “Quickstart”.</p>
 </div>
 <div id="quickstart" class="section level2">
 <h2>Quickstart</h2>
-<p>Before getting into the details, we’ll first go over a quick example to provide a feel for what can be done with Trelliscope. This example is adapted from the quick start example in the <a href="tessera.io/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
+<p>Before getting into the details, we’ll first go over a quick example to provide a feel for what can be done with Trelliscope. This example is adapted from the quick start example in the <a href="http://tessera.io/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
 <div id="package-installation" class="section level3">
 <h3>Package installation</h3>
 <p>First, we need to install the necessary components, <code>datadr</code> and <code>trelliscope</code>. These are R packages that we install from github.</p>
@@ -165,7 +165,7 @@ conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)</code></
 <div id="visualization-by-county-and-state" class="section level3">
 <h3>Visualization by county and state</h3>
 <p>Trelliscope allows us to visualize large data sets in detail. We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.</p>
-<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="tessera.io/docs-datadr">datadr</a> package.</p>
+<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="http://tessera.io/docs-datadr">datadr</a> package.</p>
 <pre class="r"><code># divide housing data by county and state
 byCounty &lt;- divide(housing,
    by = c(&quot;county&quot;, &quot;state&quot;))</code></pre>

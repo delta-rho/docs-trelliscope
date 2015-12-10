@@ -3,6 +3,8 @@
 
 When the user has generated or opened a new display of visualization panels using Trelliscope in their browser a list of one or more displays will appear. Once the user selects a display from the list, a plot will be shown in the viewer. 
 
+**Example:**
+Here you can see two related displays have been created from the dataset.  The first display will show power over time by date.  The second display will show power versus temperature by date.  
 ![picture1](figures/start1.png)
 
 ## Viewer Layout
@@ -14,9 +16,10 @@ The Trelliscope viewer has three main features.
 The main display (highlighted in orange) is the center viewing area that will show all graphical and numerical information about the data set.
 
 ### Main Menu
-The main menu (highlighted in yellow) has tabs the user can select to adjust many different aspects of the main display.  (covered in more detail later in this guide)
+The main menu (highlighted in yellow) has tabs the user can select to adjust many different aspects of the main display (covered in more detail later in this guide).
 
 
 ### Navigation Banner
-The navigation banner (highlighted in green) includes arrows allow for scrolling through the display panels.  The folder icon will return the opening list of related displays.  The information icon will display additional information about Trelliscope (including hotkeys for easier navigation).
+The navigation banner (highlighted in green) includes arrows allow for scrolling through the display panels.  The folder icon will return the opening list of related displays allow the user to switch between displays created from the same dataset.  
+The information icon will display additional information about Trelliscope, including background information, hotkeys for easier navigation and information about the current session.
 

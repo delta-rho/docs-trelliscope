@@ -29,3 +29,10 @@ This figure shows one of the resulting display panels, with the new section high
 ## Related Displays
 The related displays tab will allow users to select additional displays (if any) that have been created on the same partitioning to view with the currently selected display. If additional displays are selected, only one subset per page will be shown.
 
+**Example:**
+Here the user would like to compare a second display that has been created from the data.  
+![picture3](figures/RD01.png)
+<br>
+<br>
+Here are the resulting panels.  The user can scroll through these panels, and apply the cognostic sorting and filtering in the same way as individual displays.
+![picture3](figures/RD02.png)
