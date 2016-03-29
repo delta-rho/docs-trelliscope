@@ -9,7 +9,7 @@
   
   <title>trelliscope</title>
 
-    <script src="assets/jquery-1.11.0/jquery.min.js"></script>
+    <script src="assets/jquery-1.11.3/jquery.min.js"></script>
   <link href="assets/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
   <script src="assets/bootstrap-3.3.2/js/bootstrap.min.js"></script>
   <script src="assets/bootstrap-3.3.2/shim/html5shiv.min.js"></script>
@@ -126,14 +126,11 @@
 <p>Before getting into the details, we’ll first go over a quick example to provide a feel for what can be done with Trelliscope. This example is adapted from the quick start example in the <a href="http://tessera.io/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
 <div id="package-installation" class="section level3">
 <h3>Package installation</h3>
-<p>First, we need to install the necessary components, <code>datadr</code> and <code>trelliscope</code>. These are R packages that we install from github.</p>
-<pre class="r"><code># install packages (one time only)
-install.packages(&quot;devtools&quot;) # if not installed
-devtools::install_github(&quot;tesseradata/datadr&quot;)
-devtools::install_github(&quot;tesseradata/trelliscope&quot;)</code></pre>
+<p>First, we need to install the necessary components, <code>datadr</code> and <code>trelliscope</code>. These are R packages that we install from CRAN.</p>
+<pre class="r"><code>install.packages(c(&quot;datadr&quot;, &quot;trelliscope&quot;))</code></pre>
 <p>Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed. For support of more scalable back ends like Hadoop when dealing with larger data sets, see the <a href="http://tessera.io/#quickstart">quickstart section</a> on the Tessera website.</p>
 <p>We will use as an example a data set consisting of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from <a href="http://www.zillow.com">Zillow</a> and obtained from <a href="https://www.quandl.com">quandl</a>. A pre-processed version of this data is available in a package called <code>housingData</code>, which we will use. To install this package:</p>
-<pre class="r"><code>devtools::install_github(&quot;hafen/housingData&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;housingData&quot;)</code></pre>
 </div>
 <div id="environment-setup" class="section level3">
 <h3>Environment setup</h3>
@@ -145,14 +142,14 @@ library(trelliscope)
 
 # look at housing data
 str(housing)</code></pre>
-<pre><code>&#39;data.frame&#39;:   224369 obs. of  7 variables:
- $ fips            : Factor w/ 3235 levels &quot;01001&quot;,&quot;01003&quot;,..: 187 187 187 187 187 187 187 187 187 187 ...
- $ county          : Factor w/ 1969 levels &quot;Abbeville County&quot;,..: 17 17 17 17 17 17 17 17 17 17 ...
+<pre><code>&#39;data.frame&#39;:   247082 obs. of  7 variables:
+ $ fips            : Factor w/ 3235 levels &quot;01001&quot;,&quot;01003&quot;,..: 205 205 205 205 205 205 205 205 205 205 ...
+ $ county          : Factor w/ 1969 levels &quot;Abbeville County&quot;,..: 1050 1050 1050 1050 1050 1050 1050 1050 1050 1050 ...
  $ state           : Factor w/ 57 levels &quot;AK&quot;,&quot;AL&quot;,&quot;AR&quot;,..: 6 6 6 6 6 6 6 6 6 6 ...
- $ time            : Date, format: &quot;2008-10-01&quot; &quot;2008-11-01&quot; ...
- $ nSold           : num  NA NA NA NA NA NA NA NA NA NA ...
- $ medListPriceSqft: num  308 299 NA 290 288 ...
- $ medSoldPriceSqft: num  326 NA 318 306 292 ...</code></pre>
+ $ time            : Date, format: &quot;2008-01-31&quot; &quot;2008-02-29&quot; ...
+ $ nSold           : num  505900 497100 487300 476400 465900 ...
+ $ medListPriceSqft: num  NA NA NA NA NA ...
+ $ medSoldPriceSqft: num  360 354 350 349 344 ...</code></pre>
 <p>We see that we have a data frame with the information we discussed, in addition to the number of units sold.</p>
 </div>
 <div id="setting-up-a-visualization-database" class="section level3">
@@ -762,7 +759,7 @@ makeDisplay(byCountyHDFS, ...)</code></pre>
   <div id="footer">
     <div class="container">
       <div class="col-md-6">
-                <p>&copy; Tessera team, 2015</p>
+                <p>&copy; Tessera team, 2016</p>
               </div>
       <div class="col-md-6">
         <p class="pull-right">created with <a href="https://github.com/hafen/packagedocs">packagedocs</a></p>

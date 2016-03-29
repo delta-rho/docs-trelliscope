@@ -4,13 +4,10 @@ Before getting into the details, we'll first go over a quick example to provide 
 
 ### Package installation
 
-First, we need to install the necessary components, `datadr` and `trelliscope`.  These are R packages that we install from github.
+First, we need to install the necessary components, `datadr` and `trelliscope`.  These are R packages that we install from CRAN.
 
 ```{r quickstart_install, eval=FALSE, echo=TRUE}
-# install packages (one time only)
-install.packages("devtools") # if not installed
-devtools::install_github("tesseradata/datadr")
-devtools::install_github("tesseradata/trelliscope")
+install.packages(c("datadr", "trelliscope"))
 ```
 
 Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed.  For support of more scalable back ends like Hadoop when dealing with larger data sets, see the [quickstart section](http://tessera.io/#quickstart) on the Tessera website.
@@ -18,7 +15,7 @@ Our example is based on a small dataset that we can handle in a local R session,
 We will use as an example a data set consisting of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from [Zillow](http://www.zillow.com) and obtained from [quandl](https://www.quandl.com).  A pre-processed version of this data is available in a package called `housingData`, which we will use.  To install this package:
 
 ```{r quickstart_install2, eval=FALSE, echo=TRUE}
-devtools::install_github("hafen/housingData")
+install.packages("housingData")
 ```
 
 ### Environment setup

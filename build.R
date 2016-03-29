@@ -7,7 +7,7 @@ library(trelliscope)
 knitr::opts_knit$set(root.dir = normalizePath("."))
 
 packagedocs::render_docs(
-  code_path = "~/Documents/Code/Tessera/hafen/trelliscope",
+  code_path = "~/Documents/Code/Tessera/trelliscope",
   docs_path = ".",              # location of docs directory
   package_name = "trelliscope", # name of the package
   main_toc_collapse = TRUE,     # use collapsing toc on main page

@@ -9,7 +9,7 @@
   
   <title>trelliscope</title>
 
-    <script src="assets/jquery-1.11.0/jquery.min.js"></script>
+    <script src="assets/jquery-1.11.3/jquery.min.js"></script>
   <link href="assets/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
   <script src="assets/bootstrap-3.3.2/js/bootstrap.min.js"></script>
   <script src="assets/bootstrap-3.3.2/shim/html5shiv.min.js"></script>
@@ -120,7 +120,8 @@
           <li><a href="#websync">webSync</a></li>
           </ul></li>
           <li><a href="#misc">Misc</a><ul>
-          <li><a href="#airplane">airplane</a></li>
+          <li><a href="#splodcogfn">splodCogFn</a></li>
+          <li><a href="#splodpanelfn">splodPanelFn</a></li>
           <li><a href="#batting">batting</a></li>
           <li><a href="#nomargins">noMargins</a></li>
           <li><a href="#validatestate">validateState</a></li>
@@ -138,13 +139,13 @@
       
 <div id="content-top"></div>
 <h1>
-Trelliscope
+Create and Navigate Large Multi-Panel Visual Displays
 </h1>
 <p>
 <strong>Authors:</strong> <a href="mailto:rhafen@gmail.com">Ryan Hafen</a> [aut, cre],Jeremiah Rounds [ctb],Barret Schloerke [ctb],Landon Sego [ctb]
 </p>
 <p>
-<strong>Version:</strong> 0.9.0
+<strong>Version:</strong> 0.9.4
 </p>
 <p>
 <strong>License:</strong> BSD_3_clause + file LICENSE
@@ -153,25 +154,25 @@ Trelliscope
 Description
 </h4>
 <p>
-Trelliscope provides a way to create, organize, and view multi-panel displays, a collection of which is called a visualization database (VDB). This package provides a mechanism for extending the ideas of Trellis Display to easily generate and organize plots, providing a dynamic viewer for tiling panels of a display across the screen and paging through them. There is also a mechanism to generate built-in or user-defined “cognostic” metrics for each panel of a display , and the viewer has the ability to sort or filter the pages based on these cognostics. This is useful for large multi-panel displays where it is not possible to view each panel, allowing only panels with interesting features to be presented.
+An extension of Trellis Display that enables creation, organization, and interactive viewing of multi-panel displays created against potentially very large data sets. The dynamic viewer tiles panels of a display across the screen in a web browser and allows the user to interactively page through the panels and sort and filter them based on “cognostic” metrics computed for each panel. Panels can be created using many of R’s plotting capabilities, including base R graphics, ‘lattice’, ‘ggplot2’, and many ‘htmlwidgets’. Conditioning is handled through the ‘datadr’ package, which enables ‘Trelliscope’ displays with potentially millions of panels to be created against terabytes of data on systems like ‘Hadoop’. While designed to scale, ‘Trelliscope’ displays can also be very useful for small data sets.
 </p>
 <h4>
 Depends
 </h4>
 <p>
-R (&gt;= 3.0.0), base, datadr (&gt;= 0.8.0), lattice (&gt;= 0.20-23), ggplot2
+R (&gt;= 3.0.0), datadr (&gt;= 0.8.5),
 </p>
 <h4>
 Imports
 </h4>
 <p>
-data.table, base64enc, shiny (&gt;= 0.12.0), htmlwidgets (&gt;= 0.5.0), digest, jsonlite, fastICA, hexbin, png
+lattice (&gt;= 0.20-23), ggplot2, data.table, base64enc, shiny (&gt;= 0.12.0), htmlwidgets (&gt;= 0.5.0), digest, jsonlite, hexbin, png, rsconnect
 </p>
 <h4>
 Suggests
 </h4>
 <p>
-Cairo, dplyr, testthat (&gt;= 0.11.0), roxygen2 (&gt;= 5.0.1), scagnostics, shinyapps
+Cairo, dplyr, testthat (&gt;= 0.11.0), roxygen2 (&gt;= 5.0.1), scagnostics, housingData
 </p>
 <h4>
 Enhances
@@ -510,7 +511,8 @@ Connect to a new or existing visualization database
 <h4>
 Usage
 </h4>
-<pre class="r"><code>vdbConn(path, name = NULL, autoYes = FALSE, verbose = TRUE)</code></pre>
+<pre class="r"><code>vdbConn(path, name = NULL, autoYes = FALSE, updateFiles = TRUE,
+  verbose = TRUE)</code></pre>
 <h4>
 Arguments
 </h4>
@@ -525,13 +527,19 @@ The path on the local file system where the directory for the VDB is located
 name
 </dt>
 <dd class="rd-dd">
-A character string giving the name of the VDB. If the VDB already exists and <code>name = NULL</code>, the previous name is used. If the VDB exists and a string is provided for <code>name</code>, the name is overwritten. The primary purpose of the <code>name</code> argument is to facilitate deploying the trelliscope display as a Shiny app. See the <code>appName</code> argument of <code><a href=#deploytoshinyapps>deployToShinyApps</a></code>
+A character string giving the name of the VDB. If the VDB already exists and <code>name = NULL</code>, the previous name is used. If the VDB exists and a string is provided for <code>name</code>, the name is overwritten. The primary purpose of the <code>name</code> argument is to facilitate deploying the trelliscope display as a Shiny app. See the <code>appName</code> argument of <code><a href=http://www.inside-r.org/packages/cran/trelliscope/docs/deployToShinyApps>deployToShinyApps</a></code>
 </dd>
 <dt>
 autoYes
 </dt>
 <dd class="rd-dd">
 should questions to proceed with directory creation operations be automatically answered with “yes”?
+</dd>
+<dt>
+updateFiles
+</dt>
+<dd class="rd-dd">
+upon connection, should the Trelliscope viewer app files be updated in the VDB directory?
 </dd>
 <dt>
 verbose
@@ -571,7 +579,7 @@ View a display or run Shiny display viewer
 Usage
 </h4>
 <pre class="r"><code>view(name = NULL, group = NULL, state = NULL, openBrowser = TRUE,
-  conn = getOption("vdbConn"), port = 8100L)</code></pre>
+  conn = getOption("vdbConn"), port = getOption("trelliscopePort"))</code></pre>
 <h4>
 Arguments
 </h4>
@@ -604,15 +612,9 @@ VDB connection info, typically stored in options(“vdbConn”) at the beginning
 port
 </dt>
 <dd class="rd-dd">
-what port to use for the viewer
+what port to use for the viewer - if not specified, will look for “trelliscopePort” set in Rs global options, followed by a search for a system-level environment variable “TRELLISCOPE_PORT”. If none of these are defined, a random port assigned provided by shiny will be used.
 </dd>
 </dl>
-<h4>
-Details
-</h4>
-<p class="rd-p">
-The state
-</p>
 <h4>
 Author
 </h4>
@@ -716,7 +718,7 @@ Update a Display Object
 <h4>
 Usage
 </h4>
-<pre class="r"><code>updateDisplay(name, ..., group = "common", conn = getOption("vdbConn"))</code></pre>
+<pre class="r"><code>updateDisplay(name, ..., group = NULL, conn = getOption("vdbConn"))</code></pre>
 <h4>
 Arguments
 </h4>
@@ -1446,174 +1448,97 @@ Author
 </div>
 <div id="misc" class="section level1">
 <h1>Misc</h1>
-<div id="airplane" class="section level2">
-<h2>airplane</h2>
+<div id="splodcogfn" class="section level2">
+<h2>splodCogFn</h2>
 <h3>
-Airplane Data
+Default Cognostics Function for splod
 </h3>
 <p class="rd-p">
-Airplane data
+Default cognostics function for splod
 </p>
 <h4>
 Usage
 </h4>
-<pre class="r"><code>data(airplane)</code></pre>
+<pre class="r"><code>splodCogFn(df)</code></pre>
 <h4>
-Format
+Arguments
+</h4>
+<dl class="rd-dl">
+<dt>
+df
+</dt>
+<dd class="rd-dd">
+a subset of data created by <code><a href=#makesploddata>makeSplodData</a></code>
+</dd>
+</dl>
+<h4>
+Value
 </h4>
 <p class="rd-p">
-A data frame with 1479 rows and 47 variables
+<dl>
+a data.frame of scagnostics for the given subset
+</dl>
 </p>
 <h4>
-Details
+References
 </h4>
 <p class="rd-p">
-<ul>
-<li>
-dat_ams. : POSIXct, format: “2010-06-28 16:25:21” “2010-06-28 16:25:34” …
-</li>
-<li>
-org. : num 9.26 13.29 12.13 12.36 10.11 …
-</li>
-<li>
-NO3. : num 0.449 0.589 0.536 0.57 0.457 …
-</li>
-<li>
-SO4. : num 0.115 0.193 0.232 0.307 0.197 …
-</li>
-<li>
-NH4. : num 0.126 0.229 0.224 0.179 0.172 …
-</li>
-<li>
-CHL. : num 0.01119 0.01748 0.00607 0.03346 0.00683 …
-</li>
-<li>
-org_err. : num 0.111 0.117 0.116 0.116 0.115 …
-</li>
-<li>
-NO3_err. : num 0.0172 0.0181 0.0177 0.0182 0.0175 …
-</li>
-<li>
-SO4_err. : num 0.0222 0.0244 0.0252 0.0253 0.025 …
-</li>
-<li>
-NH4_err. : num 0.0331 0.0331 0.0331 0.0332 0.0331 …
-</li>
-<li>
-CHl_err. : num 0.0124 0.0122 0.0123 0.0123 0.0123 …
-</li>
-<li>
-latitude. : num 38.7 38.7 38.7 38.7 38.7 …
-</li>
-<li>
-longitude. : num -121 -121 -121 -121 -121 …
-</li>
-<li>
-altitude. : num 354 369 385 393 388 …
-</li>
-<li>
-static_p. : num 968 966 964 963 964 …
-</li>
-<li>
-altitude_p. : num 327 341 356 365 360 …
-</li>
-<li>
-static_t. : num 28.4 28.7 28.6 28.5 28.8 …
-</li>
-<li>
-potential_t. : num 31.3 31.7 31.7 31.7 32 …
-</li>
-<li>
-dewpt. : num 14.1 13.5 13.4 12.9 11.1 …
-</li>
-<li>
-RH. : num 41.6 39.3 39.3 38.5 33.5 …
-</li>
-<li>
-h2o_MF. : num 10.54 10.11 10.05 9.8 8.68 …
-</li>
-<li>
-windspd. : num 3.45 3.9 4.14 4.12 4.7 4.54 3.42 3.1 2.98 2.64 …
-</li>
-<li>
-winddir. : num 330 325 320 318 317 …
-</li>
-<li>
-cpc_3025. : num 5508 3915 4037 3969 3567 …
-</li>
-<li>
-cpc_3010. : num 483 352 364 348 314 …
-</li>
-<li>
-ozone. : num 46.8 44.3 45.2 45.5 40.4 …
-</li>
-<li>
-co. : num 109.7 97.6 101.2 103.1 91.8 …
-</li>
-<li>
-so2. : num NA NA NA NA NA NA NA 0.6 0.465 0.644 …
-</li>
-<li>
-no. : num 0.3074 0.0514 0.1456 0.1593 0.115 …
-</li>
-<li>
-no2. : num 1.745 0.358 0.573 0.688 0.8 …
-</li>
-<li>
-noy. : num 5.25 3.48 4.09 4.02 3.53 …
-</li>
-<li>
-mz_33. : num 16.7 14.6 14.4 14.1 11.1 …
-</li>
-<li>
-mz_42. : num 0.1024 0.1176 0.1333 0.0916 0.0407 …
-</li>
-<li>
-mz_45. : num 5.98 5.22 5.19 4.84 5.07 …
-</li>
-<li>
-mz_59. : num 8.49 7.71 6.85 7.08 6.46 …
-</li>
-<li>
-mz_69. : num 1.589 0.811 0.791 0.904 0.911 …
-</li>
-<li>
-mz_71. : num 3.88 3.65 3.35 2.94 2.74 …
-</li>
-<li>
-mz_79. : num 0.417 0.243 0.192 0.261 0.178 …
-</li>
-<li>
-mz_93. : num 0.446 0.571 0.454 0.218 0.185 …
-</li>
-<li>
-mz_107. : num 0.686 0.869 0.661 0.78 0.265 …
-</li>
-<li>
-mz_137. : num 0.519 0.452 0.093 0.353 0.348 …
-</li>
-<li>
-mz_43. : num 8.52 8.3 8.17 8.38 6.87 …
-</li>
-<li>
-mz_61. : num 5.39 5.13 5.1 5.17 4.96 …
-</li>
-<li>
-mz_87. : num 0.302 0.235 0.418 0.298 0.364 …
-</li>
-<li>
-mz69_71. : num 5.47 4.46 4.14 3.84 3.65 …
-</li>
-<li>
-leg_flag. : int 13 13 13 13 3 3 3 3 3 3 …
-</li>
-<li>
-nox. : num 2.053 0.41 0.718 0.847 0.915 …
-</li>
-</ul>
+Wilkinsons scagnostics paper.
 </p>
+<h4>
+See also
+</h4>
+<p><code><a href=#splodpanelfn>splodPanelFn</a></code>, <code><a href=#splod>splod</a></code>, <code><a href=#makesploddata>makeSplodData</a></code></p>
+<h4>
+Author
+</h4>
+<p>Ryan Hafen</p>
+</div>
+<div id="splodpanelfn" class="section level2">
+<h2>splodPanelFn</h2>
+<h3>
+Default Plot Function for splod
+</h3>
 <p class="rd-p">
+Default plot function for splod
 </p>
+<h4>
+Usage
+</h4>
+<pre class="r"><code>splodPanelFn(df)</code></pre>
+<h4>
+Arguments
+</h4>
+<dl class="rd-dl">
+<dt>
+df
+</dt>
+<dd class="rd-dd">
+a subset of data created by <code><a href=#makesploddata>makeSplodData</a></code>
+</dd>
+</dl>
+<h4>
+Value
+</h4>
+<p class="rd-p">
+<dl>
+a trellis plot object of a scatterplot for the given subset
+</dl>
+</p>
+<h4>
+References
+</h4>
+<p class="rd-p">
+Wilkinsons scagnostics paper.
+</p>
+<h4>
+See also
+</h4>
+<p><code><a href=#splodcogfn>splodCogFn</a></code>, <code><a href=#splod>splod</a></code>, <code><a href=#makesploddata>makeSplodData</a></code></p>
+<h4>
+Author
+</h4>
+<p>Ryan Hafen</p>
 </div>
 <div id="batting" class="section level2">
 <h2>batting</h2>
@@ -2222,7 +2147,7 @@ Author
   <div id="footer">
     <div class="container">
       <div class="col-md-6">
-                <p>&copy; Tessera team, 2015</p>
+                <p>&copy; Tessera team, 2016</p>
               </div>
       <div class="col-md-6">
         <p class="pull-right">created with <a href="https://github.com/hafen/packagedocs">packagedocs</a></p>
