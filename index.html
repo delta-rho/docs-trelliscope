@@ -5,8 +5,8 @@
   <meta name="generator" content="pandoc" />
 
     <meta name="author" content="Ryan Hafen" />
-  
-  
+
+
   <title>trelliscope</title>
 
     <script src="assets/jquery-1.11.3/jquery.min.js"></script>
@@ -22,17 +22,17 @@
   <link href="assets/packagedocs-0.0.1/pd.css" rel="stylesheet" />
   <script src="assets/packagedocs-0.0.1/pd.js"></script>
   <script src="assets/packagedocs-0.0.1/pd-collapse-toc.js"></script>
-  
-  
-  
-  
-  
+
+
+
+
+
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 
 <body>
 
-  
+
   <header class="navbar navbar-white navbar-fixed-top" role="banner" id="header">
     <div class="container">
       <div class="navbar-header">
@@ -43,7 +43,7 @@
           <span class="icon-bar"></span>
         </button>
                 <span class="navbar-brand">
-<a href="http://tessera.io"> <img src='figures/icon.png' alt='tessera icon' width='30px' height='30px' style='margin-top: -3px;'> </a>
+<a href="http://deltarho.org"> <img src='figures/icon.png' alt='deltarho icon' width='30px' height='30px' style='margin-top: -3px;'> </a>
         </span>
                 <a href="index.html" class="navbar-brand page-scroll">
         trelliscope - Tutorial
@@ -61,7 +61,7 @@
 <a href='rd.html'>Package Ref</a>
 </li>
 <li>
-<a href='https://github.com/tesseradata/trelliscope'>Github <i class='fa fa-github'></i></a>
+<a href='https://github.com/delta-rho/trelliscope'>Github <i class='fa fa-github'></i></a>
 </li>
         </ul>
       </nav>
@@ -110,25 +110,25 @@
         </div>
       </div>
       <div class="col-md-9" id="content-col">
-      
+
 <div id="content-top"></div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment. Trelliscope is a component in the <a href="tessera.io">Tessera</a> environment.</p>
+<p>Trelliscope provides a way to flexibly visualize large, complex data in great detail from within the R statistical programming environment. Trelliscope is a component in the <a href="deltarho.org">DeltaRho</a> environment.</p>
 <p>For those familiar with <a href="http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/">Trellis Display</a>, <a href="http://docs.ggplot2.org/0.9.3.1/facet_wrap.html">faceting in ggplot</a>, or the notion of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples</a>, Trelliscope provides a scalable way to break a set of data into pieces, apply a plot method to each piece, and then arrange those plots in a grid and interactively sort, filter, and query panels of the display based on metrics of interest. With Trelliscope, we are able to create multipanel displays on data with a very large number of subsets and view them in an interactive and meaningful way.</p>
 <p>Another important function of trelliscope is the organization of all of the Trelliscope displays and other visual artifacts we have deemed worthy of presentation into what we call a “visualization database”, which can be easily shared with other researchers in a way that they can interact with.</p>
 <p>To start getting a feel for Trelliscope, continue to the next section, “Quickstart”.</p>
 </div>
 <div id="quickstart" class="section level2">
 <h2>Quickstart</h2>
-<p>Before getting into the details, we’ll first go over a quick example to provide a feel for what can be done with Trelliscope. This example is adapted from the quick start example in the <a href="http://tessera.io/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
+<p>Before getting into the details, we’ll first go over a quick example to provide a feel for what can be done with Trelliscope. This example is adapted from the quick start example in the <a href="http://deltarho.org/docs-datadr">datadr</a> documentation, but with a specific focus on Trelliscope.</p>
 <div id="package-installation" class="section level3">
 <h3>Package installation</h3>
 <p>First, we need to install the necessary components, <code>datadr</code> and <code>trelliscope</code>. These are R packages that we install from CRAN.</p>
 <pre class="r"><code>install.packages(c(&quot;datadr&quot;, &quot;trelliscope&quot;))</code></pre>
-<p>Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed. For support of more scalable back ends like Hadoop when dealing with larger data sets, see the <a href="http://tessera.io/#quickstart">quickstart section</a> on the Tessera website.</p>
+<p>Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed. For support of more scalable back ends like Hadoop when dealing with larger data sets, see the <a href="http://deltarho.org/#quickstart">quickstart section</a> on the DeltaRho website.</p>
 <p>We will use as an example a data set consisting of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from <a href="http://www.zillow.com">Zillow</a> and obtained from <a href="https://www.quandl.com">quandl</a>. A pre-processed version of this data is available in a package called <code>housingData</code>, which we will use. To install this package:</p>
 <pre class="r"><code>install.packages(&quot;housingData&quot;)</code></pre>
 </div>
@@ -156,13 +156,13 @@ str(housing)</code></pre>
 <h3>Setting up a visualization database</h3>
 <p>We create many plots throughout the course of analysis, and with Trelliscope, we can store these in a “visualization database” (VDB), which is a directory on our computer where all of the information about our display artifacts is stored. Typically we will set up a single VDB for each project we are working on. To initialize and connect to a VDB, we call the <code>vdbConn()</code> function with the path where our VDB is located (or where we would like it to be located), and optionally give it a name.</p>
 <pre class="r"><code># connect to a &quot;visualization database&quot;
-conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)</code></pre>
+conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;deltarhoTutorial&quot;)</code></pre>
 <p>This connects to a directory called <code>&quot;vdb&quot;</code> relative to our current working directory. The first time you do this it will ask to make sure you want to create the directory. R holds this connection in its global options so that subsequent calls will know where to put things without explicitly specifying the connection each time.</p>
 </div>
 <div id="visualization-by-county-and-state" class="section level3">
 <h3>Visualization by county and state</h3>
 <p>Trelliscope allows us to visualize large data sets in detail. We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.</p>
-<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="http://tessera.io/docs-datadr">datadr</a> package.</p>
+<p>An interesting thing to look at with the housing data is the median list and sold price over time by county and state. To split the data in this way, we use the <code>divide()</code> function from the <code>datadr</code> package. It is recommended to have some familiarity with the <a href="http://deltarho.org/docs-datadr">datadr</a> package.</p>
 <pre class="r"><code># divide housing data by county and state
 byCounty &lt;- divide(housing,
    by = c(&quot;county&quot;, &quot;state&quot;))</code></pre>
@@ -236,8 +236,8 @@ priceCog &lt;- function(x) {
 <pre class="r"><code># test cognostics function on a subset
 priceCog(byCounty[[1]]$value)</code></pre>
 <pre><code>$slope
-         time 
--0.0002323686 
+         time
+-0.0002323686
 
 $meanList
 [1] 72.76927
@@ -369,7 +369,7 @@ p + facet_wrap(~ Species, ncol = 3)</code></pre>
 <p>Before we create our first display, we need to initiate and connect to a visualization database (VDB). A VDB connection is simply a pointer to a directory on disk where all of the VDB files reside or will reside.</p>
 <pre class="r"><code># initialize a connection to a new VDB which will
 # go in a directory &quot;vdb&quot; in the current working directory
-conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;tesseraTutorial&quot;)</code></pre>
+conn &lt;- vdbConn(&quot;vdb&quot;, name = &quot;deltarhoTutorial&quot;)</code></pre>
 <p>If the VDB connection directory doesn’t exist, it will ask whether it should be created. Giving the VDB a <code>name</code> is optional, but will be useful for later when we sync our VDB to a web server.</p>
 <p>In any subsequent R session, we can connect to the existing VDB directory by issuing the same command. The VDB’s name was stored when we first initialized the VDB, so it does not need to be specified again:</p>
 <pre class="r"><code># re-connect to an existing VDB
@@ -382,7 +382,7 @@ conn &lt;- vdbConn(&quot;vdb&quot;)</code></pre>
 <div id="division-with-datadr" class="section level2">
 <h2>Division with datadr</h2>
 <p>Since Trelliscope is a multipanel display system, the first step of creating a display is to break the data into subsets, with each subset representing the data to go in one panel of the display. For a given data set, there can be multiple meaningful ways to split the data.</p>
-<p>We achieve data partitioning through the <code>datadr</code> package, the companion package to Trelliscope. This package implements the Divide &amp; Recombine (D&amp;R) approach to data analysis. If you have not spent time with <code>datadr</code>, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the <code>datadr</code> <a href="http://tessera.io/docs-datadr">tutorial</a>.</p>
+<p>We achieve data partitioning through the <code>datadr</code> package, the companion package to Trelliscope. This package implements the Divide &amp; Recombine (D&amp;R) approach to data analysis. If you have not spent time with <code>datadr</code>, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the <code>datadr</code> <a href="http://deltarho.org/docs-datadr">tutorial</a>.</p>
 <p>The <code>datadr</code> package provides a mechanism for dividing potentially very large data sets into subsets, applying analytical methods to each subset, and then recombining the results in a statistically valid way. Here, we use <code>datadr</code> to partition our data, and then Trelliscope will provide a <em>visual recombination</em>.</p>
 <div id="home-price-data" class="section level3">
 <h3>Home price data</h3>
@@ -435,7 +435,7 @@ $value
 <p>To quickly get our feet wet with creating a display, we start with a minimal example.</p>
 <div id="panel-functions" class="section level3">
 <h3>Panel functions</h3>
-<p>Creating a plot first requires the specification of what you would like to be plotted for each subset, a <em>panel function</em>. The function is applied to each key-value pair subset in your data. This function behaves like all other per-subset functions in <code>datadr</code>, which can operate either on both a key and a value of just the value (see <a href="http://tessera.io/docs-datadr/#key-value-pairs">here</a> for more details).</p>
+<p>Creating a plot first requires the specification of what you would like to be plotted for each subset, a <em>panel function</em>. The function is applied to each key-value pair subset in your data. This function behaves like all other per-subset functions in <code>datadr</code>, which can operate either on both a key and a value of just the value (see <a href="http://deltarho.org/docs-datadr/#key-value-pairs">here</a> for more details).</p>
 <p>Some things to know about the panel function:</p>
 <ul>
 <li>The panel function is applied to each subset of your divided data object</li>
@@ -477,7 +477,7 @@ makeDisplay(byCounty,
 <p>To view the display:</p>
 <pre class="r"><code># open the Trelliscope viewer for the VDB
 view()</code></pre>
-<p>This will bring up the Trelliscope viewer in a web browser. Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended. If you aren’t following along with the example in your own R console, we have pushed this VDB out to RStudio’s shinyapps.io site <a href="http://hafen.shinyapps.io/tesseraTutorial">here</a>.</p>
+<p>This will bring up the Trelliscope viewer in a web browser. Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended. If you aren’t following along with the example in your own R console, we have pushed this VDB out to RStudio’s shinyapps.io site <a href="http://hafen.shinyapps.io/deltarhoTutorial">here</a>.</p>
 <p>What you should see in the web browser is a modal box with the title “Open a New Display”. If at any point you want this box to come back up to choose a display, you can bring it up by clicking the folder icon in the top right of the viewer window. This will give you a list of displays to choose from. At this point, there will be one or two displays, depending on whether you ran through the quick start.</p>
 <p>We want to select the display we just created, which we named “list_vs_time_barebones”. We can do this by clicking the appropriate row in the list of displays. This brings up the display in the viewer, showing the first panel of 2883. You can use the arrow keys to navigate from one panel to the next.</p>
 <p>While we will provide a more in-depth tutorial on the viewer <a href="#trelliscope-viewer">later</a>, at this point feel free to experiment with some of the viewer features available along the left panel. The options are broken down into two categories, “View Options” and “Cognostics”. We will talk about cognostics later in this section, and there is not too much interesting to do with cognostics for this example. But it is worth taking some time to experiment with the options available in these controls, many of which are self-explanatory, keeping in mind that no harm will be done to the display.</p>
@@ -530,8 +530,8 @@ In the future, support for input variables will be added (this existed in older 
 <pre class="r"><code># test the cognostics function on a subset
 priceCog(byCounty[[1]]$value)</code></pre>
 <pre><code>$slope
-         time 
--0.0002323686 
+         time
+-0.0002323686
 
 $meanList
 [1] 72.76927
@@ -721,19 +721,19 @@ makeDisplay(byCountyHDFS, ...)</code></pre>
 <h2>FAQ</h2>
 <div id="what-should-i-do-if-i-have-an-issue-or-feature-request" class="section level3">
 <h3>What should I do if I have an issue or feature request?</h3>
-<p>Please post an issue on <a href="https://github.com/tesseradata/trelliscope/issues">github</a>.</p>
+<p>Please post an issue on <a href="https://github.com/delta-rho/trelliscope/issues">github</a>.</p>
 </div>
 </div>
 <div id="reference" class="section level2">
 <h2>Reference</h2>
 <p>Related projects:</p>
 <ul>
-<li><a href="http://github.com/tesseradata/datadr">datadr</a>: R package providing the D&amp;R framework</li>
-<li><a href="http://github.com/tesseradata/RHIPE">RHIPE</a>: the engine that enables D&amp;R to work with large, complex data</li>
+<li><a href="http://github.com/delta-rho/datadr">datadr</a>: R package providing the D&amp;R framework</li>
+<li><a href="http://github.com/delta-rho/RHIPE">RHIPE</a>: the engine that enables D&amp;R to work with large, complex data</li>
 </ul>
 <p>References:</p>
 <ul>
-<li><a href="http://tessera.io">tessera.io</a></li>
+<li><a href="http://deltarho.org">deltarho.org</a></li>
 <li><a href="http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf">Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data</a></li>
 <li><a href="http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full">Large complex data: divide and recombine (D&amp;R) with RHIPE</a></li>
 <li><a href="http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf">Visualization Databases for the Analysis of Large Complex Datasets</a></li>
@@ -759,7 +759,7 @@ makeDisplay(byCountyHDFS, ...)</code></pre>
   <div id="footer">
     <div class="container">
       <div class="col-md-6">
-                <p>&copy; Tessera team, 2016</p>
+                <p>&copy; DeltaRho team, 2016</p>
               </div>
       <div class="col-md-6">
         <p class="pull-right">created with <a href="https://github.com/hafen/packagedocs">packagedocs</a></p>
@@ -767,6 +767,6 @@ makeDisplay(byCountyHDFS, ...)</code></pre>
     </div>
   </div>
 
-  
+
 </body>
 </html>

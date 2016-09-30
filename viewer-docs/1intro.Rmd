@@ -1,8 +1,8 @@
 
 
-# Introduction  
+# Introduction
 
-This navigation guide will introduce the options within the Trelliscope viewer and how to use them.  For information on creating a Trelliscope viewer see the [tutorial](http://tessera.io/docs-trelliscope/#introduction). 
+This navigation guide will introduce the options within the Trelliscope viewer and how to use them.  For information on creating a Trelliscope viewer see the [tutorial](http://deltarho.org/docs-trelliscope/#introduction).
 
 Trelliscope is a visualization tool that provides interactive exploration of large collections of plots. Trelliscope enables detailed, flexible visualization of large data sets by partitioning data into subsets, applying a plot method to each subset to create a panel, and then allowing the analyst to interactively view the panels. Interaction is provided by the ability to sort and filter the panels based on metrics computed for each subset that describe behaviors of interest. These metrics are called cognostics
 

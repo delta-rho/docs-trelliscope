@@ -1,6 +1,6 @@
 ## Quickstart
 
-Before getting into the details, we'll first go over a quick example to provide a feel for what can be done with Trelliscope.  This example is adapted from the quick start example in the [datadr](http://tessera.io/docs-datadr) documentation, but with a specific focus on Trelliscope.
+Before getting into the details, we'll first go over a quick example to provide a feel for what can be done with Trelliscope.  This example is adapted from the quick start example in the [datadr](http://deltarho.org/docs-datadr) documentation, but with a specific focus on Trelliscope.
 
 ### Package installation
 
@@ -10,7 +10,7 @@ First, we need to install the necessary components, `datadr` and `trelliscope`. 
 install.packages(c("datadr", "trelliscope"))
 ```
 
-Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed.  For support of more scalable back ends like Hadoop when dealing with larger data sets, see the [quickstart section](http://tessera.io/#quickstart) on the Tessera website.
+Our example is based on a small dataset that we can handle in a local R session, and therefore we only need to have these two packages installed.  For support of more scalable back ends like Hadoop when dealing with larger data sets, see the [quickstart section](http://deltarho.org/#quickstart) on the DeltaRho website.
 
 We will use as an example a data set consisting of the median list and sold price of homes in the United States, aggregated by county and month from 2008 to early 2014, reported from [Zillow](http://www.zillow.com) and obtained from [quandl](https://www.quandl.com).  A pre-processed version of this data is available in a package called `housingData`, which we will use.  To install this package:
 
@@ -40,7 +40,7 @@ We create many plots throughout the course of analysis, and with Trelliscope, we
 
 ```{r quickstart_vdb, eval=TRUE, echo=TRUE, results="hide", message=FALSE}
 # connect to a "visualization database"
-conn <- vdbConn("vdb", name = "tesseraTutorial")
+conn <- vdbConn("vdb", name = "deltarhoTutorial")
 ```
 
 This connects to a directory called `"vdb"` relative to our current working directory.  The first time you do this it will ask to make sure you want to create the directory.  R holds this connection in its global options so that subsequent calls will know where to put things without explicitly specifying the connection each time.
@@ -49,7 +49,7 @@ This connects to a directory called `"vdb"` relative to our current working dire
 
 Trelliscope allows us to visualize large data sets in detail.  We do this by splitting the data into meaningful subsets and applying a visualization to each subset, and then interactively viewing the panels of the display.
 
-An interesting thing to look at with the housing data is the median list and sold price over time by county and state.  To split the data in this way, we use the `divide()` function from the `datadr` package.  It is recommended to have some familiarity with the [datadr](http://tessera.io/docs-datadr) package.
+An interesting thing to look at with the housing data is the median list and sold price over time by county and state.  To split the data in this way, we use the `divide()` function from the `datadr` package.  It is recommended to have some familiarity with the [datadr](http://deltarho.org/docs-datadr) package.
 
 ```{r quickstart_loaddata, eval=TRUE, echo=FALSE, results="hide", message=FALSE, purl=FALSE}
 # byCounty <- divide(housing,

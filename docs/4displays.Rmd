@@ -8,13 +8,13 @@ Before we create our first display, we need to initiate and connect to a visuali
 
 ```{r echo=FALSE, purl=FALSE, include=FALSE, warning=FALSE, error=FALSE, message=FALSE}
 ### hidden
-conn <- vdbConn("vdb", autoYes = TRUE, name = "tesseraTutorial")
+conn <- vdbConn("vdb", autoYes = TRUE, name = "deltarhoTutorial")
 ```
 
 ```{r vdb_conn, message=FALSE}
 # initialize a connection to a new VDB which will
 # go in a directory "vdb" in the current working directory
-conn <- vdbConn("vdb", name = "tesseraTutorial")
+conn <- vdbConn("vdb", name = "deltarhoTutorial")
 ```
 
 If the VDB connection directory doesn't exist, it will ask whether it should be created.  Giving the VDB a `name` is optional, but will be useful for later when we sync our VDB to a web server.
@@ -36,7 +36,7 @@ We can now look at some examples and start populating the VDB with displays.
 
 Since Trelliscope is a multipanel display system, the first step of creating a display is to break the data into subsets, with each subset representing the data to go in one panel of the display.  For a given data set, there can be multiple meaningful ways to split the data.
 
-We achieve data partitioning through the `datadr` package, the companion package to Trelliscope.  This package implements the Divide & Recombine (D&R) approach to data analysis.  If you have not spent time with `datadr`, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the `datadr` [tutorial](http://tessera.io/docs-datadr).
+We achieve data partitioning through the `datadr` package, the companion package to Trelliscope.  This package implements the Divide & Recombine (D&R) approach to data analysis.  If you have not spent time with `datadr`, we cover enough in this section to scrape by, but we highly recommend that you spend some time with the `datadr` [tutorial](http://deltarho.org/docs-datadr).
 
 The `datadr` package provides a mechanism for dividing potentially very large data sets into subsets, applying analytical methods to each subset, and then recombining the results in a statistically valid way.  Here, we use `datadr` to partition our data, and then Trelliscope will provide a *visual recombination*.
 
@@ -88,7 +88,7 @@ To quickly get our feet wet with creating a display, we start with a minimal exa
 
 ### Panel functions
 
-Creating a plot first requires the specification of what you would like to be plotted for each subset, a *panel function*.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in `datadr`, which can operate either on both a key and a value of just the value (see [here](http://tessera.io/docs-datadr/#key-value-pairs) for more details).
+Creating a plot first requires the specification of what you would like to be plotted for each subset, a *panel function*.  The function is applied to each key-value pair subset in your data.  This function behaves like all other per-subset functions in `datadr`, which can operate either on both a key and a value of just the value (see [here](http://deltarho.org/docs-datadr/#key-value-pairs) for more details).
 
 Some things to know about the panel function:
 
@@ -147,7 +147,7 @@ To view the display:
 view()
 ```
 
-This will bring up the Trelliscope viewer in a web browser.  Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended.  If you aren't following along with the example in your own R console, we have pushed this VDB out to RStudio's shinyapps.io site [here](http://hafen.shinyapps.io/tesseraTutorial).
+This will bring up the Trelliscope viewer in a web browser.  Note that this viewer is designed for modern web browsers and Internet Explorer is not recommended.  If you aren't following along with the example in your own R console, we have pushed this VDB out to RStudio's shinyapps.io site [here](http://hafen.shinyapps.io/deltarhoTutorial).
 
 What you should see in the web browser is a modal box with the title "Open a New Display".  If at any point you want this box to come back up to choose a display, you can bring it up by clicking the folder icon in the top right of the viewer window.  This will give you a list of displays to choose from.  At this point, there will be one or two displays, depending on whether you ran through the quick start.
 

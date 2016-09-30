@@ -6,7 +6,7 @@ Tutorial and package reference for trelliscope.
 ## How to contribute
 
 - Fork and check out this repository
-- Check out the [trelliscope](https://github.com/tesseradata/trelliscope) repository
+- Check out the [trelliscope](https://github.com/delta-rho/trelliscope) repository
 - Change `code_path` in `build.R` to point to your checkout of the trelliscope repository
 - Edit the files in `docs/*.Rmd`
 - Generate the html output by running code in `build.R` or simply calling
@@ -22,7 +22,7 @@ If others are editing the docs as well and you want to keep your checkout in syn
 One time only:
 
 ```
-git remote add upstream https://github.com/tesseradata/docs-trelliscope
+git remote add upstream https://github.com/delta-rho/docs-trelliscope
 ```
 
 Each time you want to sync with the live version of the docs:

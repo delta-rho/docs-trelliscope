@@ -57,7 +57,7 @@ makeDisplay(byCountyHDFS, ...)
 
 ### What should I do if I have an issue or feature request?
 
-Please post an issue on [github](https://github.com/tesseradata/trelliscope/issues).
+Please post an issue on [github](https://github.com/delta-rho/trelliscope/issues).
 
 ## Reference
 
@@ -68,14 +68,14 @@ Related projects:
 
 References:
 
-- [tessera.io][tessera.io]
+- [deltarho.org][deltarho.org]
 - [Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data][trspaper]
 - [Large complex data: divide and recombine (D&R) with RHIPE][drpaper]
 - [Visualization Databases for the Analysis of Large Complex Datasets][vdbpaper]
 
-[rhipe]: http://github.com/tesseradata/RHIPE
-[datadr]: http://github.com/tesseradata/datadr
-[tessera.io]: http://tessera.io
+[rhipe]: http://github.com/delta-rho/RHIPE
+[datadr]: http://github.com/delta-rho/datadr
+[deltarho.org]: http://deltarho.org
 [trspaper]: http://ml.stat.purdue.edu/gaby/trelliscope.ldav.2013.pdf
 [drpaper]: http://onlinelibrary.wiley.com/doi/10.1002/sta4.7/full
 [vdbpaper]: http://jmlr.csail.mit.edu/proceedings/papers/v5/guha09a/guha09a.pdf
